@@ -2,4 +2,6 @@
 build.gradle
 .gradle
 .vscode
-.setting
+.settings
+.classpath
+
