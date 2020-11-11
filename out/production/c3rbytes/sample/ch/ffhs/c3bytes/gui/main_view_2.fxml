@@ -18,9 +18,17 @@
   <children>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="45.0" minWidth="900.0" prefHeight="45.0" prefWidth="900.0" VBox.vgrow="ALWAYS">
          <children>
-            <Button fx:id="logoutButton" layoutX="723.0" mnemonicParsing="false" onAction="#logoutAction" prefHeight="36.0" prefWidth="177.0" text="Logout" />
-            <Button fx:id="changeMasterButton" layoutX="503.0" mnemonicParsing="false" onAction="#changeMasterAction" prefHeight="36.0" prefWidth="177.0" text="Change Master Password" wrapText="true" />
+            <Button fx:id="logoutButton" layoutX="759.0" mnemonicParsing="false" onAction="#logoutAction" prefHeight="36.0" prefWidth="141.0" text="Logout" />
+            <Button fx:id="changeMasterButton" layoutX="605.0" mnemonicParsing="false" onAction="#changeMasterAction" prefHeight="36.0" prefWidth="141.0" text="Change Master Password" wrapText="true">
+               <font>
+                  <Font size="11.0" />
+               </font></Button>
             <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchAction" prefHeight="36.0" prefWidth="177.0" text="Search" wrapText="true" />
+            <Button fx:id="deleteAccountButton" layoutX="402.0" mnemonicParsing="false" onAction="#deleteAccountAction" prefHeight="36.0" prefWidth="141.0" text="Delete Account" wrapText="true">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Button>
          </children>
       </Pane>
     <SplitPane dividerPositions="0.20044543429844097" focusTraversable="true" minHeight="513.0" minWidth="900.0" prefHeight="513.0" prefWidth="900.0" VBox.vgrow="ALWAYS">

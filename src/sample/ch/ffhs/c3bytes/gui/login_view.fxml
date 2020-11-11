@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Polygon?>
 
-<AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="371.0" prefWidth="552.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="371.0" prefWidth="552.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.ch.ffhs.c3bytes.controller.loginController">
    <children>
       <TextField fx:id="masterPasswordField" layoutX="195.0" layoutY="244.0" prefHeight="25.0" prefWidth="164.0" />
       <Button fx:id="loginButton" layoutX="196.0" layoutY="289.0" mnemonicParsing="false" onAction="#loginAction" prefHeight="25.0" prefWidth="73.0" text="Login" />
