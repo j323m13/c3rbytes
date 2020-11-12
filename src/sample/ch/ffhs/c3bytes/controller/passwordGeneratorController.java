@@ -9,12 +9,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.w3c.dom.Text;
+import sample.ch.ffhs.c3bytes.utils.PasswordGenerator;
+
+
+import java.util.ArrayList;
 
 public class passwordGeneratorController {
-    boolean useDigits = false;
-    boolean useLower = false;
-    boolean useUpper = false;
-    boolean useSymbols = false;
+    int useDigits;
+    int useLower;
+    int useUpper;
+    int useSymbols;
     int minDigits = 0;
     int minSymbols = 0;
 
@@ -62,20 +66,43 @@ public class passwordGeneratorController {
         System.out.println("minimum special characters in password: ");
     }
 
+    // Generate Password
     @FXML private TextField pwdOutputField;
     public void onGenerateAction(ActionEvent actionEvent) {
+
+        /* input for ArrayList<Integer> charSet must come from option buttons with options
+         * 0 = lower case letters
+         * 1 = upper case letters
+         * 2 = digits
+         * 3 = special characters
+         * or combinations of them
+        */
+        ArrayList<Integer> charSet = new ArrayList<>();
+
+        //int pwlength = lengthSlider.getValue().int;
+        int pwlength = Integer.parseInt(lengthTextField.getText());
+
+        if (lowerCaseCheck.isSelected()) {
+            useLower = 0;
+            charSet.add(useLower);
+        }
+
+        if (upperCaseCheck.isSelected()) {
+            useUpper = 1;
+            charSet.add(useUpper);
+        }
+
         if (digitCheck.isSelected()){
-            useDigits = true;
+            useDigits = 2;
+            charSet.add(useDigits);
         }
-        if (lowerCaseCheck.isSelected()){
-            useLower = true;
+
+       if (symbolCheck.isSelected()){
+            useSymbols = 3;
+            charSet.add(useSymbols);
         }
-        if (upperCaseCheck.isSelected()){
-            useUpper = true;
-        }
-        if (digitCheck.isSelected()){
-            useSymbols = true;
-        }
+
+       System.out.println(charSet.toString());
 
         //TODO make minimum digits and symbols into sliders to prevent null and non-digit entries
         minDigits = Integer.parseInt(minimumDigits.getText());
@@ -83,7 +110,18 @@ public class passwordGeneratorController {
 
         System.out.println("Generating password");
         //TODO: call algorithm and enter in pwdOutputField.setText
-        pwdOutputField.setText((int)lengthSlider.getValue() + " " + useDigits +" "+ useLower +" "+ useUpper +" "+ useSymbols +" "+ minDigits +" "+ minSymbols);
+
+
+        PasswordGenerator pwg = new PasswordGenerator();
+        pwg.buildPassword(charSet, pwlength);
+        String pw = pwg.generatePassword();
+
+        System.out.println(pw);
+
+        //pwdOutputField.setText((int)lengthSlider.getValue() + " " + useDigits +" "+ useLower +" "+ useUpper +" "+ useSymbols +" "+ minDigits +" "+ minSymbols);
+        pwdOutputField.setText(pw);
+
+        pwg = null;
     }
 
     public void onCopyAction(ActionEvent actionEvent) {
