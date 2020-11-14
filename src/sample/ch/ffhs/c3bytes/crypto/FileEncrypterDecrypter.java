@@ -1,0 +1,60 @@
+package sample.ch.ffhs.c3bytes.crypto;
+
+import sample.ch.ffhs.c3bytes.utils.FileHandler;
+
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Base64;
+
+public class FileEncrypterDecrypter {
+
+    private final static Charset UTF_8 = StandardCharsets.UTF_8;
+    private static FileEncrypterDecrypter enc;
+
+    public void encryptFile(String content, String toFile, String password) throws Exception {
+
+        PasswordEncrypterDecrypter passwordEncrypterDecrypter = new PasswordEncrypterDecrypter();
+
+        // read a normal txt
+        byte[] contentBytes =  content.getBytes(UTF_8);
+
+        // encrypt content with password
+        String encryptedText = passwordEncrypterDecrypter.encrypt(contentBytes, password);
+
+        // Base64 decoding
+        byte[] encryptedByteText = Base64.getDecoder().decode(encryptedText.getBytes(UTF_8));
+
+        // save to file
+        FileHandler fileHandler = new FileHandler();
+        fileHandler.writeToFile(toFile, encryptedByteText);
+        fileHandler = null;
+
+        passwordEncrypterDecrypter = null;
+    }
+
+    public byte[] decryptFile(String fromEncryptedFile, String password) throws Exception {
+
+        // create new passwordEncrypterDecrypter
+        PasswordEncrypterDecrypter passwordEncrypterDecrypter = new PasswordEncrypterDecrypter();
+
+        // read from file
+        byte[] fileContent = Files.readAllBytes(Paths.get(fromEncryptedFile));
+
+        // Encode in Base64
+        String cryptedText = Base64.getEncoder().encodeToString(fileContent);
+
+        // Decrypt crypted Text
+        String decryptedText = passwordEncrypterDecrypter.decrypt(cryptedText, password);
+
+        // Cast to Bytes
+        byte[] decryptedByteText = decryptedText.getBytes(UTF_8);
+
+        return decryptedByteText;
+
+    }
+}
+
+
+

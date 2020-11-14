@@ -8,8 +8,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import org.w3c.dom.Text;
-import sample.ch.ffhs.c3bytes.utils.PasswordGenerator;
+import sample.ch.ffhs.c3bytes.crypto.PasswordGenerator;
 
 
 import java.util.ArrayList;

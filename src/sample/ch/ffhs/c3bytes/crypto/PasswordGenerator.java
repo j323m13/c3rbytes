@@ -1,4 +1,4 @@
-package sample.ch.ffhs.c3bytes.utils;
+package sample.ch.ffhs.c3bytes.crypto;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ public class PasswordGenerator {
             }
         }
 
-        // add charset collection to arraylist könnte man noch verbessern
+        // add charset collection to arraylist, already improvable
         charSetContainer.add(lowerCaseLetters);
         charSetContainer.add(upperCaseLetters);
         charSetContainer.add(digits);
@@ -93,6 +93,7 @@ public class PasswordGenerator {
         return l;
     }
 
+    /*
     public static void main(String[] args) {
         PasswordGenerator pwgen = new PasswordGenerator();
 
@@ -102,7 +103,7 @@ public class PasswordGenerator {
          * 2 = digits
          * 3 = special characters
          * or combinations of them
-         */
+         *
         ArrayList<Integer> charSet = new ArrayList<>();
 
         charSet.add(0);
@@ -118,4 +119,5 @@ public class PasswordGenerator {
         String pw = pwgen.generatePassword();
         System.out.println(pw);
     }
+    */
 }

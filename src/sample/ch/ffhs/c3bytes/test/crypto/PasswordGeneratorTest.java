@@ -1,10 +1,10 @@
-package sample.ch.ffhs.c3bytes.test.utils;
+package sample.ch.ffhs.c3bytes.test.crypto;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import org.hamcrest.text.MatchesPattern;
 import org.junit.jupiter.api.Test;
-import sample.ch.ffhs.c3bytes.utils.PasswordGenerator;
+import sample.ch.ffhs.c3bytes.crypto.PasswordGenerator;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
