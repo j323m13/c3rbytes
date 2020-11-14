@@ -1,4 +1,6 @@
 package sample.ch.ffhs.c3bytes.main;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import sample.ch.ffhs.c3bytes.dao.DatabaseEntry;
 import sample.ch.ffhs.c3bytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3bytes.dao.connectionFactory;
@@ -26,10 +28,13 @@ public class Main extends Application {
 
 
     public void start(Stage secondaryStage) throws Exception {
+
+        /*
         Connection connection = connectionFactory.getConnection();
         DatabaseEntryDao newDao = new DatabaseEntryDao();
         DatabaseEntryDao.getAll();
         connection.close();
+         */
 
         /*
         Parent root = FXMLLoader.load(getClass().getResource("../gui/password_generator_view.fxml"));
@@ -42,10 +47,19 @@ public class Main extends Application {
         //secondaryStage stage = new Stage();
         secondaryStage.setTitle("C3rBytes");
         secondaryStage.setScene(new Scene(mainView, 1200, 600));
-        secondaryStage.show();}
+        secondaryStage.show();
+
+
+
+
+    }
 
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
+
+
+
+
 
         /*
         Connection connection = connectionFactory.getConnection();

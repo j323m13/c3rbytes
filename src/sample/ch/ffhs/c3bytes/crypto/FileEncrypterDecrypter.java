@@ -23,8 +23,13 @@ public class FileEncrypterDecrypter {
         // encrypt content with password
         String encryptedText = passwordEncrypterDecrypter.encrypt(contentBytes, password);
 
-        // Base64 decoding
-        byte[] encryptedByteText = Base64.getDecoder().decode(encryptedText.getBytes(UTF_8));
+        System.out.println("encryptedText: " + encryptedText);
+
+        // in purpose of obfuscation decoding in Base64 --> odd way
+        //byte[] encryptedByteText = Base64.getDecoder().decode(encryptedText.getBytes(UTF_8));
+
+        // Base64 Encoding the standard way
+        byte[] encryptedByteText = Base64.getEncoder().encode(encryptedText.getBytes(UTF_8));
 
         // save to file
         FileHandler fileHandler = new FileHandler();
@@ -42,8 +47,12 @@ public class FileEncrypterDecrypter {
         // read from file
         byte[] fileContent = Files.readAllBytes(Paths.get(fromEncryptedFile));
 
-        // Encode in Base64
-        String cryptedText = Base64.getEncoder().encodeToString(fileContent);
+        // in purpose of obfuscation encoding in Base64 --> odd way
+        //String cryptedText = Base64.getEncoder().encodeToString(fileContent);
+
+        // Base64 Decoding the standard way
+        byte[] cryptedTextBytes = Base64.getDecoder().decode(fileContent);
+        String cryptedText = new String(cryptedTextBytes,UTF_8);
 
         // Decrypt crypted Text
         String decryptedText = passwordEncrypterDecrypter.decrypt(cryptedText, password);
