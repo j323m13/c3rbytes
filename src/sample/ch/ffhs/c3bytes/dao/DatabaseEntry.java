@@ -1,10 +1,9 @@
 package sample.ch.ffhs.c3bytes.dao;
 
-import javafx.beans.value.ObservableValue;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
+
 
 public class DatabaseEntry{
 
@@ -15,12 +14,30 @@ public class DatabaseEntry{
     private static String password;
     private static String creationDate;
     private static String lastUpdate;
-    private HashSet dataEntries;
+
+
 
     public DatabaseEntry() {
+        //creation of a DatabaseEntry without paramenters.
+        //DatabaseEntry.id = 0;
+        DatabaseEntry.username = null;
+        DatabaseEntry.description = null;
+        DatabaseEntry.url = null;
+        DatabaseEntry.password = null;
+        DatabaseEntry.creationDate = new String(getDateTime());
+        //the first time, creationDate and lastUpdate have the same value
+        DatabaseEntry.lastUpdate = DatabaseEntry.getCreationDate();
 
     }
 
+    /*
+    * Constructor for an DatabaseEntry Object which contains an id
+    * * @param id the id from the database
+     * @param username the username
+     * @param description what kind of entry it is (social media account, etc.)
+     * @param url
+     * @param password password is protected (hashed)
+     */
     public DatabaseEntry(int id, String username, String description, String url, String password){
         DatabaseEntry.id = id;
         DatabaseEntry.username = username;
@@ -29,10 +46,17 @@ public class DatabaseEntry{
         DatabaseEntry.password = password;
         DatabaseEntry.creationDate = getDateTime();
         //the first time, creationDate and lastUpdate have the same value
-        DatabaseEntry.lastUpdate = DatabaseEntry.creationDate;
+        DatabaseEntry.lastUpdate = DatabaseEntry.getCreationDate();
+
 
     }
-
+    /*
+    *Constructor for an DatabaseEntry Object which contains an id
+    * @param username the username
+    * @param description what kind of entry it is (social media account, etc.)
+    * @param url
+    * @param password password is protected (hashed)
+     */
     public DatabaseEntry(String username, String description, String url, String password){
         DatabaseEntry.username = username;
         DatabaseEntry.description = description;
@@ -40,9 +64,22 @@ public class DatabaseEntry{
         DatabaseEntry.password = password;
         DatabaseEntry.creationDate = getDateTime();
         //the first time, creationDate and lastUpdate have the same value
-        DatabaseEntry.lastUpdate = DatabaseEntry.creationDate;
+        DatabaseEntry.lastUpdate = DatabaseEntry.getCreationDate().toString();
 
     }
+
+    public DatabaseEntry(int id, String username, String description, String url, String password, String creationDate, String lastUpdate){
+        DatabaseEntry.id = id;
+        DatabaseEntry.username = username;
+        DatabaseEntry.description = description;
+        DatabaseEntry.url = url;
+        DatabaseEntry.password = password;
+        DatabaseEntry.creationDate = creationDate;
+        //the first time, creationDate and lastUpdate have the same value
+        DatabaseEntry.lastUpdate = lastUpdate;
+
+    }
+
 
     public static void setId(int id) {
         DatabaseEntry.id = id;
@@ -50,10 +87,6 @@ public class DatabaseEntry{
 
     public static int getId() {
         return id;
-    }
-
-    public static String getIdAsString(){
-        return String.valueOf(id);
     }
 
     public static String getUsername() {
@@ -91,20 +124,36 @@ public class DatabaseEntry{
     public static String getCreationDate() {
         return creationDate;
     }
-
-    public static void setCreationDate(String creationDate) {
-        DatabaseEntry.creationDate = creationDate;
+    /*
+     * When setCreationDate is set (for i.e. when it is returned from the database). if creationDate has to be set, then call
+     * getDateTime()
+     * @see setCreationDate
+     */
+    public  static void setCreationDate(String time) {
+        DatabaseEntry.creationDate = time;
     }
+
 
     public static String getLastUpdate() {
         return lastUpdate;
     }
 
+    /*
+    * When lastUpdate is set (for i.e. when it is returned from the database). if lastUpdate has to be set, then call
+    * getDateTime()
+    * @see getDateTime
+     */
     public static void setLastUpdate(String lastUpdate) {
         DatabaseEntry.lastUpdate = lastUpdate;
     }
 
-    public String getDateTime(){
+
+    /*
+    * Methode to create the a time stamp for the date_creation (Database) and date_update (Database)
+    * This methode is also used to store a time stamp value inside an DatabaseEntry Object, for the fields creationDate and
+    * lastUpdate.
+     */
+    public static String getDateTime(){
         LocalDateTime myDateObj = LocalDateTime.now();
         //System.out.println("Before formatting: " + myDateObj);
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");

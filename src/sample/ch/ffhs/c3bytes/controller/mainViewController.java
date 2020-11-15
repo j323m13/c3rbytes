@@ -6,26 +6,27 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import sample.ch.ffhs.c3bytes.dao.Dao;
 import sample.ch.ffhs.c3bytes.dao.DatabaseEntry;
 import sample.ch.ffhs.c3bytes.dao.DatabaseEntryDao;
+import sample.ch.ffhs.c3bytes.dao.connectionFactory;
 
 import javax.swing.text.TableView;
-import javax.xml.transform.Result;
 import java.io.IOException;
-import java.sql.ResultSet;
+import java.net.URL;
+import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.ResourceBundle;
 
 
-public class mainViewController {
+public class mainViewController implements Initializable {
 
     @FXML
     private TextField entryIdText;
@@ -43,27 +44,85 @@ public class mainViewController {
     private javafx.scene.control.TableView<DatabaseEntry> profileTable;
 
     @FXML
-    private TableColumn<DatabaseEntry, Integer> idColumn;
+    private TableColumn<DatabaseEntry, String> idColumn;
     @FXML
     private TableColumn<DatabaseEntry, String> categoryColumn;
     @FXML
-    private TableColumn<DatabaseEntry, String> usernameColumn;
+    private TableColumn<DatabaseEntry, String> userNameColumn;
     @FXML
     private TableColumn<DatabaseEntry, String> passwordColumn;
     @FXML
     private TableColumn<DatabaseEntry, String> urlColumn;
 
     @FXML
-    private void initialize() throws SQLException, ClassNotFoundException {
 
+
+
+
+
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        idColumn.setCellValueFactory(
+                new PropertyValueFactory<>("id")
+        );
+
+        categoryColumn.setCellValueFactory(
+                new PropertyValueFactory<>("description")
+        );
+
+        userNameColumn.setCellValueFactory(
+                new PropertyValueFactory<>("username")
+        );
+
+        passwordColumn.setCellValueFactory(
+                new PropertyValueFactory<>("password")
+        );
+
+        urlColumn.setCellValueFactory(
+                new PropertyValueFactory<>("url")
+        );
+
+        /*
+        final ObservableList<DatabaseEntry> data = FXCollections.observableArrayList(
+                new DatabaseEntry("1", "Jérémie", "Facebook", "www.facebook.com", "12345!!"),
+                new DatabaseEntry("2","Jérémie", "Facebook", "www.facebook.com", "12345!!")
+
+
+        );
+         */
+
+        /*
+        try {
+            Connection connection = connectionFactory.getConnection();
+            DatabaseEntryDao newDao = new DatabaseEntryDao();
+            DatabaseEntryDao.getAll();
+
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+        }
+         */
+        try {
+            profileTable.setItems(DatabaseEntryDao.getAll());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+        /*
         //idColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getIdAsString()));
-        //categoryColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(DatabaseEntry.getDescription()));
-        //usernameColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(DatabaseEntry.getUsername()));
-        //passwordColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(DatabaseEntry.getPassword()));
-        //urlColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(DatabaseEntry.getUrl()));
+        categoryColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(DatabaseEntry.getDescription().toString()));
+        userNameColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(DatabaseEntry.getUsername().toString()));
+        passwordColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(DatabaseEntry.getPassword().toString()));
+        urlColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(DatabaseEntry.getUrl().toString()));
+         */
 
 
     }
+
+
     /*
     @FXML
     private void populateTableView(DatabaseEntryDao entry) throws ClassNotFoundException, SQLException {
@@ -152,4 +211,6 @@ public class mainViewController {
     }
 
     private TableView tableView;
+
+
 }

@@ -1,31 +1,43 @@
 package sample.ch.ffhs.c3bytes.dao;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.sql.*;
-import java.util.ArrayList;
 
 public class DatabaseEntryDao implements Dao{
 
 
 
-    public static ArrayList<ResultSet> getAll() throws SQLException, ClassNotFoundException {
+    public static ObservableList<DatabaseEntry> getAll() throws SQLException, ClassNotFoundException {
         Connection connection = connectionFactory.getConnection();
-        PreparedStatement ps = connection.prepareStatement("SELECT * FROM CERBYTES.\"user\"");
-        ResultSet rs = ps.executeQuery();
+        PreparedStatement ps = null;
+
+        ps = connection.prepareStatement("SELECT * FROM CERBYTES.\"user\"");
+        ResultSet rs = null;
+        rs = ps.executeQuery();
+
         //TODO implement List as DataEntry Type
-        ArrayList<ResultSet> list = new ArrayList<>() {
-        };
-        while(rs.next()){
-           list.add(rs);
+        final ObservableList<DatabaseEntry> results = FXCollections.observableArrayList();
+        while(true){
+            if (!rs.next()) break;
+            results.add(new DatabaseEntry(rs.getInt(1), rs.getString(2), rs.getString(3),
+                    rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7)));
+
+
+            /*
             System.out.println(rs.getInt(1)+","+
             rs.getString(2)+", "+rs.getString(3)+", "+
                     rs.getString(4)+", "+rs.getString(5)+", "+rs.getString(6)+", "+
                     rs.getString(7)
             );
+             */
 
         }
         //contain all the entries from the database CERBYTES (user only)
         //TODO implement join statement
-        return list;
+        connection.close();
+        return results;
 
 
     }
@@ -81,7 +93,7 @@ public class DatabaseEntryDao implements Dao{
     public void insertDatabaseEntry() throws SQLException, ClassNotFoundException {
         Connection connection = connectionFactory.getConnection();
         PreparedStatement psForPassword = connection.prepareStatement(("INSERT INTO CERBYTES.\"password\"(\"password_text\") values (?)"));
-        psForPassword.setString(1,DatabaseEntry.getPassword());
+        psForPassword.setString(1,DatabaseEntry.getPassword().toString());
         psForPassword.executeUpdate();
 
         PreparedStatement psPasswordForeignKey = connection.prepareStatement(("(SELECT MAX(\"password_id\") FROM CERBYTES.\"password\")"));
@@ -94,12 +106,12 @@ public class DatabaseEntryDao implements Dao{
         PreparedStatement ps = connection.prepareStatement("INSERT INTO CERBYTES.\"user\" " +
                 "(\"username\", \"description\", \"url_content\", \"password_id\", \"date_creation\", \"date_update\")" +
                 " VALUES (?,?,?,?,?,?)");
-        ps.setString(1, DatabaseEntry.getUsername());
-        ps.setString(2,DatabaseEntry.getDescription());
-        ps.setString(3,DatabaseEntry.getUrl());
+        ps.setString(1, DatabaseEntry.getUsername().toString());
+        ps.setString(2,DatabaseEntry.getDescription().toString());
+        ps.setString(3,DatabaseEntry.getUrl().toString());
         ps.setInt(4,passwordReferenceTmp);
-        ps.setString(5,DatabaseEntry.getCreationDate());
-        ps.setString(6,DatabaseEntry.getLastUpdate());
+        ps.setString(5,DatabaseEntry.getCreationDate().toString());
+        ps.setString(6,DatabaseEntry.getLastUpdate().toString());
 
         int i = ps.executeUpdate();
     }

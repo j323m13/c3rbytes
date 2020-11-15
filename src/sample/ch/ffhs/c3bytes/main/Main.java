@@ -26,10 +26,7 @@ public class Main extends Application {
 
 
     public void start(Stage secondaryStage) throws Exception {
-        Connection connection = connectionFactory.getConnection();
-        DatabaseEntryDao newDao = new DatabaseEntryDao();
-        DatabaseEntryDao.getAll();
-        connection.close();
+
 
         /*
         Parent root = FXMLLoader.load(getClass().getResource("../gui/password_generator_view.fxml"));
