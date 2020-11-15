@@ -106,7 +106,6 @@ public class mainViewController {
     @FXML private javafx.scene.control.Button addButton;
     public void addNewItemAction(ActionEvent event){
 
-
         Parent root;
         try {
             root = FXMLLoader.load(getClass().getResource("../gui/add_new_item_view.fxml"));
@@ -168,21 +167,6 @@ public class mainViewController {
         ClipboardHandler clipboardHandler = new ClipboardHandler();
         clipboardHandler.copyPasswordToClipboard("Test");
 
-        /*
-        Timer timer = new Timer();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                Platform.runLater(() -> clipboardHandler.clearClipboard());
-            }
-        };
-
-        System.out.println("Current time" + System.currentTimeMillis());
-        timer.schedule(task,0, 5000);
-        System.out.println("Current time" + System.currentTimeMillis());
-
-        //clipboardHandler.clearClipboard();
-*/
     }
     @FXML private javafx.scene.control.Button deleteButton;
     public void deleteProfileAction(ActionEvent event){
