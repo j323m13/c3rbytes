@@ -15,7 +15,12 @@ public class addNewItemController {
     @FXML private javafx.scene.control.Button generatePasswordButton;
     public void generatePassword(ActionEvent event){
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("../gui/password_generator_view.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/password_generator_view.fxml"));
+            Parent root = loader.load();
+
+            passwordGeneratorController pwGenCon = loader.getController();
+            pwGenCon.getpwdOutputTextField(passwordField);
+
             Stage stage = new Stage();
             stage.setTitle("Password-Generator");
             stage.setScene(new Scene(root, 545, 420));

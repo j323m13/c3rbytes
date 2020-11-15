@@ -60,6 +60,10 @@ public class FileEncrypterDecrypter {
         // Cast to Bytes
         byte[] decryptedByteText = decryptedText.getBytes(UTF_8);
 
+        /* in case to decrypt passphrasefiel c3r.c3r
+        FileHandler fileHandler = new FileHandler();
+        fileHandler.writeToFile(fromEncryptedFile, decryptedByteText);
+        */
         return decryptedByteText;
 
     }

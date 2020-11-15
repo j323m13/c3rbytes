@@ -134,7 +134,7 @@ public class passwordGeneratorController {
         //TODO: Copy contents of pwdOutputField.
         System.out.println("Copying password");
         ClipboardHandler clipboardHandler = new ClipboardHandler();
-        String pwdOutputFieldText = getpwdOutputFieldText();
+        String pwdOutputFieldText = pwdOutputField.getText();
         clipboardHandler.copyPasswordToClipboard(pwdOutputFieldText);
 
     }
@@ -145,57 +145,27 @@ public class passwordGeneratorController {
         System.out.println("Discarding Password");
         //TODO: Discard information and close the window window.
         Stage stage = (Stage) discardPassword.getScene().getWindow();
-        stage.close();
+        closeStage(stage);
     }
 
     @FXML
     private javafx.scene.control.Button savePassword;
-    @FXML public TextField passwordField;
-    @FXML public AnchorPane add_new_item_pane;
-
-    @FXML public AnchorPane generate_pw_pane;
+    @FXML TextField passwordField;
     public void savePasswordAction(ActionEvent actionEvent) throws IOException {
         //TODO: Add necessary method and data transfer before closing the window.
-
-        Stage stage = (Stage) generate_pw_pane.getScene().getWindow();
-        Stage owner = (Stage) stage.getOwner();
-        Scene scene = owner.getScene();
-        Parent root = scene.getRoot();
-        TextField txtFld = (TextField) root.lookup("#passwordField");
-        txtFld.setText(String.valueOf(pwdOutputField));
-        stage.close();
-
-        /*
-        Parent root = FXMLLoader.load(getClass().getResource("../gui/add_new_item_view.fxml"));
-        Stage stage = new Stage();
-        stage.setTitle("Add new Item");
-        stage.setScene(new Scene(root, 600, 400));
-        stage.show();
-
-        String pwdOutputFieldText = getpwdOutputFieldText();
-        //root.getCh passwordField.setText(pwdOutputFieldText);
-
-        /*
-        addNewItemController addNewItemCont = root.getController();
-        System.out.println(addNewItemCont);
-        Stage stag = (Stage) addNewItemCont.passwordField.getScene().getWindow();
-
-        stag.close();
-
-        String pwdOutputFieldText = getpwdOutputFieldText();
-        System.out.println(pwdOutputFieldText);
-        addNewItemCont.fillPasswordField(pwdOutputFieldText);
-        addNewItemCont.write(pwdOutputFieldText);
-        addNewItemCont.passwordField.setText(pwdOutputFieldText);
-
-
+        String pwdOutputFieldText = pwdOutputField.getText();
+        passwordField.setText(pwdOutputFieldText);
         Stage stage = (Stage) savePassword.getScene().getWindow();
-        stage.close();
-        */
+        closeStage(stage);
     }
 
-    public String getpwdOutputFieldText(){
-        return pwdOutputField.getText();
+    public void getpwdOutputTextField(TextField pwTextField){
+        this.passwordField = pwTextField;
+    }
+
+    public void closeStage(Stage stage){
+        stage.close();
     }
 
 }
+
