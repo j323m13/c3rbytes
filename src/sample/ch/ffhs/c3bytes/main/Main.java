@@ -1,16 +1,17 @@
 package sample.ch.ffhs.c3bytes.main;
-import sample.ch.ffhs.c3bytes.dao.DatabaseEntry;
-import sample.ch.ffhs.c3bytes.dao.DatabaseEntryDao;
-import sample.ch.ffhs.c3bytes.dao.connectionFactory;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import sample.ch.ffhs.c3bytes.dao.DBConnection;
+import sample.ch.ffhs.c3bytes.dao.DatabaseEntry;
+import sample.ch.ffhs.c3bytes.dao.DatabaseEntryDao;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class Main extends Application {
 
@@ -27,25 +28,32 @@ public class Main extends Application {
 
     public void start(Stage secondaryStage) throws Exception {
 
+        Parent addItem = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../gui/add_new_item_view.fxml")));
+        secondaryStage.setTitle("Add new Item");
+        secondaryStage.setScene(new Scene(addItem, 400, 400));
+        secondaryStage.show();
 
         /*
+
         Parent root = FXMLLoader.load(getClass().getResource("../gui/password_generator_view.fxml"));
         secondaryStage.setTitle("C3rBytes");
         secondaryStage.setScene(new Scene(root, 900, 600));
         secondaryStage.show();
-         */
+
         //start mainView2
         Parent mainView = FXMLLoader.load(getClass().getResource("../gui/main_view_2.fxml"));
         //secondaryStage stage = new Stage();
         secondaryStage.setTitle("C3rBytes");
         secondaryStage.setScene(new Scene(mainView, 1200, 600));
-        secondaryStage.show();}
+        secondaryStage.show();
+         */
+    }
+
 
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
 
-        /*
-        Connection connection = connectionFactory.getConnection();
+        Connection connection = DBConnection.getConnection();
         DatabaseEntryDao newDao = new DatabaseEntryDao();
         DatabaseEntry entry1 = new DatabaseEntry(
                 "Jérémie",
@@ -53,7 +61,7 @@ public class Main extends Application {
                 "https://facebook.com",
                 "122499oiukjdfk"
         );
-        newDao.insertDatabaseEntry();
+        newDao.insertDatabaseEntry(entry1);
 
         DatabaseEntry entry2 = new DatabaseEntry(
                 "Olaf",
@@ -62,19 +70,17 @@ public class Main extends Application {
                 "!!!!!!!ukjdfk"
 
         );
-        newDao.insertDatabaseEntry();
+        newDao.insertDatabaseEntry(entry2);
 
         DatabaseEntry entry3 = new DatabaseEntry(
-                "Mersid",
+                "Jonas",
                 "Twitter.com",
                 "https://Twitter.com",
                 "@@@@@oiukjdfk"
 
         );
-        newDao.insertDatabaseEntry();
-        newDao.getAll();
+        newDao.insertDatabaseEntry(entry3);
         connection.close();
-         */
 
         launch(args);
     }

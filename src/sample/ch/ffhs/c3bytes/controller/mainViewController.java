@@ -1,6 +1,8 @@
 package sample.ch.ffhs.c3bytes.controller;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -9,21 +11,21 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3bytes.dao.DatabaseEntry;
 import sample.ch.ffhs.c3bytes.dao.DatabaseEntryDao;
-import sample.ch.ffhs.c3bytes.dao.connectionFactory;
 
 import javax.swing.text.TableView;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.ResourceBundle;
+
+import static java.lang.String.valueOf;
 
 
 public class mainViewController implements Initializable {
@@ -63,6 +65,16 @@ public class mainViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        ObservableList<DatabaseEntry> databaseEntries = FXCollections.observableArrayList();
+        /*
+        final ObservableList<DatabaseEntry> data = FXCollections.observableArrayList(
+                new DatabaseEntry(1, "Jérémie", "Facebook", "www.facebook.com", "12345!!"),
+                new DatabaseEntry(2,"Jérémie", "Facebook", "www.facebook.com", "12345!!")
+
+
+        );
+*/
+
         idColumn.setCellValueFactory(
                 new PropertyValueFactory<>("id")
         );
@@ -83,14 +95,9 @@ public class mainViewController implements Initializable {
                 new PropertyValueFactory<>("url")
         );
 
-        /*
-        final ObservableList<DatabaseEntry> data = FXCollections.observableArrayList(
-                new DatabaseEntry("1", "Jérémie", "Facebook", "www.facebook.com", "12345!!"),
-                new DatabaseEntry("2","Jérémie", "Facebook", "www.facebook.com", "12345!!")
 
 
-        );
-         */
+
 
         /*
         try {
@@ -101,9 +108,9 @@ public class mainViewController implements Initializable {
         } catch (SQLException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
         }
-         */
+    */
         try {
-            profileTable.setItems(DatabaseEntryDao.getAll());
+            profileTable.setItems(DatabaseEntryDao.getAll(databaseEntries));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -111,13 +118,7 @@ public class mainViewController implements Initializable {
         }
 
 
-        /*
-        //idColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getIdAsString()));
-        categoryColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(DatabaseEntry.getDescription().toString()));
-        userNameColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(DatabaseEntry.getUsername().toString()));
-        passwordColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(DatabaseEntry.getPassword().toString()));
-        urlColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(DatabaseEntry.getUrl().toString()));
-         */
+
 
 
     }
@@ -156,12 +157,12 @@ public class mainViewController implements Initializable {
 
 
     public void addNewItemAction(ActionEvent event){
-        Parent root;
+        Parent addItem;
         try {
-            root = FXMLLoader.load(getClass().getClassLoader().getResource("../gui/add_new_item_view.fxml"));
+            addItem = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("../gui/add_new_item_view.fxml")));
             Stage stage = new Stage();
             stage.setTitle("Add new Item");
-            stage.setScene(new Scene(root, 400, 400));
+            stage.setScene(new Scene(addItem, 400, 400));
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
