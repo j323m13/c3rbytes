@@ -2,11 +2,14 @@ package sample.ch.ffhs.c3bytes.controller;
 
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -15,6 +18,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -26,14 +30,15 @@ import sample.ch.ffhs.c3bytes.utils.ClipboardHandler;
 
 import javax.swing.*;
 import javax.swing.text.TableView;
-import javax.xml.transform.Result;
 import java.io.IOException;
-import java.sql.ResultSet;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.*;
 
+import static java.lang.String.valueOf;
 
-public class mainViewController {
+
+public class mainViewController implements Initializable {
 
     @FXML
     private TextField entryIdText;
@@ -51,24 +56,79 @@ public class mainViewController {
     private javafx.scene.control.TableView<DatabaseEntry> profileTable;
 
     @FXML
-    private TableColumn<DatabaseEntry, Integer> idColumn;
+    private TableColumn<DatabaseEntry, String> idColumn;
     @FXML
     private TableColumn<DatabaseEntry, String> categoryColumn;
     @FXML
-    private TableColumn<DatabaseEntry, String> usernameColumn;
+    private TableColumn<DatabaseEntry, String> userNameColumn;
     @FXML
     private TableColumn<DatabaseEntry, String> passwordColumn;
     @FXML
     private TableColumn<DatabaseEntry, String> urlColumn;
 
     @FXML
-    private void initialize() throws SQLException, ClassNotFoundException {
 
-        //idColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getIdAsString()));
-        //categoryColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(DatabaseEntry.getDescription()));
-        //usernameColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(DatabaseEntry.getUsername()));
-        //passwordColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(DatabaseEntry.getPassword()));
-        //urlColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(DatabaseEntry.getUrl()));
+
+
+
+
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        ObservableList<DatabaseEntry> databaseEntries = FXCollections.observableArrayList();
+        /*
+        final ObservableList<DatabaseEntry> data = FXCollections.observableArrayList(
+                new DatabaseEntry(1, "Jérémie", "Facebook", "www.facebook.com", "12345!!"),
+                new DatabaseEntry(2,"Jérémie", "Facebook", "www.facebook.com", "12345!!")
+
+
+        );
+*/
+
+        idColumn.setCellValueFactory(
+                new PropertyValueFactory<>("id")
+        );
+
+        categoryColumn.setCellValueFactory(
+                new PropertyValueFactory<>("description")
+        );
+
+        userNameColumn.setCellValueFactory(
+                new PropertyValueFactory<>("username")
+        );
+
+        passwordColumn.setCellValueFactory(
+                new PropertyValueFactory<>("password")
+        );
+
+        urlColumn.setCellValueFactory(
+                new PropertyValueFactory<>("url")
+        );
+
+
+
+
+
+        /*
+        try {
+            Connection connection = connectionFactory.getConnection();
+            DatabaseEntryDao newDao = new DatabaseEntryDao();
+            DatabaseEntryDao.getAll();
+
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+        }
+    */
+        try {
+            profileTable.setItems(DatabaseEntryDao.getAll(databaseEntries));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+
 
 
     }
@@ -105,35 +165,16 @@ public class mainViewController {
 
     @FXML private javafx.scene.control.Button addButton;
     public void addNewItemAction(ActionEvent event){
-
-        Parent root;
+        Parent addItem;
         try {
-            root = FXMLLoader.load(getClass().getResource("../gui/add_new_item_view.fxml"));
+            addItem = FXMLLoader.load(getClass().getResource("../gui/add_new_item_view.fxml"));
             Stage stage = new Stage();
             stage.setTitle("Add new Item");
-            stage.setScene(new Scene(root, 600, 400));
+            stage.setScene(new Scene(addItem, 600, 400));
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        /*
-        Parent root;
-        try {
-
-            ///FXMLLoader fxmlLoader = new FXMLLoader();
-            root = FXMLLoader.load(getClass().getResource("../gui/add_new_item_view.fxml"));
-            Stage stage = new Stage();
-            stage.setTitle("My New Stage Title");
-            stage.setScene(new Scene(root, 450, 450));
-            stage.show();
-            // Hide this current window (if this is what you want)
-            ((Node)(event.getSource())).getScene().getWindow().hide();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }*/
-
     }
 
 
@@ -191,4 +232,6 @@ public class mainViewController {
     }
 
     private TableView tableView;
+
+
 }
