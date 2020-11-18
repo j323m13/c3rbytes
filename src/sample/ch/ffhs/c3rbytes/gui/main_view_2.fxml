@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -14,21 +20,26 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.ch.ffhs.c3rbytes.controller.mainViewController">
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.ch.ffhs.c3rbytes.controller.mainViewController">
     <children>
         <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="45.0" minWidth="900.0" prefHeight="45.0" prefWidth="900.0" VBox.vgrow="ALWAYS">
             <children>
                 <Button fx:id="logoutButton" layoutX="759.0" mnemonicParsing="false" onAction="#logoutAction" prefHeight="36.0" prefWidth="141.0" text="Logout" />
-                <Button fx:id="changeMasterButton" layoutX="605.0" mnemonicParsing="false" onAction="#changeMasterAction" prefHeight="36.0" prefWidth="141.0" text="Change Master Password" wrapText="true">
+                <Button fx:id="changeMasterButton" layoutX="441.0" mnemonicParsing="false" onAction="#changeMasterAction" prefHeight="36.0" prefWidth="141.0" text="Change Master Password" wrapText="true">
                     <font>
                         <Font size="11.0" />
                     </font></Button>
                 <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchAction" prefHeight="36.0" prefWidth="177.0" text="Search" wrapText="true" />
-                <Button fx:id="deleteAccountButton" layoutX="402.0" mnemonicParsing="false" onAction="#deleteAccountAction" prefHeight="36.0" prefWidth="141.0" text="Delete Account" wrapText="true">
+                <Button fx:id="deleteAccountButton" layoutX="279.0" mnemonicParsing="false" onAction="#deleteAccountAction" prefHeight="36.0" prefWidth="141.0" text="Delete Account" wrapText="true">
                     <font>
                         <Font size="11.0" />
                     </font>
                 </Button>
+            <Button fx:id="changeMasterPPButton1" layoutX="595.0" layoutY="-1.0" mnemonicParsing="false" onAction="#changeMasterPPAction" prefHeight="36.0" prefWidth="154.0" text="Change Master Passphrase" wrapText="true">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Button>
             </children>
         </Pane>
         <SplitPane dividerPositions="0.20044543429844097" focusTraversable="true" minHeight="513.0" minWidth="900.0" prefHeight="513.0" prefWidth="900.0" VBox.vgrow="ALWAYS">
@@ -46,23 +57,25 @@
                     </children>
                 </AnchorPane>
                 <ScrollPane prefHeight="499.0" prefWidth="715.0">
-
-
-
-                    <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="510.0" prefWidth="715.0">
-                        <children>
-                            <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style="&#10;" text="View" textAlignment="CENTER" textFill="$x2" wrapText="false" />
-                            <TableView fx:id="profileTable" editable="true" minHeight="-Infinity" minWidth="-Infinity" prefHeight="511.0" prefWidth="715.0">
-                                <columns>
-                                    <TableColumn fx:id="idColumn" prefWidth="37.0" text="id" />
-                                    <TableColumn fx:id="categoryColumn" prefWidth="116.0" text="Category" />
-                                    <TableColumn fx:id="userNameColumn" prefWidth="187.0" text="User Name" />
-                                    <TableColumn fx:id="passwordColumn" prefWidth="187.0" text="Password" />
-                                    <TableColumn fx:id="urlColumn" prefWidth="187.0" text="URL" />
-                                </columns>
-                            </TableView>
-                        </children>
-                    </AnchorPane>
+                   <content>
+   
+   
+   
+                       <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="510.0" prefWidth="715.0">
+                           <children>
+                               <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style="&#10;" text="View" textAlignment="CENTER" textFill="$x2" wrapText="false" />
+                               <TableView fx:id="profileTable" editable="true" minHeight="-Infinity" minWidth="-Infinity" prefHeight="511.0" prefWidth="715.0">
+                                   <columns>
+                                       <TableColumn fx:id="idColumn" prefWidth="37.0" text="id" />
+                                       <TableColumn fx:id="categoryColumn" prefWidth="116.0" text="Category" />
+                                       <TableColumn fx:id="userNameColumn" prefWidth="187.0" text="User Name" />
+                                       <TableColumn fx:id="passwordColumn" prefWidth="187.0" text="Password" />
+                                       <TableColumn fx:id="urlColumn" prefWidth="187.0" text="URL" />
+                                   </columns>
+                               </TableView>
+                           </children>
+                       </AnchorPane>
+                   </content>
                 </ScrollPane>
 
         </items>

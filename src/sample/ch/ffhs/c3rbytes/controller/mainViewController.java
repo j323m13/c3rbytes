@@ -13,6 +13,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import sample.ch.ffhs.c3rbytes.crypto.FileEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntry;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.utils.ClipboardHandler;
@@ -20,6 +21,8 @@ import sample.ch.ffhs.c3rbytes.utils.ClipboardHandler;
 import javax.swing.text.TableView;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -57,7 +60,8 @@ public class mainViewController implements Initializable {
     @FXML
 
 
-
+    public static final String FILENAME = "c3r.c3r";
+    private final static Charset UTF_8 = StandardCharsets.UTF_8;
 
 
 
@@ -222,4 +226,29 @@ public class mainViewController implements Initializable {
     private TableView tableView;
 
 
+    public void changeMasterPPAction(ActionEvent actionEvent){
+
+        // here we have to open login_view_masterpassphrase.fxml and aks for the passphrase
+        String oldPassPhrase = "das ist ein test";
+
+        try {
+            FileEncrypterDecrypter fileEncrypterDecrypter = new FileEncrypterDecrypter();
+            byte[] decryptedText = fileEncrypterDecrypter.decryptFile(FILENAME, oldPassPhrase);
+            String originalContent = new String(decryptedText, UTF_8);
+
+
+            // then here we have to call the set_master_mpp_view.fxml and ask for the new passphrase
+
+            String newPassPhrase = "leer";
+            fileEncrypterDecrypter.encryptFile(originalContent, FILENAME, newPassPhrase);
+
+
+        } catch(javax.crypto.AEADBadTagException e){
+            System.out.println("PassPhrase change denied");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
 }
