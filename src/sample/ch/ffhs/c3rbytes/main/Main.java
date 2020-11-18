@@ -28,39 +28,50 @@ public class Main extends Application {
     }*/
 
 
-    public void start(Stage secondaryStage) throws Exception {
+    public void start(Stage stage) throws Exception {
         /*
         Parent addItem = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../gui/add_new_item_view.fxml")));
-        secondaryStage.setTitle("Add new Item");
-        secondaryStage.setScene(new Scene(addItem, 400, 400));
-        secondaryStage.show();
+        stage.setTitle("Add new Item");
+        stage.setScene(new Scene(addItem, 400, 400));
+        stage.show();
 
 
 
         Parent root = FXMLLoader.load(getClass().getResource("../gui/password_generator_view.fxml"));
-        secondaryStage.setTitle("C3rBytes");
-        secondaryStage.setScene(new Scene(root, 900, 600));
-        secondaryStage.show();
+        stage.setTitle("C3rBytes");
+        stage.setScene(new Scene(root, 900, 600));
+        stage.show();
         */
 
         /*
         //start mainView2
         Parent mainView = FXMLLoader.load(getClass().getResource("../gui/main_view_2.fxml"));
-        //secondaryStage stage = new Stage();
-        secondaryStage.setTitle("C3rBytes");
-        secondaryStage.setScene(new Scene(mainView, 1200, 600));
-        secondaryStage.show();
+        //stage stage = new Stage();
+        stage.setTitle("C3rBytes");
+        stage.setScene(new Scene(mainView, 1200, 600));
+        stage.show();
         */
 
-        //start login_view
-        Parent mainView = FXMLLoader.load(getClass().getResource("../gui/login_view.fxml"));
-        //secondaryStage stage = new Stage();
-        secondaryStage.setTitle("C3rBytes Login Masterpassword");
-        secondaryStage.setScene(new Scene(mainView, 552, 371));
-        secondaryStage.show();
+        // First Init
+        FileHandler fileHandler = new FileHandler();
+        if (fileHandler.readFromFile("c3r.c3r").equals("File does not exist")){
+            System.out.println("Enter Masterpassword Dialog");
 
+            Parent setMasterpasswordView = FXMLLoader.load(getClass().getResource("../gui/set_master_pw_view.fxml"));
+            //stage stage = new Stage();
+            stage.setTitle("Welcome to C3rBytes");
+            stage.setScene(new Scene(setMasterpasswordView, 552, 371));
 
+        }
+        else{ // or just logging in
+            //start login_view
+            Parent loginViewMP = FXMLLoader.load(Main.class.getResource("../gui/login_view.fxml"));
+            //stage stage = new Stage();
+            stage.setTitle("C3rBytes Login Masterpassword");
+            stage.setScene(new Scene(loginViewMP, 552, 371));
+        }
 
+        stage.show();
     }
 
     /*
@@ -73,18 +84,20 @@ public class Main extends Application {
 
 
     }
-*/
+
+
+    public static void entryView(Stage stage) throws IOException {
+        //start login_view
+        Parent loginViewMP = FXMLLoader.load(Main.class.getResource("../gui/login_view.fxml"));
+        //secondaryStage stage = new Stage();
+        stage.setTitle("C3rBytes Login Masterpassword");
+        stage.setScene(new Scene(loginViewMP, 552, 371));
+        stage.show();
+    }*/
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
 
-        FileHandler fileHandler = new FileHandler();
-        if (fileHandler.readFromFile("c3r.c3r").equals("File does not exist")){
-            System.out.println("Enter Masterpassword Dialog");
-
-        }
-        else{
-            launch(args);
-        }
+        launch(args);
 
 
         Connection connection = DBConnection.getConnection();

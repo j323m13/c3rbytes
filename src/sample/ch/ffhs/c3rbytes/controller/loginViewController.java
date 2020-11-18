@@ -12,7 +12,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class loginViewController {
-    @FXML private javafx.scene.control.TextField masterPasswordField;
+    //@FXML private javafx.scene.control.TextField masterPasswordField;
+    @FXML private javafx.scene.control.PasswordField loginViewPasswordField;
     @FXML private javafx.scene.control.Button loginButton;
     @FXML private javafx.scene.control.Button logoutButton;
 
@@ -24,32 +25,42 @@ public class loginViewController {
         boolean dbLogincorrect = true;
 
         // password to forward to the db
-        String mpTextField = masterPasswordField.getText();
-        Connection connection = DBConnection.getConnection();
+        String mpTextField = loginViewPasswordField.getText();
+        System.out.println("masterpassword: " + mpTextField);
 
 
-        if (dbLogincorrect){
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/login_view_masterpassphrase.fxml"));
-                Parent root = loader.load();
-                //passwordGeneratorController pwGenCon = loader.getController();
-                //pwGenCon.getpwdOutputTextField(passwordField);
-                Stage stage = new Stage();
-                stage.setTitle("C3rBytes Login Masterpassphrase");
-                stage.setScene(new Scene(root, 552, 371));
-                stage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        String bootPassword = "12345secureAF";
+        DBConnection.bootPassword = bootPassword;
 
-            Stage stage =  (Stage) loginButton.getScene().getWindow();
-            stage.close();
+        // To test if an error is catched
+        //public static String passwordDB = "1234";
+        DBConnection.passwordDB = mpTextField;
 
+        System.out.println("DBConnPW: " + DBConnection.passwordDB);
 
+        try {
+
+            DBConnection.getConnection();
+
+            System.out.println("Access to DB granted");
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/login_view_masterpassphrase.fxml"));
+            Parent root = loader.load();
+            //passwordGeneratorController pwGenCon = loader.getController();
+            //pwGenCon.getpwdOutputTextField(passwordField);
+            Stage stage = new Stage();
+            stage.setTitle("C3rBytes Login Masterpassphrase");
+            stage.setScene(new Scene(root, 552, 371));
+            stage.show();
+
+        }catch ( SQLException e){
+            System.out.println("Access to DB denied");
+        }catch (IOException e) {
+            e.printStackTrace();
         }
-        else{
-            System.out.println("Login failed");
-        }
+
+        Stage stage =  (Stage) loginButton.getScene().getWindow();
+        stage.close();
 
     }
 

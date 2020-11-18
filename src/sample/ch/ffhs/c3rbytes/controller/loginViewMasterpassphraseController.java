@@ -5,52 +5,74 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import sample.ch.ffhs.c3rbytes.crypto.FileEncrypterDecrypter;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class loginViewMasterpassphraseController {
-    @FXML
-    private javafx.scene.control.TextField masterPassPhraseField;
+    @FXML private javafx.scene.control.PasswordField masterPassPhraseField;
     @FXML private javafx.scene.control.Button loginButtonMPP;
     @FXML private javafx.scene.control.Button logoutButtonMPP;
+    private final static Charset UTF_8 = StandardCharsets.UTF_8;
+    private final String filename = "c3r.c3r";
+    public static String passwordDecrypterPassword;
 
-    public void loginActionMPP(){
+    public void loginActionMPP() throws Exception {
 
-        // check pw in c3r.c3r file
+        // check pw in c3r.c3r file and assign to passwordDecrypterpassword
 
+        String masterPassPhrase = masterPassPhraseField.getText();
+        //masterPassPhrase = "password123";
 
-        // Assume PW is correct
-        boolean filePwcorrect = true;
+        try {
+            FileEncrypterDecrypter fileEncrypterDecrypter = new FileEncrypterDecrypter();
+            byte[] decryptedText = fileEncrypterDecrypter.decryptFile(filename, masterPassPhrase);
 
-        if (filePwcorrect){
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/main_view_2.fxml"));
-                Parent root = loader.load();
-                //passwordGeneratorController pwGenCon = loader.getController();
-                //pwGenCon.getpwdOutputTextField(passwordField);
-                Stage stage = new Stage();
-                stage.setTitle("C3rBytes Main");
-                stage.setScene(new Scene(root, 1200, 600));
-                stage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            passwordDecrypterPassword = new String(decryptedText, UTF_8);
 
-            Stage stage =  (Stage) loginButtonMPP.getScene().getWindow();
-            stage.close();
+            // debugging
+            System.out.println("passwordDecrypterPassword generated from pwgeneretaor" + passwordDecrypterPassword);
+            System.out.println("Access granted");
 
+            // Start Main view
+            /*
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/main_view_2.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("C3rBytes Main");
+            stage.setScene(new Scene(root, 1200, 600));
+            stage.show();
+            */
 
-        }
-        else{
-            System.out.println("Login failed");
-        }
+            startMainView();
 
 
+
+        }catch(javax.crypto.AEADBadTagException e){
+            // Here should come a notification to the user --> login failed
+            System.out.println("Access denied");
+        }catch (IOException e) {
+        e.printStackTrace();
+    }
+
+        Stage stage =  (Stage) loginButtonMPP.getScene().getWindow();
+        stage.close();
     }
 
     public void logoutActionMPP(){
         System.out.println("System exited");
         System.exit(0);
+    }
+
+    public static void startMainView() throws IOException {
+        FXMLLoader loader = new FXMLLoader(loginViewMasterpassphraseController.class.getResource("../gui/main_view_2.fxml"));
+        Parent root = loader.load();
+        Stage stage = new Stage();
+        stage.setTitle("C3rBytes Main");
+        stage.setScene(new Scene(root, 1200, 600));
+        stage.show();
     }
 
 }

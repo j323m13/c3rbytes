@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -18,6 +19,7 @@ import java.sql.SQLException;
 
 
 public class addNewItemController {
+
 
     @FXML private javafx.scene.control.Button generatePasswordButton;
     public void generatePassword(ActionEvent event){
@@ -92,4 +94,9 @@ public class addNewItemController {
         DatabaseEntryDao.insertDatabaseEntry(item);
     }
 
+    @FXML javafx.scene.control.Button discardButton;
+    public void discardAction(ActionEvent actionEvent) {
+        Stage stage = (Stage) discardButton.getScene().getWindow();
+        stage.close();
+    }
 }

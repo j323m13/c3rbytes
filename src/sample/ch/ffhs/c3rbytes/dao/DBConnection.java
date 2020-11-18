@@ -4,8 +4,11 @@ import java.sql.*;
 
 public class DBConnection {
     private static final String userDB = "cerbytes";
-    private static final String passwordDB = "1234";
-    private static final String bootPassword = "12345secureAF";
+    public static String passwordDB;
+    public static String bootPassword = "12345secureAF";
+    //origianl
+    // public static final String bootPassword = "12345secureAF";
+    // public static String passwordDB = "1234";
     private static final int encryptionKeyLength = 192;
     private static final String encryptionAlgorithm = "AES/CBC/NoPadding";
     private static final String databaseName = "dbEncryptedAES";
@@ -25,7 +28,7 @@ public class DBConnection {
      *
      */
     private static String createUrl(){
-        return JDBC_URL = "jdbc:derby:dbFactory;create=true;user=cerbytes;password=1234";
+        return JDBC_URL = "jdbc:derby:dbFactory;create=true;user=cerbytes;password="+passwordDB;
 
     }
 
