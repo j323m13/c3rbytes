@@ -49,7 +49,7 @@ public class FileEncrypterDecrypterTest {
         // encrypt file
         //fileEncrypterDecrypter.encryptFile(originalContent, file, password);
 
-        password = "g";
+        password = "leer";
 
         // decrypt file
         String pText = "Access denied";

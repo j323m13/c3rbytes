@@ -1,5 +1,6 @@
 package sample.ch.ffhs.c3rbytes.dao;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.apache.commons.dbutils.QueryRunner;
 
@@ -26,7 +27,7 @@ public class DatabaseEntryDao implements Dao{
 
 
         while(rs.next()) {
-            int tmpId = rs.getInt(1);
+            String tmpId = rs.getString(1);
             String tmpUsername = rs.getString(2);
             String tmpDescription = rs.getString(3);
             String tmpUrl = rs.getString(4);
@@ -42,6 +43,7 @@ public class DatabaseEntryDao implements Dao{
                     tmpCreationDate,
                     tmpLastUpdate
             );
+
             //Print results in terminal for debugging
             System.out.println(rs.getInt(1) + "," +
                     rs.getString(2) + ", " + rs.getString(3) + ", " +
@@ -50,11 +52,13 @@ public class DatabaseEntryDao implements Dao{
                     rs.getString(7)
             );
             databaseEntries.add(catchResults);
+
         }
         //contain all the entries from the database CERBYTES (user only)
         //TODO implement join statement
         connection.close();
-         return databaseEntries;
+        return databaseEntries;
+
 
     }
 
@@ -63,8 +67,28 @@ public class DatabaseEntryDao implements Dao{
         return null;
     }
 
+    @Override
+    public Dao save() {
+        return null;
+    }
 
-    /*
+    @Override
+    public Dao update() {
+        return null;
+    }
+
+    @Override
+    public Dao delete() {
+        return null;
+    }
+/*
+    @Override
+    public Dao getEntryById(int id) throws SQLException, ClassNotFoundException {
+        return null;
+    }
+
+
+
        @Override
        public Dao getEntryById(int id) throws SQLException, ClassNotFoundException {
            Connection connection = DBConnection.getConnection();
@@ -76,11 +100,11 @@ public class DatabaseEntryDao implements Dao{
            }
            return null;
        }
-     */
-    /* methode to extract the values of a row (or multiples rows) from a query and save the values in a DataEntry Object.
+
+     methode to extract the values of a row (or multiples rows) from a query and save the values in a DataEntry Object.
      *@param rs take a Resultset object as paramenter and save the values inside a DatabaseEntry object
      * @return entry a DatabaseEntry Object which is a row in the Dababase
-     */
+
     private static DatabaseEntry extractEntryFromResultSet(ResultSet rs) throws SQLException{
         DatabaseEntry entry = new DatabaseEntry();
         //DatabaseEntry.setId(rs.getInt("id"));
@@ -109,21 +133,21 @@ public class DatabaseEntryDao implements Dao{
         return null;
     }
 
-    /*
+
      * Insert a DatabaseEntry Object into the Database
      *
-     */
+    */
     public static void insertDatabaseEntry(DatabaseEntry databaseEntry) throws SQLException, ClassNotFoundException {
         Connection connection = DBConnection.getConnection();
         PreparedStatement ps = connection.prepareStatement("INSERT INTO CERBYTES.\"database_entries\" " +
                 "(\"username\", \"description\", \"url_content\", \"password_text\", \"date_creation\", \"date_update\")" +
                 " VALUES (?,?,?,?,?,?)");
-        ps.setString(1, DatabaseEntry.getUsername());
-        ps.setString(2, DatabaseEntry.getDescription());
-        ps.setString(3, DatabaseEntry.getUrl());
-        ps.setString(4, DatabaseEntry.getPassword());
-        ps.setString(5, DatabaseEntry.getCreationDate());
-        ps.setString(6, DatabaseEntry.getLastUpdate());
+        ps.setString(1, databaseEntry.getUsername());
+        ps.setString(2, databaseEntry.getDescription());
+        ps.setString(3, databaseEntry.getUrl());
+        ps.setString(4, databaseEntry.getPassword());
+        ps.setString(5, databaseEntry.getCreationDate());
+        ps.setString(6, databaseEntry.getLastUpdate());
 
         int i = ps.executeUpdate();
     }

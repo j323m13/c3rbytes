@@ -124,6 +124,8 @@ public class mainViewController implements Initializable {
 
 
     }
+
+
     /*
     @FXML
     private void populateTableView(DatabaseEntryDao entry) throws ClassNotFoundException, SQLException {
@@ -194,9 +196,11 @@ public class mainViewController implements Initializable {
         scene.setCursor(Cursor.WAIT);
     }
 
+
     public void copyPasswordAction(ActionEvent event){
         //TODO: Copy password -> get password text field content
         System.out.println("Copy Password Action");
+
         ClipboardHandler clipboardHandler = new ClipboardHandler();
         clipboardHandler.copyPasswordToClipboard("Test");
 

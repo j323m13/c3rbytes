@@ -99,7 +99,7 @@ public class Main extends Application {
 
         launch(args);
 
-
+/*
         Connection connection = DBConnection.getConnection();
         DatabaseEntryDao newDao = new DatabaseEntryDao();
         DatabaseEntry entry1 = new DatabaseEntry(
@@ -130,7 +130,10 @@ public class Main extends Application {
         connection.close();
 
         //launch(args);
+     */
     }
+
+
 
 
 }

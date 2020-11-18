@@ -81,7 +81,9 @@ public class addNewItemController {
         System.out.println(password);
         System.out.println(description);
         System.out.println(url);
-        DatabaseEntry item = new DatabaseEntry(username, description, url, password);
+
+
+        DatabaseEntry item = new DatabaseEntry(null, username, description, url, password, null, null);
         try {
             insertDatabaseEntry(item);
         } catch (Exception e) {
