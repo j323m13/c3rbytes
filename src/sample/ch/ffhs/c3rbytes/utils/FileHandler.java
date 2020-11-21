@@ -21,6 +21,9 @@ public class FileHandler {
 
         // write to file
         Files.write(path, content);
+
+        setReadWriteAttributes(file, false);
+
     }
 
     public String readFromFile(String filename) throws IOException {
@@ -39,4 +42,12 @@ public class FileHandler {
             return content;
         }
     }
+
+    public void setReadWriteAttributes(String file, boolean bool){
+        File file1 = new File(file);
+
+        file1.setWritable(bool);
+        //file1.setReadable(bool);
+    }
+
 }

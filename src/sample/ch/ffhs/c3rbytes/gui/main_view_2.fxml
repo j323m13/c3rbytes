@@ -90,6 +90,7 @@
                     <Button fx:id="deleteButton" layoutX="634.0" layoutY="5.0" mnemonicParsing="false" onAction="#deleteProfileAction" prefHeight="25.0" prefWidth="109.0" text="Delete Profile" />
                     <Label layoutX="14.0" layoutY="9.0" text="Found Items: " />
                     <Label fx:id="foundLabel" layoutX="86.0" layoutY="9.0" prefHeight="17.0" prefWidth="40.0" text="#" />
+                  <Button fx:id="openUrlButton" layoutX="764.0" layoutY="4.0" mnemonicParsing="false" onAction="#onOpenUrl" prefHeight="25.0" prefWidth="109.0" text="Open url" />
                 </children>
             </Pane>
         </children>

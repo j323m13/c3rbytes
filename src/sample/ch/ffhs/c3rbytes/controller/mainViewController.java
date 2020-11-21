@@ -14,9 +14,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.FileEncrypterDecrypter;
+import sample.ch.ffhs.c3rbytes.crypto.PasswordEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntry;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.utils.ClipboardHandler;
+import sample.ch.ffhs.c3rbytes.utils.UrlOpener;
 
 import javax.swing.text.TableView;
 import java.io.IOException;
@@ -197,12 +199,24 @@ public class mainViewController implements Initializable {
     }
 
 
-    public void copyPasswordAction(ActionEvent event){
+    public void copyPasswordAction(ActionEvent event) throws Exception {
         //TODO: Copy password -> get password text field content
         System.out.println("Copy Password Action");
 
+        String passwordDecrypterPassword = loginViewMasterpassphraseController.passwordDecrypterPassword;
+
+        // Test: password is: 456, encrypted is: "m0ACLvmX92f52lJL+lIASUzTZq6yBN+owjB+czjh5pjVvZ1uy54Ou9zbcKGPTBU="
+        //TODO: But we have to fetch the password of the selected row
+        String encryptedAccountPassword = "m0ACLvmX92f52lJL+lIASUzTZq6yBN+owjB+czjh5pjVvZ1uy54Ou9zbcKGPTBU=";
+
+        PasswordEncrypterDecrypter passwordEncrypterDecrypter = new PasswordEncrypterDecrypter();
+
+        String decryptedAccountPassword = passwordEncrypterDecrypter.decrypt(encryptedAccountPassword, passwordDecrypterPassword);
+
+        System.out.println("decryptedAccountPassword: " + decryptedAccountPassword);
+
         ClipboardHandler clipboardHandler = new ClipboardHandler();
-        clipboardHandler.copyPasswordToClipboard("Test");
+        clipboardHandler.copyPasswordToClipboard(decryptedAccountPassword);
 
     }
     @FXML private javafx.scene.control.Button deleteButton;
@@ -254,5 +268,13 @@ public class mainViewController implements Initializable {
         }
 
 
+    }
+
+    public void onOpenUrl(ActionEvent actionEvent) {
+        // first get url form selected row
+
+        // to test with blick.ch
+        UrlOpener urlOpener = new UrlOpener();
+        urlOpener.openURL("www.blick.ch");
     }
 }

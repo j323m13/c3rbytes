@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import sample.ch.ffhs.c3rbytes.crypto.StringHasher;
 import sample.ch.ffhs.c3rbytes.dao.DBConnection;
 
 import java.io.IOException;
@@ -18,9 +19,14 @@ public class setMasterPWViewController {
 
     // password to encrypt DB
     public void saveMPAction(ActionEvent actionEvent) {
-        String dBpassword = setMPViewPasswordField.getText();
-        //DBConnection.bootPassword = dBpassword;
-        System.out.println(dBpassword);
+        String plainDBpassword = setMPViewPasswordField.getText();
+        System.out.println(plainDBpassword);
+
+        // Hashing masterpassword
+        StringHasher sha = new StringHasher();
+        String HASHALGORITHM = "SHA3-512";
+        String hashedDBPassword = sha.encryptSHA3(HASHALGORITHM, plainDBpassword);
+        //DBConnection.bootPassword = hashedDBPassword;
 
         try {
 

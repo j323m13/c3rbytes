@@ -12,15 +12,20 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 import javafx.scene.control.TextInputControl;
+import sample.ch.ffhs.c3rbytes.crypto.FileEncrypterDecrypter;
+import sample.ch.ffhs.c3rbytes.crypto.PasswordEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntry;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 
 
 public class addNewItemController {
+    private final static Charset UTF_8 = StandardCharsets.UTF_8;
 
-
+    @FXML private javafx.scene.control.Button saveButton;
     @FXML private javafx.scene.control.Button generatePasswordButton;
     public void generatePassword(ActionEvent event){
         try {
@@ -71,7 +76,7 @@ public class addNewItemController {
     TextInputControl urlField;
 
 
-    public void getValueFromTextField(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
+    public void getValueFromTextField(ActionEvent actionEvent) throws Exception {
 
         String username = userNameField.getText();
         String password = passwordField.getText();
@@ -82,13 +87,52 @@ public class addNewItemController {
         System.out.println(description);
         System.out.println(url);
 
+        ////TODO: !!!!!!! we have to find the passPhrase to decrypt the Key inside the c3r.c3r file
+        //String passPhrase = "password123";
 
-        DatabaseEntry item = new DatabaseEntry(null, username, description, url, password, null, null);
+        String passwordDecrypterPassword = loginViewMasterpassphraseController.passwordDecrypterPassword;
+
+        System.out.println("passphrase: "+ passwordDecrypterPassword);
+
+        /*
+        // decrypt File
+        FileEncrypterDecrypter fileEncrypterDecrypter = new FileEncrypterDecrypter();
+        // extract secretKey
+        byte[] byteDecryptedKey = fileEncrypterDecrypter.decryptFile("c3r.c3r", passPhrase);
+
+
+        System.out.println("decryptedKey: " + new String(byteDecryptedKey, UTF_8));
+        String decryptedKey = new String(byteDecryptedKey, UTF_8);
+        */
+
+        // for passwordEncrypterDecrypter the password of the account is the plainText
+        byte[] bytePassword = password.getBytes(UTF_8);
+
+        // Encrypt Account-passwort with secretKey from File
+        PasswordEncrypterDecrypter passwordEncrypterDecrypter = new PasswordEncrypterDecrypter();
+        String encryptedAccountPassword = passwordEncrypterDecrypter.encrypt(bytePassword, passwordDecrypterPassword);
+
+        System.out.println("encryptedAccountPassword: " + encryptedAccountPassword);
+
+
+        // decryption test
+        String decryptedAccountPassword = passwordEncrypterDecrypter.decrypt(encryptedAccountPassword, passwordDecrypterPassword);
+
+        System.out.println("decryptedAccountPassword: " + decryptedAccountPassword);
+
+
+        DatabaseEntry item = new DatabaseEntry(null, username, description, url, encryptedAccountPassword, null, null);
         try {
             insertDatabaseEntry(item);
         } catch (Exception e) {
             System.out.print(e);
         }
+
+        Stage stage = (Stage) saveButton.getScene().getWindow();
+        stage.close();
+
+        // !!!!we have to reload the table
+
     }
 
 
