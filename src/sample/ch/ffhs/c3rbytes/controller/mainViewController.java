@@ -85,7 +85,17 @@ public class mainViewController implements Initializable {
             @Override
             public void handle(javafx.scene.input.MouseEvent mouseEvent) {
                 if ((mouseEvent.getClickCount() == 2)) {
+                    DatabaseEntry tmp = new DatabaseEntry(
+                            profileTable.getSelectionModel().getSelectedItem().getId(),
+                            profileTable.getSelectionModel().getSelectedItem().getUsername(),
+                            profileTable.getSelectionModel().getSelectedItem().getDescription(),
+                            profileTable.getSelectionModel().getSelectedItem().getUrl(),
+                            profileTable.getSelectionModel().getSelectedItem().getPassword(),
+                            profileTable.getSelectionModel().getSelectedItem().getCreationDate(),
+                            profileTable.getSelectionModel().getSelectedItem().getLastUpdate());
                     System.out.println(profileTable.getSelectionModel().getSelectedItem().getId());
+                    System.out.print(tmp.getUsername()+", "+tmp.getPassword()+", "+tmp.getUrl());
+
                     //TODO open view of the selected item
                 }
             }
