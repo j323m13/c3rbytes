@@ -3,12 +3,14 @@ package sample.ch.ffhs.c3rbytes.controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -20,7 +22,9 @@ import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.utils.ClipboardHandler;
 import sample.ch.ffhs.c3rbytes.utils.UrlOpener;
 
+import javax.crypto.AEADBadTagException;
 import javax.swing.text.TableView;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -76,15 +80,17 @@ public class mainViewController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ObservableList<DatabaseEntry> databaseEntries = FXCollections.observableArrayList();
 
-        //TODO: refactor
-        /*
-        final ObservableList<DatabaseEntry> data = FXCollections.observableArrayList(
-                new DatabaseEntry(1, "Jérémie", "Facebook", "www.facebook.com", "12345!!"),
-                new DatabaseEntry(2,"Jérémie", "Facebook", "www.facebook.com", "12345!!")
+        //Methode to listen to mouse clicks
+        profileTable.setOnMousePressed(new EventHandler<javafx.scene.input.MouseEvent>() {
+            @Override
+            public void handle(javafx.scene.input.MouseEvent mouseEvent) {
+                if ((mouseEvent.getClickCount() == 2)) {
+                    System.out.println(profileTable.getSelectionModel().getSelectedItem().getId());
+                    //TODO open view of the selected item
+                }
+            }
+            });
 
-
-        );
-*/
 
         idColumn.setCellValueFactory(
                 new PropertyValueFactory<>("id")
@@ -173,7 +179,7 @@ public class mainViewController implements Initializable {
 
     }
 
-    @FXML private javafx.scene.control.Button addButton;
+    @FXML private Button addButton;
     public void addNewItemAction(ActionEvent event){
         Parent addItem;
         try {
@@ -188,7 +194,7 @@ public class mainViewController implements Initializable {
     }
 
 
-    @FXML private javafx.scene.control.Button logoutButton;
+    @FXML private Button logoutButton;
     public void logoutAction(ActionEvent event){
         System.out.println("Logout Action");
         //TODO: Add necessary methods to clear/reencrypt/delete before closing the app.
@@ -203,7 +209,7 @@ public class mainViewController implements Initializable {
 
     }
 
-    @FXML private javafx.scene.control.Button searchButton;
+    @FXML private Button searchButton;
     public void searchAction(ActionEvent event){
         //TODO: Search entries based on parameter.
         //TODO: Define how search works.
@@ -235,7 +241,7 @@ public class mainViewController implements Initializable {
         clipboardHandler.copyPasswordToClipboard(decryptedAccountPassword);
 
     }
-    @FXML private javafx.scene.control.Button deleteButton;
+    @FXML private Button deleteButton;
     public void deleteProfileAction(ActionEvent event){
         //TODO: Delete profile. Pop up alert.
 
@@ -276,7 +282,7 @@ public class mainViewController implements Initializable {
             fileEncrypterDecrypter.encryptFile(originalContent, FILENAME, newPassPhrase);
 
 
-        } catch(javax.crypto.AEADBadTagException e){
+        } catch(AEADBadTagException e){
             System.out.println("PassPhrase change denied");
         } catch (Exception e) {
             e.printStackTrace();
@@ -294,4 +300,12 @@ public class mainViewController implements Initializable {
         UrlOpener urlOpener = new UrlOpener();
         urlOpener.openURL(url);
     }
+
+    @FXML
+    public void getRow(MouseEvent actionEvent) {
+        DatabaseEntry dbEntry = profileTable.getSelectionModel().getSelectedItem();
+        System.out.print(dbEntry.getId());
+    }
+
+
 }
