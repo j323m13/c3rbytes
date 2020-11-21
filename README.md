@@ -27,3 +27,6 @@ if you encounter a problem with javaFx "bad url"
 
 ********Password for c3r.c3r file is "password123"***************
 the password was set by a the testclass FileEncrypterDecrypterTest
+
+bootPassword=654321654321
+user and password for the connection to the db -> check DBConnection.java
