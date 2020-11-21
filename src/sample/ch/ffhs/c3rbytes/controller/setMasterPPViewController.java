@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.FileEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.crypto.PasswordGenerator;
-import sample.ch.ffhs.c3rbytes.main.Main;
 
 import java.util.ArrayList;
 

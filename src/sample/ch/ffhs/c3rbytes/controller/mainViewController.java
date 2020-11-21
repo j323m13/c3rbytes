@@ -33,6 +33,7 @@ import static java.lang.String.valueOf;
 
 public class mainViewController implements Initializable {
 
+
     @FXML
     private TextField entryIdText;
     @FXML
@@ -60,11 +61,15 @@ public class mainViewController implements Initializable {
     private TableColumn<DatabaseEntry, String> urlColumn;
 
     @FXML
-
+    public ObservableList<DatabaseEntry> databaseEntries = FXCollections.observableArrayList();
 
     public static final String FILENAME = "c3r.c3r";
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
 
+    public void refresh() throws SQLException, ClassNotFoundException {
+        profileTable.refresh();
+        profileTable.setItems(populateTableViews(databaseEntries));
+    }
 
 
     @Override
@@ -115,8 +120,9 @@ public class mainViewController implements Initializable {
             throwables.printStackTrace();
         }
     */
+
         try {
-            profileTable.setItems(DatabaseEntryDao.getAll(databaseEntries));
+            profileTable.setItems(populateTableViews(databaseEntries));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -127,6 +133,12 @@ public class mainViewController implements Initializable {
 
 
 
+    }
+
+    private static ObservableList populateTableViews(ObservableList entries) throws SQLException, ClassNotFoundException {
+        entries.clear();
+        DatabaseEntryDao.getAll(entries);
+        return entries;
     }
 
 
@@ -214,7 +226,7 @@ public class mainViewController implements Initializable {
         // decrypt account password
         PasswordEncrypterDecrypter passwordEncrypterDecrypter = new PasswordEncrypterDecrypter();
         String decryptedAccountPassword = passwordEncrypterDecrypter.decrypt(encryptedAccountPassword,
-                                          passwordDecrypterPassword);
+                passwordDecrypterPassword);
 
         System.out.println("decryptedAccountPassword: " + decryptedAccountPassword);
 

@@ -4,16 +4,14 @@ import java.sql.*;
 
 public class DBConnection {
     private static final String userDB = "cerbytes";
-    public static String passwordDB;
-    public static String bootPassword = "12345secureAF";
-    //origianl
-    // public static final String bootPassword = "12345secureAF";
-    // public static String passwordDB = "1234";
+    public static String passwordDB = "tH94mLBaKr";
+    public static String bootPassword;
+    public static String newBootPassword;
+    public boolean newBootPasswordEnabled = false;
     private static final int encryptionKeyLength = 192;
     private static final String encryptionAlgorithm = "AES/CBC/NoPadding";
-    private static final String databaseName = "dbEncryptedAES";
+    private static final String databaseName = "cerbytesdb";
     private static final Boolean databaseEncryption = true;
-    private static final Boolean createDabaseIfNotExist = true;
     private static String JDBC_URL;
     private Connection connection;
 
@@ -28,7 +26,7 @@ public class DBConnection {
      *
      */
     private static String createUrl(){
-        return JDBC_URL = "jdbc:derby:dbFactory;create=true;user=cerbytes;password="+passwordDB;
+        return JDBC_URL = "jdbc:derby:dbFactory;create=true";
 
     }
 
@@ -38,29 +36,29 @@ public class DBConnection {
      * @param createDabaseIfNotExist -> create database if not exist;
      *
      */
-    private String createUrlWithParamenters(){
-        JDBC_URL = "jdbc:derby:"+databaseName+";create="+createDabaseIfNotExist+";user="+
-                userDB+";password="+passwordDB+";dataEncryption="+databaseEncryption+";encryptionKeyLength="+encryptionKeyLength+";encryptionAlgorithm="+encryptionAlgorithm+";bootPassword="+bootPassword+"";
+    public static String createUrlWithParamenters(){
+        JDBC_URL = "jdbc:derby:"+databaseName +
+                ";user="+ userDB+
+                ";password="+passwordDB+
+                ";dataEncryption="+databaseEncryption+
+                ";encryptionKeyLength="+encryptionKeyLength+
+                ";encryptionAlgorithm="+encryptionAlgorithm+
+                ";bootPassword="+bootPassword+"";
         return JDBC_URL;
     }
-    //TODO to implement a setup routine
-    public void setup() throws SQLException {
-        connection = DriverManager.getConnection(JDBC_URL);
-        String sqlCreate = "CREATE TABLE CERBYTES.\"user\" (\n" +
-                "                        \"user_id\" INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY(Start with 1, Increment by 1),\n" +
-                "                        \"username\" VARCHAR(255) DEFAULT NULL,\n" +
-                "                        \"description\" VARCHAR(255) DEFAULT NULL,\n" +
-                "                        \"url_content\" VARCHAR(255) DEFAULT NULL,\n" +
-                "                        \"password_text\" VARCHAR(255) DEFAULT NULL,\n" +
-                "                        \"date_creation\" VARCHAR(20) DEFAULT NULL,\n" +
-                "                        \"date_update\" VARCHAR(20) DEFAULT NULL\n)";
-        //dbAccess.update(connection, sqlCreate);
-    }
 
+    /*
+     * Methode to change the bootpassword to encrypt the DB
+     * jdbc:derby:salesdb;bootPassword=abc1234xyz;newBootPassword=new1234xyz
+     * @param the newBootPassword
+     */
+    public static Connection changebootPasswordAndEncryptDBWithNewBootPassword(String newBootPassword) throws SQLException {
+        return DriverManager.getConnection(createUrlWithParamenters()+"newBootPassword="+newBootPassword);
+    }
 
     public static Connection getConnection() throws SQLException, ClassNotFoundException {
         //Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
-        createUrl();
+        createUrlWithParamenters();
          return DriverManager.getConnection(JDBC_URL);
     }
 
@@ -76,11 +74,25 @@ public class DBConnection {
     public Connection close() throws SQLException, ClassNotFoundException{
         connection.close();
         try{
-             DriverManager.getConnection(JDBC_URL+"shutdown=true");
+             DriverManager.getConnection(createUrlWithParamenters()+"shutdown=true");
         }catch (Exception e){
             System.out.print(e);
         }
         return connection;
+    }
+
+    //TODO to implement a setup routine
+    public void setup() throws SQLException {
+        connection = DriverManager.getConnection(JDBC_URL);
+        String sqlCreate = "CREATE TABLE CERBYTES.\"user\" (\n" +
+                "                        \"user_id\" INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY(Start with 1, Increment by 1),\n" +
+                "                        \"username\" VARCHAR(255) DEFAULT NULL,\n" +
+                "                        \"description\" VARCHAR(255) DEFAULT NULL,\n" +
+                "                        \"url_content\" VARCHAR(255) DEFAULT NULL,\n" +
+                "                        \"password_text\" VARCHAR(255) DEFAULT NULL,\n" +
+                "                        \"date_creation\" VARCHAR(20) DEFAULT NULL,\n" +
+                "                        \"date_update\" VARCHAR(20) DEFAULT NULL\n)";
+        //dbAccess.update(connection, sqlCreate);
     }
 
     /*

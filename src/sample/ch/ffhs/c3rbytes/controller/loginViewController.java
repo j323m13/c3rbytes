@@ -29,18 +29,20 @@ public class loginViewController {
         String mpTextField = loginViewPasswordField.getText();
         System.out.println("masterpassword: " + mpTextField);
 
-
-        String bootPassword = "12345secureAF";
+        //TODO:hash masterpw and pass it to bootPassword
+        String bootPassword = mpTextField;
         DBConnection.bootPassword = bootPassword;
 
         // To test if an error is catched
         //public static String passwordDB = "1234";
-        DBConnection.passwordDB = mpTextField;
+        //DBConnection.passwordDB = mpTextField;
 
         System.out.println("DBConnPW: " + DBConnection.passwordDB);
 
-        try {
+        //debugging for the url
+        System.out.print(DBConnection.createUrlWithParamenters());
 
+        try {
             DBConnection.getConnection();
 
             System.out.println("Access to DB granted");

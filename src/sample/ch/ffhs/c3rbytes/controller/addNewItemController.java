@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -99,20 +100,24 @@ public class addNewItemController {
         System.out.println("decryptedAccountPassword: " + decryptedAccountPassword);
 
         // save to DB
-        DatabaseEntry item = new DatabaseEntry(null, username, description, url, encryptedAccountPassword, null, null);
+        DatabaseEntry item = new DatabaseEntry(null, username, description, url, encryptedAccountPassword, DatabaseEntry.getDateTime(), DatabaseEntry.getDateTime());
         try {
             insertDatabaseEntry(item);
         } catch (Exception e) {
             System.out.print(e);
         }
 
+
         // close the window
         Stage stage = (Stage) saveButton.getScene().getWindow();
         stage.close();
 
-        //TODO: !!!!we have to reload the table
 
+        //TODO: !!!!we have to reload the table
+        //mainViewController.refresh();
     }
+
+
 
 
     private void insertDatabaseEntry(DatabaseEntry item) throws SQLException, ClassNotFoundException {

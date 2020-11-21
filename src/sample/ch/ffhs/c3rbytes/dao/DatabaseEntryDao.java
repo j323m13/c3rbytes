@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.apache.commons.dbutils.QueryRunner;
 
+import javax.xml.crypto.Data;
 import java.sql.*;
 
 public class DatabaseEntryDao implements Dao{
@@ -150,7 +151,10 @@ public class DatabaseEntryDao implements Dao{
         ps.setString(6, databaseEntry.getLastUpdate());
 
         int i = ps.executeUpdate();
+        connection.close();
+
     }
+
 
     }
 
