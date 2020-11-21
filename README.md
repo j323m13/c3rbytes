@@ -24,3 +24,6 @@ if you encounter a problem with javaFx "bad url"
 - shemas and DTSs
 - add "http://javafx.com/"
 
+
+********Password for c3r.c3r file is "password123"***************
+the password was set by a the testclass FileEncrypterDecrypterTest
