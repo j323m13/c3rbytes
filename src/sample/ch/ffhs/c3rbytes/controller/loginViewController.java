@@ -18,6 +18,7 @@ public class loginViewController {
     @FXML private javafx.scene.control.Button logoutButton;
 
     public void loginAction() throws IOException, SQLException, ClassNotFoundException {
+        //TODO: Correct login authentication with dB
         System.out.println("LoginAction");
         // Here comes the db check, if mp is correct --> successful login if correct populate
         // to test set dbLogincorrect to true

@@ -51,10 +51,4 @@ import java.nio.charset.StandardCharsets;
 
             return bytesToHex(shaInBytes);
         }
-
-        public static void main(String[] args) {
-            StringHasher sha = new StringHasher();
-            sha.encryptSHA3("SHA3-512", "test");
-        }
-
     }
