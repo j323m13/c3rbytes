@@ -22,9 +22,7 @@ public class loginViewMasterpassphraseController {
     public void loginActionMPP() throws Exception {
 
         // check pw in c3r.c3r file and assign to passwordDecrypterpassword
-
         String masterPassPhrase = masterPassPhraseField.getText();
-        //masterPassPhrase = "password123";
 
         try {
             FileEncrypterDecrypter fileEncrypterDecrypter = new FileEncrypterDecrypter();
@@ -36,22 +34,9 @@ public class loginViewMasterpassphraseController {
             System.out.println("passwordDecrypterPassword generated from pwgeneretaor" + passwordDecrypterPassword);
             System.out.println("Access granted");
 
-            // Start Main view
-            /*
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/main_view_2.fxml"));
-            Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("C3rBytes Main");
-            stage.setScene(new Scene(root, 1200, 600));
-            stage.show();
-            */
-
             startMainView();
-
-
-
         }catch(javax.crypto.AEADBadTagException e){
-            // Here should come a notification to the user --> login failed
+            //TODO: Here should come a notification to the user --> login failed
             System.out.println("Access denied");
         }catch (IOException e) {
         e.printStackTrace();

@@ -70,6 +70,8 @@ public class mainViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ObservableList<DatabaseEntry> databaseEntries = FXCollections.observableArrayList();
+
+        //TODO: refactor
         /*
         final ObservableList<DatabaseEntry> data = FXCollections.observableArrayList(
                 new DatabaseEntry(1, "Jérémie", "Facebook", "www.facebook.com", "12345!!"),
@@ -205,16 +207,18 @@ public class mainViewController implements Initializable {
 
         String passwordDecrypterPassword = loginViewMasterpassphraseController.passwordDecrypterPassword;
 
-        // Test: password is: 456, encrypted is: "m0ACLvmX92f52lJL+lIASUzTZq6yBN+owjB+czjh5pjVvZ1uy54Ou9zbcKGPTBU="
-        //TODO: But we have to fetch the password of the selected row
-        String encryptedAccountPassword = "m0ACLvmX92f52lJL+lIASUzTZq6yBN+owjB+czjh5pjVvZ1uy54Ou9zbcKGPTBU=";
+        // get password of the selected row
+        DatabaseEntry dbEntry = profileTable.getSelectionModel().getSelectedItem();
+        String encryptedAccountPassword = dbEntry.getPassword();
 
+        // decrypt account password
         PasswordEncrypterDecrypter passwordEncrypterDecrypter = new PasswordEncrypterDecrypter();
-
-        String decryptedAccountPassword = passwordEncrypterDecrypter.decrypt(encryptedAccountPassword, passwordDecrypterPassword);
+        String decryptedAccountPassword = passwordEncrypterDecrypter.decrypt(encryptedAccountPassword,
+                                          passwordDecrypterPassword);
 
         System.out.println("decryptedAccountPassword: " + decryptedAccountPassword);
 
+        // send plain text password to clipboard
         ClipboardHandler clipboardHandler = new ClipboardHandler();
         clipboardHandler.copyPasswordToClipboard(decryptedAccountPassword);
 
@@ -222,12 +226,11 @@ public class mainViewController implements Initializable {
     @FXML private javafx.scene.control.Button deleteButton;
     public void deleteProfileAction(ActionEvent event){
         //TODO: Delete profile. Pop up alert.
+
+        // Test to change cursor appearence to default. Its purpose is for after a search or load function to get back to default curser
         System.out.println("Delete Profile Action");
         Scene scene = searchButton.getScene();
         scene.setCursor(Cursor.DEFAULT);
-        // Code to delete Clipboardentry's
-        //ClipboardHandler clipboardHandler = new ClipboardHandler();
-        //clipboardHandler.clearClipboard();
 
     }
 
@@ -246,7 +249,7 @@ public class mainViewController implements Initializable {
 
     public void changeMasterPPAction(ActionEvent actionEvent){
 
-        // here we have to open login_view_masterpassphrase.fxml and aks for the passphrase
+        //TODO: here we have to open login_view_masterpassphrase.fxml and aks for the passphrase
         String oldPassPhrase = "das ist ein test";
 
         try {
@@ -255,7 +258,7 @@ public class mainViewController implements Initializable {
             String originalContent = new String(decryptedText, UTF_8);
 
 
-            // then here we have to call the set_master_mpp_view.fxml and ask for the new passphrase
+            //TODO: then here we have to call the set_master_mpp_view.fxml and ask for the new passphrase
 
             String newPassPhrase = "leer";
             fileEncrypterDecrypter.encryptFile(originalContent, FILENAME, newPassPhrase);
@@ -272,9 +275,11 @@ public class mainViewController implements Initializable {
 
     public void onOpenUrl(ActionEvent actionEvent) {
         // first get url form selected row
+        DatabaseEntry dbEntry = profileTable.getSelectionModel().getSelectedItem();
+        String url = dbEntry.getUrl();
 
-        // to test with blick.ch
+        // open the url
         UrlOpener urlOpener = new UrlOpener();
-        urlOpener.openURL("www.blick.ch");
+        urlOpener.openURL(url);
     }
 }

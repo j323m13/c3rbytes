@@ -26,8 +26,9 @@ public class addNewItemController {
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
 
     @FXML private javafx.scene.control.Button saveButton;
-    @FXML private javafx.scene.control.Button generatePasswordButton;
+    //@FXML private javafx.scene.control.Button generatePasswordButton;
     public void generatePassword(ActionEvent event){
+        //TODO: for all views: find a better approach to handle stage changes
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/password_generator_view.fxml"));
             Parent root = loader.load();
@@ -62,14 +63,6 @@ public class addNewItemController {
         passwordField.setText("Test");
     }
 
-    /*
-    @FXML
-    TextInputControl userNameField;
-    @FXML
-    TextInputControl passwordField;
-
-
-     */
     @FXML
     TextInputControl typeField;
     @FXML
@@ -87,23 +80,11 @@ public class addNewItemController {
         System.out.println(description);
         System.out.println(url);
 
-        ////TODO: !!!!!!! we have to find the passPhrase to decrypt the Key inside the c3r.c3r file
-        //String passPhrase = "password123";
-
+        // get secretKey of the file c3r.c3r
         String passwordDecrypterPassword = loginViewMasterpassphraseController.passwordDecrypterPassword;
 
+        // debugging
         System.out.println("passphrase: "+ passwordDecrypterPassword);
-
-        /*
-        // decrypt File
-        FileEncrypterDecrypter fileEncrypterDecrypter = new FileEncrypterDecrypter();
-        // extract secretKey
-        byte[] byteDecryptedKey = fileEncrypterDecrypter.decryptFile("c3r.c3r", passPhrase);
-
-
-        System.out.println("decryptedKey: " + new String(byteDecryptedKey, UTF_8));
-        String decryptedKey = new String(byteDecryptedKey, UTF_8);
-        */
 
         // for passwordEncrypterDecrypter the password of the account is the plainText
         byte[] bytePassword = password.getBytes(UTF_8);
@@ -112,15 +93,12 @@ public class addNewItemController {
         PasswordEncrypterDecrypter passwordEncrypterDecrypter = new PasswordEncrypterDecrypter();
         String encryptedAccountPassword = passwordEncrypterDecrypter.encrypt(bytePassword, passwordDecrypterPassword);
 
+        // debugging decryption test
         System.out.println("encryptedAccountPassword: " + encryptedAccountPassword);
-
-
-        // decryption test
         String decryptedAccountPassword = passwordEncrypterDecrypter.decrypt(encryptedAccountPassword, passwordDecrypterPassword);
-
         System.out.println("decryptedAccountPassword: " + decryptedAccountPassword);
 
-
+        // save to DB
         DatabaseEntry item = new DatabaseEntry(null, username, description, url, encryptedAccountPassword, null, null);
         try {
             insertDatabaseEntry(item);
@@ -128,15 +106,17 @@ public class addNewItemController {
             System.out.print(e);
         }
 
+        // close the window
         Stage stage = (Stage) saveButton.getScene().getWindow();
         stage.close();
 
-        // !!!!we have to reload the table
+        //TODO: !!!!we have to reload the table
 
     }
 
 
     private void insertDatabaseEntry(DatabaseEntry item) throws SQLException, ClassNotFoundException {
+        //TODO: implement DatabaseEntryDao not static ??
         DatabaseEntryDao.insertDatabaseEntry(item);
     }
 

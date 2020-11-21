@@ -11,7 +11,6 @@ import java.util.Base64;
 public class FileEncrypterDecrypter {
 
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
-    //private static FileEncrypterDecrypter enc;
 
     public void encryptFile(String content, String toFile, String password) throws Exception {
 
@@ -31,7 +30,7 @@ public class FileEncrypterDecrypter {
         // Base64 Encoding the standard way
         byte[] encryptedByteText = Base64.getEncoder().encode(encryptedText.getBytes(UTF_8));
 
-        // save to file
+        // save to file and disable write permissions
         FileHandler fileHandler = new FileHandler();
         fileHandler.setReadWriteAttributes(toFile,true);
         fileHandler.writeToFile(toFile, encryptedByteText);
@@ -46,6 +45,7 @@ public class FileEncrypterDecrypter {
         // create new passwordEncrypterDecrypter
         PasswordEncrypterDecrypter passwordEncrypterDecrypter = new PasswordEncrypterDecrypter();
 
+        // Enable write Persmissions of the file
         FileHandler fileHandler = new FileHandler();
         fileHandler.setReadWriteAttributes(fromEncryptedFile, true);
 
