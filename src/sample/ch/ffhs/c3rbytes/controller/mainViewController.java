@@ -38,6 +38,7 @@ import static java.lang.String.valueOf;
 public class mainViewController implements Initializable {
 
 
+    private static boolean isNew;
     @FXML
     private TextField entryIdText;
     @FXML
@@ -95,6 +96,11 @@ public class mainViewController implements Initializable {
                             profileTable.getSelectionModel().getSelectedItem().getLastUpdate());
                     System.out.println(profileTable.getSelectionModel().getSelectedItem().getId());
                     System.out.print(tmp.getUsername()+", "+tmp.getPassword()+", "+tmp.getUrl());
+                    try {
+                        startOpenSelectedItemsToView();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                     //TODO open view of the selected item
                 }
@@ -271,9 +277,17 @@ public class mainViewController implements Initializable {
         //TODO: Define deleting account
         System.out.println("Delete Account Action");
     }
-
+    //TODO: to delete?
     private TableView tableView;
-
+    public static void startOpenSelectedItemsToView() throws IOException {
+        isNew = false;
+        FXMLLoader loader = new FXMLLoader(loginViewMasterpassphraseController.class.getResource("../gui/add_new_item_view.fxml"));
+        Parent root = loader.load();
+        Stage stage = new Stage();
+        stage.setTitle("C3rBytes Main");
+        stage.setScene(new Scene(root, 600, 600));
+        stage.show();
+    }
 
     public void changeMasterPPAction(ActionEvent actionEvent){
 
