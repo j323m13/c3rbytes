@@ -22,7 +22,8 @@ public class FileHandler {
         // write to file
         Files.write(path, content);
 
-        setReadWriteAttributes(file, false);
+        //setReadWriteAttributes(file, false);
+        setReadWriteAttributes(file, "deny");
 
     }
 
@@ -43,11 +44,35 @@ public class FileHandler {
         }
     }
 
-    public void setReadWriteAttributes(String file, boolean bool){
+    public void setReadWriteAttributes(String file, String permissionToAccess) throws IOException {
         File file1 = new File(file);
 
-        file1.setWritable(bool);
+        //Path path = Paths.get(file);
+        //System.out.println("path: " + path);
+        System.out.println("fileabspath: " + file1.getAbsolutePath());
+
+
+        switch (permissionToAccess){
+            case "allow":
+                // allow all permissions
+                Runtime.getRuntime().exec(new String[]{"cacls", file1.getAbsolutePath(), "/E", "/P", "Benutzer:f"} );
+                return;
+
+            case "deny":
+                // deny all permissions
+                Runtime.getRuntime().exec(new String[]{"cacls", file1.getAbsolutePath(), "/E", "/P", "Benutzer:n"});
+                return;
+        }
+
+        //file1.setWritable(permissionToAccess);
         //file1.setReadable(bool);
+    }
+
+
+    public static void main(String[] args) throws IOException {
+        FileHandler fileHandler = new FileHandler();
+        fileHandler.setReadWriteAttributes("testfile.txt", "deny");
+
     }
 
 }

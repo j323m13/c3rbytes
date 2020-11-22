@@ -223,6 +223,8 @@ public class mainViewController implements Initializable {
         //TODO: Open view_item.fxml and edit the entry.
         System.out.println("Modify Profile Action");
 
+
+
     }
 
     @FXML private Button searchButton;

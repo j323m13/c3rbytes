@@ -14,6 +14,9 @@ public class UrlOpener {
     public void openURL(String domain){
 
         url = domain;
+
+        System.out.println("url: " + url);
+
         try {
             if (isWindows(getSystem)) {
                 runtime.exec("rundll32 url.dll,FileProtocolHandler " + url).waitFor();

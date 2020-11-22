@@ -34,7 +34,7 @@ public class loginViewController {
         DBConnection.bootPassword = bootPassword;
 
         // To test if an error is catched
-        //public static String passwordDB = "1234";
+        //public static String passwordDB = "654321654321";
         //DBConnection.passwordDB = mpTextField;
 
         System.out.println("DBConnPW: " + DBConnection.passwordDB);
