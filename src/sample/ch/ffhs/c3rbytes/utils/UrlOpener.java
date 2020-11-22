@@ -14,11 +14,24 @@ public class UrlOpener {
     public void openURL(String domain){
 
         url = domain;
-
         try {
-            runtime.exec("rundll32 url.dll,FileProtocolHandler " + url).waitFor();
+            if (isWindows(getSystem)) {
+                runtime.exec("rundll32 url.dll,FileProtocolHandler " + url).waitFor();
+
+            } else if (isMac(getSystem)) {
+                String[] cmd = {"open", url};
+                runtime.exec(cmd).waitFor();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean isWindows(String os){
+        return os.contains("Win") || os.contains("win");
+    }
+
+    public boolean isMac(String os){
+        return os.contains("mac") || os.contains("Mac");
     }
 }

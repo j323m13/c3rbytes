@@ -271,6 +271,20 @@ public class mainViewController implements Initializable {
     public void changeMasterAction(ActionEvent actionEvent) {
         //TODO: Change password action
         System.out.println("Change Master Password Action");
+
+        //TODO: here we have to open login_view_masterpassword.fxml and aks for the passphrase or something similar
+        String oldPassword = "654321654321";
+
+        try {
+            //TODO: then here we have to call the set_master_pw_view.fxml and ask for the new passphrase
+            // and forward to the DB
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
     }
 
     public void deleteAccountAction(ActionEvent actionEvent) {
@@ -291,7 +305,7 @@ public class mainViewController implements Initializable {
 
     public void changeMasterPPAction(ActionEvent actionEvent){
 
-        //TODO: here we have to open login_view_masterpassphrase.fxml and aks for the passphrase
+        //TODO: here we have to open login_view_masterpassphrase.fxml and aks for the passphrase or something similar
         String oldPassPhrase = "das ist ein test";
 
         try {
