@@ -1,5 +1,6 @@
 package sample.ch.ffhs.c3rbytes.controller;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -114,7 +115,7 @@ public class addNewItemController {
 
 
         //TODO: !!!!we have to reload the table
-        //mainViewController.refresh();
+
     }
 
 

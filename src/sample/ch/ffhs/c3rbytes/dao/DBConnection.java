@@ -13,7 +13,7 @@ public class DBConnection {
     private static final String databaseName = "cerbytesdb";
     private static final Boolean databaseEncryption = true;
     private static String JDBC_URL;
-    private Connection connection;
+    private static Connection connection;
 
 
 
@@ -53,7 +53,9 @@ public class DBConnection {
      * @param the newBootPassword
      */
     public static Connection changebootPasswordAndEncryptDBWithNewBootPassword(String newBootPassword) throws SQLException {
-        return DriverManager.getConnection(createUrlWithParamenters()+"newBootPassword="+newBootPassword);
+        Connection connection =  DriverManager.getConnection(createUrlWithParamenters()+"newBootPassword="+newBootPassword);
+        connection.close();
+        return connection;
     }
 
     public static Connection getConnection() throws SQLException, ClassNotFoundException {

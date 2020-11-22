@@ -2,6 +2,7 @@ package sample.ch.ffhs.c3rbytes.dao;
 
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -16,6 +17,8 @@ public class DatabaseEntry{
     private SimpleStringProperty  password;
     private SimpleStringProperty  creationDate;
     private SimpleStringProperty  lastUpdate;
+    private String passwordTrick;
+
 
     public DatabaseEntry(String id, String username, String description,
                          String url, String password, String creationDate,
@@ -27,7 +30,7 @@ public class DatabaseEntry{
         this.password = new SimpleStringProperty(password);
         this.creationDate = new SimpleStringProperty(creationDate);
         this.lastUpdate = new SimpleStringProperty(lastUpdate);
-
+        passwordTrick = "* * * * *";
     }
 
 
@@ -261,4 +264,7 @@ public class DatabaseEntry{
     }
 
 
+    public String getHiddenPasswordTrick() {
+        return passwordTrick;
+    }
 }

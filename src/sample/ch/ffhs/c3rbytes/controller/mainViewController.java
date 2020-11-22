@@ -10,9 +10,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TextField;
+import javafx.scene.chart.PieChart;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.FileEncrypterDecrypter;
@@ -25,6 +24,7 @@ import sample.ch.ffhs.c3rbytes.utils.UrlOpener;
 import javax.crypto.AEADBadTagException;
 import javax.swing.text.TableView;
 import java.awt.event.MouseEvent;
+import java.awt.image.DataBuffer;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -71,41 +71,89 @@ public class mainViewController implements Initializable {
     public static final String FILENAME = "c3r.c3r";
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
 
-    public void refresh() throws SQLException, ClassNotFoundException {
-        profileTable.refresh();
-        profileTable.setItems(populateTableViews(databaseEntries));
+
+
+
+    public void copyClickedEntry(){
+        DatabaseEntry tmp = new DatabaseEntry(
+                profileTable.getSelectionModel().getSelectedItem().getId(),
+                profileTable.getSelectionModel().getSelectedItem().getUsername(),
+                profileTable.getSelectionModel().getSelectedItem().getDescription(),
+                profileTable.getSelectionModel().getSelectedItem().getUrl(),
+                profileTable.getSelectionModel().getSelectedItem().getPassword(),
+                profileTable.getSelectionModel().getSelectedItem().getCreationDate(),
+                profileTable.getSelectionModel().getSelectedItem().getLastUpdate());
+        System.out.println(profileTable.getSelectionModel().getSelectedItem().getId());
+        System.out.print(tmp.getUsername()+", "+tmp.getPassword()+", "+tmp.getUrl()+", "+tmp.getHiddenPasswordTrick());
+        try {
+            startOpenSelectedItemsToView();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        ObservableList<DatabaseEntry> databaseEntries = FXCollections.observableArrayList();
-
+    public void startMouseClicks(){
         //Methode to listen to mouse clicks
         profileTable.setOnMousePressed(new EventHandler<javafx.scene.input.MouseEvent>() {
             @Override
             public void handle(javafx.scene.input.MouseEvent mouseEvent) {
                 if ((mouseEvent.getClickCount() == 2)) {
-                    DatabaseEntry tmp = new DatabaseEntry(
-                            profileTable.getSelectionModel().getSelectedItem().getId(),
-                            profileTable.getSelectionModel().getSelectedItem().getUsername(),
-                            profileTable.getSelectionModel().getSelectedItem().getDescription(),
-                            profileTable.getSelectionModel().getSelectedItem().getUrl(),
-                            profileTable.getSelectionModel().getSelectedItem().getPassword(),
-                            profileTable.getSelectionModel().getSelectedItem().getCreationDate(),
-                            profileTable.getSelectionModel().getSelectedItem().getLastUpdate());
-                    System.out.println(profileTable.getSelectionModel().getSelectedItem().getId());
-                    System.out.print(tmp.getUsername()+", "+tmp.getPassword()+", "+tmp.getUrl());
-                    try {
-                        startOpenSelectedItemsToView();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    copyClickedEntry();
 
                     //TODO open view of the selected item
                 }
             }
-            });
+        });
+    }
+
+    public void startContextMenu(){
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem copyUrlOption = new MenuItem("Copy url");
+        MenuItem copyPasswordOption = new MenuItem("copy password");
+        MenuItem deleteItemOption = new MenuItem("Delete item");
+
+        copyUrlOption.setOnAction((event) -> {
+            //copyClickedEntry();
+            String url = profileTable.getSelectionModel().getSelectedItem().getUrl();
+            openUrl(url);
+        });
+
+        copyPasswordOption.setOnAction((event) -> {
+            DatabaseEntry entry = profileTable.getSelectionModel().getSelectedItem();
+            System.out.println(entry.getPassword());
+            //copyClickedEntry();
+            try {
+                copyPassword(entry);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        deleteItemOption.setOnAction((event) -> {
+            //copyClickedEntry();
+            copyClickedEntry();
+            //TODO call delete Mehtode;
+            //TODO print alert when deleting entries
+        });
+
+
+
+        contextMenu.getItems().addAll(copyUrlOption, copyPasswordOption, deleteItemOption);
+        profileTable.setContextMenu(contextMenu);
+
+
+    }
+
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        startMouseClicks();
+        startContextMenu();
+        ObservableList<DatabaseEntry> databaseEntries = FXCollections.observableArrayList();
+
+
+
+
 
 
         idColumn.setCellValueFactory(
@@ -121,7 +169,7 @@ public class mainViewController implements Initializable {
         );
 
         passwordColumn.setCellValueFactory(
-                new PropertyValueFactory<>("password")
+                new PropertyValueFactory<>("hiddenPasswordTrick")
         );
 
         urlColumn.setCellValueFactory(
@@ -236,15 +284,13 @@ public class mainViewController implements Initializable {
         scene.setCursor(Cursor.WAIT);
     }
 
-
-    public void copyPasswordAction(ActionEvent event) throws Exception {
-        //TODO: Copy password -> get password text field content
-        System.out.println("Copy Password Action");
-
+    /*
+    * copy password in computer memory.
+     */
+    public void copyPassword(DatabaseEntry dbEntry) throws Exception {
         String passwordDecrypterPassword = loginViewMasterpassphraseController.passwordDecrypterPassword;
 
         // get password of the selected row
-        DatabaseEntry dbEntry = profileTable.getSelectionModel().getSelectedItem();
         String encryptedAccountPassword = dbEntry.getPassword();
 
         // decrypt account password
@@ -257,8 +303,15 @@ public class mainViewController implements Initializable {
         // send plain text password to clipboard
         ClipboardHandler clipboardHandler = new ClipboardHandler();
         clipboardHandler.copyPasswordToClipboard(decryptedAccountPassword);
+    }
+    public void copyPasswordAction(ActionEvent event) throws Exception {
+        //TODO: Copy password -> get password text field content
+        System.out.println("Copy Password Action");
+        DatabaseEntry dbEntry = profileTable.getSelectionModel().getSelectedItem();
+        copyPassword(dbEntry);
 
     }
+
     @FXML private Button deleteButton;
     public void deleteProfileAction(ActionEvent event){
         //TODO: Delete profile. Pop up alert.
@@ -339,15 +392,19 @@ public class mainViewController implements Initializable {
 
 
     }
+    public void openUrl(String url){
+        // open the url
+        UrlOpener urlOpener = new UrlOpener();
+        urlOpener.openURL(url);
+    }
 
     public void onOpenUrl(ActionEvent actionEvent) {
         // first get url form selected row
         DatabaseEntry dbEntry = profileTable.getSelectionModel().getSelectedItem();
         String url = dbEntry.getUrl();
+        openUrl(url);
 
-        // open the url
-        UrlOpener urlOpener = new UrlOpener();
-        urlOpener.openURL(url);
+
     }
 
     @FXML
