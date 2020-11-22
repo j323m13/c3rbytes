@@ -270,24 +270,6 @@ public class mainViewController implements Initializable {
 
     }
 
-    public void changeMasterAction(ActionEvent actionEvent) {
-        //TODO: Change password action
-        System.out.println("Change Master Password Action");
-
-        //TODO: here we have to open login_view_masterpassword.fxml and aks for the passphrase or something similar
-        String oldPassword = "654321654321";
-
-        try {
-            //TODO: then here we have to call the set_master_pw_view.fxml and ask for the new passphrase
-            // and forward to the DB
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-
-    }
 
     public void deleteAccountAction(ActionEvent actionEvent) {
         //TODO: Define deleting account
@@ -305,10 +287,32 @@ public class mainViewController implements Initializable {
         stage.show();
     }
 
+
+    @FXML private javafx.scene.control.Button changeMasterButton;
+    public void changeMasterAction(ActionEvent actionEvent) {
+        //TODO: Change password action
+        System.out.println("Change Master Password Action");
+        Parent changePassword;
+        try {
+            changePassword = FXMLLoader.load(getClass().getResource("../gui/change_password_view.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Change Password");
+            stage.setScene(new Scene(changePassword,600, 400));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Change Master Password Action");
+    }
+
+
+    @FXML private javafx.scene.control.Button changeMasterPPButton;
     public void changeMasterPPAction(ActionEvent actionEvent){
 
         //TODO: here we have to open login_view_masterpassphrase.fxml and aks for the passphrase or something similar
         String oldPassPhrase = "das ist ein test";
+
+        Parent changePassphrase;
 
         try {
             FileEncrypterDecrypter fileEncrypterDecrypter = new FileEncrypterDecrypter();
@@ -317,6 +321,11 @@ public class mainViewController implements Initializable {
 
 
             //TODO: then here we have to call the set_master_mpp_view.fxml and ask for the new passphrase
+            changePassphrase = FXMLLoader.load(getClass().getResource("../gui/change_passphrase_view.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Change Passphrase");
+            stage.setScene(new Scene(changePassphrase,600, 400));
+            stage.show();
 
             String newPassPhrase = "leer";
             fileEncrypterDecrypter.encryptFile(originalContent, FILENAME, newPassPhrase);
