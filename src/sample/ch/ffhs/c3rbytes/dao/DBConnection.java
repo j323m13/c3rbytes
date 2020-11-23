@@ -6,7 +6,7 @@ public class DBConnection {
     private static final String userDB = "cerbytes";
     public static String passwordDB;
     //public static String passwordDB = "tH94mLBaKr";
-    public static String bootPassword = "654321654321";
+    public static String oldBootPassword = "654321654321";
     public static String newBootPassword;
     public boolean newBootPasswordEnabled = false;
     private static final int encryptionKeyLength = 192;
@@ -44,7 +44,7 @@ public class DBConnection {
                 ";dataEncryption="+databaseEncryption+
                 ";encryptionKeyLength="+encryptionKeyLength+
                 ";encryptionAlgorithm="+encryptionAlgorithm+
-                ";bootPassword="+bootPassword+"";
+                ";bootPassword="+ oldBootPassword +"";
         return JDBC_URL;
     }
 
@@ -68,6 +68,35 @@ public class DBConnection {
         cs.close();
         conn.close();
         //return connection;
+    }
+
+    public static void changeBootPassword(String oldBootMasterPassword, String newBootMasterpassword ) throws SQLException, ClassNotFoundException {
+        DBConnection.oldBootPassword = oldBootMasterPassword;
+        DBConnection.newBootPassword = newBootMasterpassword;
+
+        //String url = getConnection()+";newBootPassword="+newBootMasterpassword;
+        String url = "jdbc:derby:"+databaseName+";create=true;user="+ userDB+";password="+passwordDB+";bootPassword="+oldBootMasterPassword+";newBootPassword="+newBootMasterpassword;
+        System.out.println(url);
+        DriverManager.getConnection(url);
+
+        getConnection();
+        //DriverManager.getConnection("jdbc:derby:"+databaseName+";shutdown=true");
+
+        /*
+
+        CallableStatement cs = conn.prepareCall("CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY(?, ?, ?)");
+        cs.setString(1,"bootPassword");
+        cs.setString(2, oldBootMasterPassword);
+        cs.setString(3, newBootMasterpassword);
+        cs.execute();
+        cs.close();
+        conn.close();
+
+/*
+        DBConnection.JDBC_URL = createUrlWithParamenters() + ";newBootPassword="+newBootMasterpassword;
+        DBConnection.getConnection();
+*/
+
     }
 
     public static Connection getConnection() throws SQLException, ClassNotFoundException {

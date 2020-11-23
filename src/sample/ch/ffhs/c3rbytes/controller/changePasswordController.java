@@ -52,9 +52,10 @@ public class changePasswordController {
             try {
                 StringHasher stringHasher = new StringHasher();
                 String hashedOldMasterpassword = stringHasher.encryptSHA3(HASHALGORITHM, oldMasterpassword);
-                String hashedNewMasterpassword = stringHasher.encryptSHA3(HASHALGORITHM, newMasterpassword);
+                String hashedNewMasterpassword = stringHasher.encryptSHA3(HASHALGORITHM, newMasterpassword).substring(0,24);
 
-                DBConnection.changebootPasswordAndEncryptDBWithNewBootPassword(hashedOldMasterpassword, hashedNewMasterpassword);
+                //DBConnection.changebootPasswordAndEncryptDBWithNewBootPassword(hashedOldMasterpassword, hashedNewMasterpassword);
+                DBConnection.changeBootPassword(oldMasterpassword, hashedNewMasterpassword);
                 System.out.println(hashedNewMasterpassword);
                 discardPasswordAction(null);
             }catch (Exception e){
