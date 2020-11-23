@@ -54,6 +54,7 @@ public class changePasswordController {
                 String hashedOldMasterpassword = stringHasher.encryptSHA3(HASHALGORITHM, oldMasterpassword);
                 String hashedNewMasterpassword = stringHasher.encryptSHA3(HASHALGORITHM, newMasterpassword).substring(0,24);
 
+
                 //DBConnection.changebootPasswordAndEncryptDBWithNewBootPassword(hashedOldMasterpassword, hashedNewMasterpassword);
                 DBConnection.changeBootPassword(oldMasterpassword, hashedNewMasterpassword);
                 System.out.println(hashedNewMasterpassword);

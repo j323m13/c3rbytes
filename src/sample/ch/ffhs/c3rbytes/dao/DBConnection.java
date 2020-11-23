@@ -6,7 +6,8 @@ public class DBConnection {
     private static final String userDB = "cerbytes";
     public static String passwordDB;
     //public static String passwordDB = "tH94mLBaKr";
-    public static String oldBootPassword = "654321654321";
+    //public static String oldBootPassword = "c12345";
+    public static String oldBootPassword = "f235c129089233ce3c9c85f1";
     public static String newBootPassword;
     public boolean newBootPasswordEnabled = false;
     private static final int encryptionKeyLength = 192;
@@ -74,12 +75,15 @@ public class DBConnection {
         DBConnection.oldBootPassword = oldBootMasterPassword;
         DBConnection.newBootPassword = newBootMasterpassword;
 
+        //DBConnection.close();
         //String url = getConnection()+";newBootPassword="+newBootMasterpassword;
-        String url = "jdbc:derby:"+databaseName+";create=true;user="+ userDB+";password="+passwordDB+";bootPassword="+oldBootMasterPassword+";newBootPassword="+newBootMasterpassword;
+        String url = "jdbc:derby:"+databaseName+";user="+ userDB+";password="+passwordDB+";bootPassword="+oldBootMasterPassword+";newBootPassword="+newBootMasterpassword;
         System.out.println(url);
-        DriverManager.getConnection(url);
-
-        getConnection();
+        DBConnection.oldBootPassword = newBootMasterpassword;
+        connection = DriverManager.getConnection(url);
+        DBConnection.close();
+        connection = getConnection();
+        //DBConnection.close();
         //DriverManager.getConnection("jdbc:derby:"+databaseName+";shutdown=true");
 
         /*
@@ -114,7 +118,7 @@ public class DBConnection {
         return connection;
     }
 
-    public Connection close() throws SQLException, ClassNotFoundException{
+    public static Connection close() throws SQLException, ClassNotFoundException{
         connection.close();
         try{
              DriverManager.getConnection(createUrlWithParamenters()+"shutdown=true");
