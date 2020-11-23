@@ -3,8 +3,12 @@ package sample.ch.ffhs.c3rbytes.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
+import sample.ch.ffhs.c3rbytes.crypto.StringHasher;
 import sample.ch.ffhs.c3rbytes.dao.DBConnection;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class changePasswordController {
@@ -14,6 +18,8 @@ public class changePasswordController {
     @FXML javafx.scene.control.TextField newPasswordConfirmField;
     @FXML javafx.scene.control.Label oldPasswordErrorLabel;
     @FXML javafx.scene.control.Label passwordMatchErrorLabel;
+
+    private final String HASHALGORITHM = "SHA3-512";
 
     public void changePasswordAction(ActionEvent actionEvent) throws SQLException {
         String oldMasterpassword = oldMasterPasswordField.getText();
@@ -44,9 +50,16 @@ public class changePasswordController {
 
         if (isFilledOut && newMasterpassword.equals(newMasterpasswordConfirmed)) {
             try {
-                DBConnection.changebootPasswordAndEncryptDBWithNewBootPassword(oldMasterpassword, newMasterpassword);
+                StringHasher stringHasher = new StringHasher();
+                String hashedOldMasterpassword = stringHasher.encryptSHA3(HASHALGORITHM, oldMasterpassword);
+                String hashedNewMasterpassword = stringHasher.encryptSHA3(HASHALGORITHM, newMasterpassword);
+
+                DBConnection.changebootPasswordAndEncryptDBWithNewBootPassword(hashedOldMasterpassword, hashedNewMasterpassword);
+                System.out.println(hashedNewMasterpassword);
                 discardPasswordAction(null);
             }catch (Exception e){
+                System.out.println("Password incorrect");
+                oldPasswordErrorLabel.setText("Password incorrect");
                 e.printStackTrace();
             }
         } else{

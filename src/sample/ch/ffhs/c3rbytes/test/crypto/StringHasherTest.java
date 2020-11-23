@@ -11,10 +11,10 @@ public class StringHasherTest {
     @Test
     public void samePWHasherTest(){
         StringHasher shaONE = new StringHasher();
-        String shaONEstr = shaONE.encryptSHA3("SHA3-512", "test");
+        String shaONEstr = shaONE.encryptSHA3("SHA3-512", "123");
 
         StringHasher shaTWO = new StringHasher();
-        String shaTWOstr = shaTWO.encryptSHA3("SHA3-512", "test");
+        String shaTWOstr = shaTWO.encryptSHA3("SHA3-512", "123");
 
         assertTrue(shaONEstr.equals(shaTWOstr));
     }

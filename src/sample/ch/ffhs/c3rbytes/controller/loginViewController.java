@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import sample.ch.ffhs.c3rbytes.crypto.StringHasher;
 import sample.ch.ffhs.c3rbytes.dao.DBConnection;
 
 import java.awt.event.ActionEvent;
@@ -18,6 +19,7 @@ public class loginViewController {
     @FXML private javafx.scene.control.PasswordField loginViewPasswordField;
     @FXML private javafx.scene.control.Button loginButton;
     @FXML private javafx.scene.control.Button logoutButton;
+    private final String HASHALGORITHM = "SHA3-512";
 
     public void loginAction(javafx.event.ActionEvent actionEvent) throws IOException, SQLException, ClassNotFoundException {
         //TODO: Correct login authentication with dB
@@ -32,12 +34,12 @@ public class loginViewController {
         System.out.println("masterpassword: " + mpTextField);
 
         //TODO:hash masterpw and pass it to bootPassword
-        String bootPassword = mpTextField;
-        DBConnection.bootPassword = bootPassword;
+        String dbPassword = mpTextField;
+        StringHasher stringHasher = new StringHasher();
+        //String hashedPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM,dbPassword).substring(0,24);
+        String hashedPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM,dbPassword);
 
-        // To test if an error is catched
-        //public static String passwordDB = "654321654321";
-        //DBConnection.passwordDB = mpTextField;
+        DBConnection.passwordDB = hashedPasswordDB;
 
         System.out.println("DBConnPW: " + DBConnection.passwordDB);
 
@@ -48,16 +50,6 @@ public class loginViewController {
             DBConnection.getConnection();
 
             System.out.println("Access to DB granted");
-            /*
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/login_view_masterpassphrase.fxml"));
-            Parent root = loader.load();
-            //passwordGeneratorController pwGenCon = loader.getController();
-            //pwGenCon.getpwdOutputTextField(passwordField);
-            Stage stage = new Stage();
-            stage.setTitle("C3rBytes Login Masterpassphrase");
-            stage.setScene(new Scene(root, 552, 371));
-            stage.show();
-            */
             Parent parent = FXMLLoader.load(getClass().getResource("../gui/login_view_masterpassphrase.fxml"));
             Scene loginView = new Scene(parent);
 

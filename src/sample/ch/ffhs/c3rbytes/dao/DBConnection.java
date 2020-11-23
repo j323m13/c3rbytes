@@ -4,8 +4,9 @@ import java.sql.*;
 
 public class DBConnection {
     private static final String userDB = "cerbytes";
-    public static String passwordDB = "tH94mLBaKr";
-    public static String bootPassword;
+    public static String passwordDB;
+    //public static String passwordDB = "tH94mLBaKr";
+    public static String bootPassword = "654321654321";
     public static String newBootPassword;
     public boolean newBootPasswordEnabled = false;
     private static final int encryptionKeyLength = 192;
@@ -52,15 +53,21 @@ public class DBConnection {
      * jdbc:derby:salesdb;bootPassword=abc1234xyz;newBootPassword=new1234xyz
      * @param the newBootPassword
      */
-    public static Connection changebootPasswordAndEncryptDBWithNewBootPassword(String oldBootPassword, String newBootPassword) throws SQLException {
-        DBConnection.bootPassword = oldBootPassword;
-        String connectionString = createUrlWithParamenters()+";newBootPassword="+newBootPassword;
+    public static void changebootPasswordAndEncryptDBWithNewBootPassword(String oldPassword, String newMasterpassword) throws SQLException, ClassNotFoundException {
+        DBConnection.passwordDB = oldPassword;
 
-        //String connectionString = "jdbc:derby:"+databaseName+";user="+ userDB+";password="+passwordDB+";bootPassword="+oldBootPassword+";newBootPassword="+newBootPassword;
-        Connection connection =  DriverManager.getConnection(connectionString);
+        String connectionString = createUrlWithParamenters();
+
         System.out.println(connectionString);
-        connection.close();
-        return connection;
+
+        Connection conn = DBConnection.getConnection();
+        CallableStatement cs = conn.prepareCall("CALL SYSCS_UTIL.SYSCS_RESET_PASSWORD(?, ?)");
+        cs.setString(1, "cerbytes");
+        cs.setString(2, newMasterpassword);
+        cs.execute();
+        cs.close();
+        conn.close();
+        //return connection;
     }
 
     public static Connection getConnection() throws SQLException, ClassNotFoundException {
