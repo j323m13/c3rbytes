@@ -6,8 +6,8 @@ public class DBConnection {
     private static final String userDB = "cerbytes";
     public static String passwordDB;
     //public static String passwordDB = "tH94mLBaKr";
-    //public static String oldBootPassword = "c12345";
-    public static String oldBootPassword = "f235c129089233ce3c9c85f1";
+    public static String oldBootPassword = "c12345";
+    //public static String oldBootPassword = "f235c129089233ce3c9c85f1";
     public static String newBootPassword;
     public boolean newBootPasswordEnabled = false;
     private static final int encryptionKeyLength = 192;
