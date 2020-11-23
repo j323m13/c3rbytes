@@ -267,11 +267,26 @@ public class mainViewController implements Initializable {
         System.exit(0);
     }
 
-    public void modifyProfileAction(ActionEvent event){
+    public void modifyProfileAction(ActionEvent event) throws IOException {
         //TODO: Open view_item.fxml and edit the entry.
         System.out.println("Modify Profile Action");
 
+        try {
+            DatabaseEntry dbEntry = profileTable.getSelectionModel().getSelectedItem();
 
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/view_item.fxml"));
+            Parent root = loader.load();
+
+            viewItemController vieICont = loader.getController();
+            vieICont.fillIn(dbEntry);
+
+            Stage stage = new Stage();
+            stage.setTitle("Modify entry");
+            stage.setScene(new Scene(root, 545, 420));
+            stage.show();
+        } catch(Exception e){
+            e.printStackTrace();
+        }
 
     }
 
@@ -330,14 +345,16 @@ public class mainViewController implements Initializable {
     }
     //TODO: to delete?
     private TableView tableView;
-    public static void startOpenSelectedItemsToView() throws IOException {
+    public void startOpenSelectedItemsToView() throws IOException {
         isNew = false;
-        FXMLLoader loader = new FXMLLoader(loginViewMasterpassphraseController.class.getResource("../gui/add_new_item_view.fxml"));
+
+        FXMLLoader loader = new FXMLLoader(loginViewMasterpassphraseController.class.getResource("../gui/view_item.fxml"));
         Parent root = loader.load();
         Stage stage = new Stage();
-        stage.setTitle("C3rBytes Main");
-        stage.setScene(new Scene(root, 600, 600));
+        stage.setTitle("C3rBytes modify entry");
+        stage.setScene(new Scene(root, 600, 400));
         stage.show();
+
     }
 
 
@@ -349,7 +366,7 @@ public class mainViewController implements Initializable {
         try {
             changePassword = FXMLLoader.load(getClass().getResource("../gui/change_password_view.fxml"));
             Stage stage = new Stage();
-            stage.setTitle("Change Password");
+            stage.setTitle("Change Masterpassword");
             stage.setScene(new Scene(changePassword,600, 400));
             stage.show();
         } catch (IOException e) {
@@ -363,7 +380,7 @@ public class mainViewController implements Initializable {
     public void changeMasterPPAction(ActionEvent actionEvent){
 
         //TODO: here we have to open login_view_masterpassphrase.fxml and aks for the passphrase or something similar
-        String oldPassPhrase = "das ist ein test";
+        String oldPassPhrase = "leer";
 
         Parent changePassphrase;
 
@@ -380,7 +397,7 @@ public class mainViewController implements Initializable {
             stage.setScene(new Scene(changePassphrase,600, 400));
             stage.show();
 
-            String newPassPhrase = "leer";
+            String newPassPhrase = "password123";
             fileEncrypterDecrypter.encryptFile(originalContent, FILENAME, newPassPhrase);
 
 
@@ -407,7 +424,7 @@ public class mainViewController implements Initializable {
 
     }
 
-    @FXML
+
     public void getRow(MouseEvent actionEvent) {
         DatabaseEntry dbEntry = profileTable.getSelectionModel().getSelectedItem();
         System.out.print(dbEntry.getId());

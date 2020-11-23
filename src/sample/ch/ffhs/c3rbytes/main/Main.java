@@ -54,7 +54,9 @@ public class Main extends Application {
 
         // First Init
         FileHandler fileHandler = new FileHandler();
-        if (fileHandler.readFromFile("c3r.c3r").equals("File does not exist")){
+        String file = "c3r.c3r";
+        //fileHandler.setReadWriteAttributes(file,"allow");
+        if (fileHandler.readFromFile(file).equals("File does not exist")){
             System.out.println("Enter Masterpassword Dialog");
 
             Parent setMasterpasswordView = FXMLLoader.load(getClass().getResource("../gui/set_master_pw_view.fxml"));
@@ -65,12 +67,12 @@ public class Main extends Application {
         }
         else{ // or just logging in
             //start login_view
-            Parent loginViewMP = FXMLLoader.load(Main.class.getResource("../gui/login_view.fxml"));
+            Parent loginViewMP = FXMLLoader.load(getClass().getResource("../gui/login_view.fxml"));
             //stage stage = new Stage();
             stage.setTitle("C3rBytes Login Masterpassword");
             stage.setScene(new Scene(loginViewMP, 552, 371));
         }
-
+        //fileHandler.setReadWriteAttributes(file,"deny");
         stage.show();
     }
 

@@ -16,7 +16,7 @@ public class ClipboardHandler{
         String clipboardContent = content.getString();
         System.out.println("clipboardContent: " + clipboardContent);
         clipboard.setContent(content);
-        setTimer(5000,1000);
+        setTimer(9000,1000);
     }
 
     public void clearClipboard(Timer timer) {

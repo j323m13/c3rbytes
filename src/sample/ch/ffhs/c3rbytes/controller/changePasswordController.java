@@ -3,11 +3,57 @@ package sample.ch.ffhs.c3rbytes.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
+import sample.ch.ffhs.c3rbytes.dao.DBConnection;
+
+import java.sql.SQLException;
 
 public class changePasswordController {
 
+    @FXML javafx.scene.control.TextField oldMasterPasswordField;
+    @FXML javafx.scene.control.TextField newPasswordField;
+    @FXML javafx.scene.control.TextField newPasswordConfirmField;
+    @FXML javafx.scene.control.Label oldPasswordErrorLabel;
+    @FXML javafx.scene.control.Label passwordMatchErrorLabel;
 
-    public void changePasswordAction(ActionEvent actionEvent) {
+    public void changePasswordAction(ActionEvent actionEvent) throws SQLException {
+        String oldMasterpassword = oldMasterPasswordField.getText();
+        String newMasterpassword = newPasswordField.getText();
+        String newMasterpasswordConfirmed = newPasswordConfirmField.getText();
+        boolean isFilledOut = true;
+
+        oldPasswordErrorLabel.setText("");
+        passwordMatchErrorLabel.setText("");
+
+        if (oldMasterpassword.equals("") || oldMasterpassword.length() == 0){
+            oldPasswordErrorLabel.setText("Please fill out old masterpassword");
+            isFilledOut = false;
+            System.out.println("fill out masterpassword");
+        }
+
+        if (newMasterpassword.equals("") || newMasterpassword.length() == 0){
+            oldPasswordErrorLabel.setText("Please fill out new masterpassword");
+            isFilledOut = false;
+            System.out.println("fill out masterpassword");
+        }
+
+        if (newMasterpasswordConfirmed.equals("") || newMasterpasswordConfirmed.length() == 0){
+            oldPasswordErrorLabel.setText("Please fill out confirmation for the new masterpassword");
+            isFilledOut = false;
+            System.out.println("fill out masterpassword");
+        }
+
+        if (isFilledOut && newMasterpassword.equals(newMasterpasswordConfirmed)) {
+            try {
+                DBConnection.changebootPasswordAndEncryptDBWithNewBootPassword(oldMasterpassword, newMasterpassword);
+                discardPasswordAction(null);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        } else{
+            passwordMatchErrorLabel.setText("New password does not match");
+            System.out.println("New password does not match");
+        }
+
 
     }
 

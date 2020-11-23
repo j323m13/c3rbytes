@@ -118,6 +118,10 @@ public class DatabaseEntry{
         this.id.set(id);
     }
 
+    public DatabaseEntry getAll(){
+        return this;
+    }
+
     /*
         public DatabaseEntry() {
             //creation of a DatabaseEntry without paramenters.

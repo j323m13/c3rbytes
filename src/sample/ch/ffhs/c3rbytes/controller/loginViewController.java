@@ -2,11 +2,13 @@ package sample.ch.ffhs.c3rbytes.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.dao.DBConnection;
 
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -17,13 +19,13 @@ public class loginViewController {
     @FXML private javafx.scene.control.Button loginButton;
     @FXML private javafx.scene.control.Button logoutButton;
 
-    public void loginAction() throws IOException, SQLException, ClassNotFoundException {
+    public void loginAction(javafx.event.ActionEvent actionEvent) throws IOException, SQLException, ClassNotFoundException {
         //TODO: Correct login authentication with dB
         System.out.println("LoginAction");
         // Here comes the db check, if mp is correct --> successful login if correct populate
         // to test set dbLogincorrect to true
 
-        boolean dbLogincorrect = true;
+        //boolean dbLogincorrect = true;
 
         // password to forward to the db
         String mpTextField = loginViewPasswordField.getText();
@@ -46,7 +48,7 @@ public class loginViewController {
             DBConnection.getConnection();
 
             System.out.println("Access to DB granted");
-
+            /*
             FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/login_view_masterpassphrase.fxml"));
             Parent root = loader.load();
             //passwordGeneratorController pwGenCon = loader.getController();
@@ -55,6 +57,17 @@ public class loginViewController {
             stage.setTitle("C3rBytes Login Masterpassphrase");
             stage.setScene(new Scene(root, 552, 371));
             stage.show();
+            */
+            Parent parent = FXMLLoader.load(getClass().getResource("../gui/login_view_masterpassphrase.fxml"));
+            Scene loginView = new Scene(parent);
+
+            //This line gets the Stage information
+            Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+
+            window.setScene(loginView);
+            window.show();
+
+
 
         }catch ( SQLException e){
             System.out.println("Access to DB denied");
@@ -62,8 +75,8 @@ public class loginViewController {
             e.printStackTrace();
         }
 
-        Stage stage =  (Stage) loginButton.getScene().getWindow();
-        stage.close();
+        //Stage stage =  (Stage) loginButton.getScene().getWindow();
+        //stage.close();
 
     }
 
@@ -71,5 +84,8 @@ public class loginViewController {
         System.out.println("LogoutAction");
         System.exit(0);
     }
+    /*
+    public void loginAction(javafx.event.ActionEvent actionEvent) {
 
+    }*/
 }

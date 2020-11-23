@@ -23,7 +23,7 @@ public class FileHandler {
         Files.write(path, content);
 
         //setReadWriteAttributes(file, false);
-        setReadWriteAttributes(file, "deny");
+        //setReadWriteAttributes(file, "deny");
 
     }
 
@@ -44,7 +44,8 @@ public class FileHandler {
         }
     }
 
-    public void setReadWriteAttributes(String file, String permissionToAccess) throws IOException {
+
+    public void setReadWriteAttributes(String file, boolean isHidden) throws IOException {
         File file1 = new File(file);
 
         //Path path = Paths.get(file);
@@ -52,27 +53,41 @@ public class FileHandler {
         System.out.println("fileabspath: " + file1.getAbsolutePath());
 
 
-        switch (permissionToAccess){
+        if (isHidden){
+            //Runtime.getRuntime().exec(new String[]{"attrib", "+H", file});
+            Runtime.getRuntime().exec("attrib +H " + file);
+            file1.setWritable(false);
+        } else{
+            file1.setWritable(true);
+        }
+
+        /*
+        switch (isHidden){
             case "allow":
                 // allow all permissions
-                Runtime.getRuntime().exec(new String[]{"cacls", file1.getAbsolutePath(), "/E", "/P", "Benutzer:f"} );
+                Runtime.getRuntime().exec(new String[]{"attrib", "+H", file});
+                //Runtime.getRuntime().exec(new String[]{"cacls", file1.getAbsolutePath(), "/E", "/P", "Benutzer:f"} );
                 return;
 
             case "deny":
                 // deny all permissions
-                Runtime.getRuntime().exec(new String[]{"cacls", file1.getAbsolutePath(), "/E", "/P", "Benutzer:n"});
+                //Runtime.getRuntime().exec(new String[]{"cacls", file1.getAbsolutePath(), "/E", "/P", "Benutzer:n"});
                 return;
         }
 
         //file1.setWritable(permissionToAccess);
         //file1.setReadable(bool);
+
+         */
     }
 
 
     public static void main(String[] args) throws IOException {
         FileHandler fileHandler = new FileHandler();
-        fileHandler.setReadWriteAttributes("testfile.txt", "deny");
+        fileHandler.setReadWriteAttributes("testfile.txt", true);
 
     }
+
+
 
 }

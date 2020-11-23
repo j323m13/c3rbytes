@@ -30,12 +30,12 @@ public class FileHandlerTest {
         assertTrue(file.exists());
 
         //fileHandler.setReadWriteAttributes(filename,false);
-        fileHandler.setReadWriteAttributes(filename,"deny");
+        //fileHandler.setReadWriteAttributes(filename,"deny");
 
         assertTrue(file.canWrite() == false);
 
         //fileHandler.setReadWriteAttributes(filename,true);
-        fileHandler.setReadWriteAttributes(filename,"allow");
+        //fileHandler.setReadWriteAttributes(filename,"allow");
 
         assertTrue(file.canWrite() == true);
 

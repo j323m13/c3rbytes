@@ -32,11 +32,12 @@ public class FileEncrypterDecrypter {
 
         // save to file and disable write permissions
         FileHandler fileHandler = new FileHandler();
-        //fileHandler.setReadWriteAttributes(toFile,true);
-        fileHandler.setReadWriteAttributes(toFile,"allow");
+        fileHandler.setReadWriteAttributes(toFile,false);
+        //fileHandler.setReadWriteAttributes(toFile,"allow");
         fileHandler.writeToFile(toFile, encryptedByteText);
+        fileHandler.setReadWriteAttributes(toFile, true);
         //fileHandler.setReadWriteAttributes(toFile,false);
-        fileHandler.setReadWriteAttributes(toFile,"deny");
+        //fileHandler.setReadWriteAttributes(toFile,"deny");
         fileHandler = null;
 
         passwordEncrypterDecrypter = null;
@@ -50,8 +51,9 @@ public class FileEncrypterDecrypter {
         // Enable write Persmissions of the file
         FileHandler fileHandler = new FileHandler();
         //fileHandler.setReadWriteAttributes(fromEncryptedFile, true);
+        //fileHandler.setReadWriteAttributes(fromEncryptedFile, true);
 
-        fileHandler.setReadWriteAttributes(fromEncryptedFile, "allow");
+        //fileHandler.setReadWriteAttributes(fromEncryptedFile, "allow");
 
 
         // read from file
@@ -76,7 +78,8 @@ public class FileEncrypterDecrypter {
         */
 
         //fileHandler.setReadWriteAttributes(fromEncryptedFile, false);
-        fileHandler.setReadWriteAttributes(fromEncryptedFile, "deny");
+        //fileHandler.setReadWriteAttributes(fromEncryptedFile, "deny");
+        //fileHandler.setReadWriteAttributes(fromEncryptedFile, false);
 
         return decryptedByteText;
 

@@ -52,8 +52,13 @@ public class DBConnection {
      * jdbc:derby:salesdb;bootPassword=abc1234xyz;newBootPassword=new1234xyz
      * @param the newBootPassword
      */
-    public static Connection changebootPasswordAndEncryptDBWithNewBootPassword(String newBootPassword) throws SQLException {
-        Connection connection =  DriverManager.getConnection(createUrlWithParamenters()+"newBootPassword="+newBootPassword);
+    public static Connection changebootPasswordAndEncryptDBWithNewBootPassword(String oldBootPassword, String newBootPassword) throws SQLException {
+        DBConnection.bootPassword = oldBootPassword;
+        String connectionString = createUrlWithParamenters()+";newBootPassword="+newBootPassword;
+
+        //String connectionString = "jdbc:derby:"+databaseName+";user="+ userDB+";password="+passwordDB+";bootPassword="+oldBootPassword+";newBootPassword="+newBootPassword;
+        Connection connection =  DriverManager.getConnection(connectionString);
+        System.out.println(connectionString);
         connection.close();
         return connection;
     }
