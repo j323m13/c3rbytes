@@ -2,6 +2,7 @@ package sample.ch.ffhs.c3rbytes.dao;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.chart.PieChart;
 import org.apache.commons.dbutils.QueryRunner;
 
 import javax.xml.crypto.Data;
@@ -12,9 +13,14 @@ public class DatabaseEntryDao implements Dao{
 
     private static final QueryRunner dbAccess = new QueryRunner();
 
+    private DatabaseEntry createSimple(String id, String username, String description,
+                                 String url, String password){
+        return new DatabaseEntry(username, description, url, password);
+    }
 
 
-    public static ObservableList<DatabaseEntry> getAll(ObservableList<DatabaseEntry> databaseEntries) throws SQLException, ClassNotFoundException {
+
+    public ObservableList<DatabaseEntry> getAll(ObservableList<DatabaseEntry> databaseEntries) throws SQLException, ClassNotFoundException {
         Connection connection = DBConnection.getConnection();
         PreparedStatement ps = null;
 
@@ -74,12 +80,56 @@ public class DatabaseEntryDao implements Dao{
     }
 
     @Override
-    public Dao update() {
+    public Dao update(DatabaseEntry entry) throws SQLException, ClassNotFoundException {
+        if(entry !=null){
+            Connection connection = DBConnection.getConnection();
+            PreparedStatement update = null;
+            update = connection.prepareStatement(
+                    "UPDATE \"CERBYTES\".\"database_entries\" SET \"username\" = ?,"+
+                    "\"description\"=?,"+
+                    "\"url_content\"=?,"+
+                    "\"password_text\"=?,"+
+                    "\"date_creation\"=?,"+
+                    "\"date_update\"=? WHERE \"user_id\"=?"
+            );
+            // we give the date to update
+            update.setString(1,entry.getUsername());
+            update.setString(2,entry.getDescription());
+            update.setString(3,entry.getUrl());
+            update.setString(4,entry.getPassword());
+            update.setString(5,entry.getCreationDate());
+            update.setString(6,entry.getLastUpdate());
+            update.setString(7,entry.getId());
+            try {
+                update.executeUpdate();
+
+            System.out.println("entry was updated succesfully.");
+            }catch (SQLException e){
+                System.out.print(e);
+            }
+        }
         return null;
     }
 
+
+
+
+
+
     @Override
-    public Dao delete() {
+    public Dao delete(DatabaseEntry entry) throws SQLException, ClassNotFoundException {
+        if(entry !=null){
+            Connection connection = DBConnection.getConnection();
+            PreparedStatement delete = null;
+
+            delete = connection.prepareStatement("DELETE FROM \"CERBYTES\".\"database_entries\" WHERE \"user_id\"="+entry.getId()+"");
+            try {
+                delete.executeUpdate();
+            }catch (SQLException e){
+                System.out.print(e);
+            }
+        }
+
         return null;
     }
 /*
@@ -138,7 +188,7 @@ public class DatabaseEntryDao implements Dao{
      * Insert a DatabaseEntry Object into the Database
      *
     */
-    public static void insertDatabaseEntry(DatabaseEntry databaseEntry) throws SQLException, ClassNotFoundException {
+    public void insertDatabaseEntry(DatabaseEntry databaseEntry) throws SQLException, ClassNotFoundException {
         Connection connection = DBConnection.getConnection();
         PreparedStatement ps = connection.prepareStatement("INSERT INTO CERBYTES.\"database_entries\" " +
                 "(\"username\", \"description\", \"url_content\", \"password_text\", \"date_creation\", \"date_update\")" +
@@ -156,6 +206,9 @@ public class DatabaseEntryDao implements Dao{
     }
 
 
+    public DatabaseEntry createSimple(String username, String password, String description, String url) {
+        return new DatabaseEntry(username, description, url, password);
     }
+}
 
 

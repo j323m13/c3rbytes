@@ -103,7 +103,7 @@
               <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteProfileAction" prefHeight="25.0" prefWidth="109.0" text="Delete Profile" GridPane.columnIndex="4" />
               <Button fx:id="copyButton" mnemonicParsing="false" onAction="#copyPasswordAction" prefHeight="25.0" prefWidth="109.0" text="Copy Password" GridPane.columnIndex="3" />
               <Button fx:id="addButton" mnemonicParsing="false" onAction="#addNewItemAction" prefHeight="25.0" prefWidth="109.0" text="Add profile" GridPane.columnIndex="2" />
-              <Button fx:id="modifyButton" mnemonicParsing="false" onAction="#modifyProfileAction" prefHeight="25.0" prefWidth="109.0" text="Modify Profile" GridPane.columnIndex="1" />
+              <Button fx:id="modifyButton" mnemonicParsing="false"  prefHeight="25.0" prefWidth="109.0" text="Modify Profile" GridPane.columnIndex="1" />
               <Label text="Found Items: " />
               <Label fx:id="foundLabel" prefHeight="17.0" prefWidth="40.0" text="#" GridPane.halignment="RIGHT" />
          </children>

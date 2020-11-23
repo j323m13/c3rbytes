@@ -26,8 +26,16 @@ import java.sql.SQLException;
 
 public class addNewItemController {
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
-
+    @FXML public TextField passwordField;
+    @FXML public TextField userNameField;
+    @FXML private javafx.scene.control.Label viewLastUpdateLabel;
+    private boolean update = false;
     @FXML private javafx.scene.control.Button saveButton;
+    @FXML private javafx.scene.control.Button showPasswordButton;
+    @FXML TextInputControl typeField;
+    @FXML TextInputControl urlField;
+    @FXML javafx.scene.control.Button discardButton;
+
     //@FXML private javafx.scene.control.Button generatePasswordButton;
     public void generatePassword(ActionEvent event){
         //TODO: for all views: find a better approach to handle stage changes
@@ -47,32 +55,26 @@ public class addNewItemController {
         }
     }
 
-    @FXML public TextField passwordField;
-    @FXML public TextField userNameField;
-    public void fillPasswordField(String password){
-        System.out.println("HEEH");
-        passwordField.setText("hro");
-        userNameField.setText("done");
-
-    }
-
     public void write(String Te){
         System.out.println(Te);
     }
-
-    @FXML private javafx.scene.control.Button showPasswordButton;
     public void showPassword(ActionEvent event){
         passwordField.setText("Test");
     }
+    public void fillIn(DatabaseEntry dbentry, boolean fromMainView){
+        userNameField.setText(dbentry.getUsername());
+        passwordField.setText(dbentry.getPassword());
+        urlField.setText(dbentry.getUrl());
+        //viewNotesField.setText(dbentry.getDescription());
+        viewLastUpdateLabel.setText(dbentry.getLastUpdate());
 
-    @FXML
-    TextInputControl typeField;
-    @FXML
-    TextInputControl urlField;
+    }
 
-
-    public void getValueFromTextField(ActionEvent actionEvent) throws Exception {
-
+    public void onDiscardButton(ActionEvent actionEvent) {
+        Stage stage = (Stage) discardButton.getScene().getWindow();
+        stage.close();
+    }
+    public void onSaveButton(ActionEvent actionEvent) throws Exception {
         String username = userNameField.getText();
         String password = passwordField.getText();
         String description = typeField.getText();
@@ -81,6 +83,7 @@ public class addNewItemController {
         System.out.println(password);
         System.out.println(description);
         System.out.println(url);
+        DatabaseEntryDao updateDao = new DatabaseEntryDao();
 
         // get secretKey of the file c3r.c3r
         String passwordDecrypterPassword = loginViewMasterpassphraseController.passwordDecrypterPassword;
@@ -101,34 +104,32 @@ public class addNewItemController {
         System.out.println("decryptedAccountPassword: " + decryptedAccountPassword);
 
         // save to DB
-        DatabaseEntry item = new DatabaseEntry(null, username, description, url, encryptedAccountPassword, DatabaseEntry.getDateTime(), DatabaseEntry.getDateTime());
-        try {
-            insertDatabaseEntry(item);
-        } catch (Exception e) {
-            System.out.print(e);
-        }
+        if(update){
+            try {
+                updateDao.update(updateDao.createSimple(username, password, description, url));
+            }catch (SQLException | ClassNotFoundException e){
+                System.out.println(e);
+            }
 
+        }else{
+            try {
+                updateDao.insertDatabaseEntry(updateDao.createSimple(username, password, description, url));
+            }catch (SQLException | ClassNotFoundException e){
+                System.out.print(e);
+            }
+        }
 
         // close the window
         Stage stage = (Stage) saveButton.getScene().getWindow();
         stage.close();
 
-
-        //TODO: !!!!we have to reload the table
+        //reload mainview
+        reloadMainView();
 
     }
 
-
-
-
-    private void insertDatabaseEntry(DatabaseEntry item) throws SQLException, ClassNotFoundException {
-        //TODO: implement DatabaseEntryDao not static ??
-        DatabaseEntryDao.insertDatabaseEntry(item);
-    }
-
-    @FXML javafx.scene.control.Button discardButton;
-    public void discardAction(ActionEvent actionEvent) {
-        Stage stage = (Stage) discardButton.getScene().getWindow();
-        stage.close();
+    private void reloadMainView() {
+        //TODO create relaod methode in main view and call it here.
     }
 }
+

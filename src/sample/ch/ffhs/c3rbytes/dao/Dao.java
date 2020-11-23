@@ -10,6 +10,6 @@ public interface Dao {
 
     Dao getEntryById(int id) throws SQLException, ClassNotFoundException;
     Dao save();
-    Dao update();
-    Dao delete();
+    Dao update(DatabaseEntry databaseEntry) throws SQLException, ClassNotFoundException;
+    Dao delete(DatabaseEntry databaseEntry) throws SQLException, ClassNotFoundException;
 }

@@ -10,7 +10,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
@@ -24,7 +23,6 @@ import sample.ch.ffhs.c3rbytes.utils.UrlOpener;
 import javax.crypto.AEADBadTagException;
 import javax.swing.text.TableView;
 import java.awt.event.MouseEvent;
-import java.awt.image.DataBuffer;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -65,6 +63,8 @@ public class mainViewController implements Initializable {
     @FXML
     private TableColumn<DatabaseEntry, String> urlColumn;
 
+    private boolean fromMainView = true;
+
     @FXML
     public ObservableList<DatabaseEntry> databaseEntries = FXCollections.observableArrayList();
 
@@ -72,9 +72,7 @@ public class mainViewController implements Initializable {
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
 
 
-
-
-    public void copyClickedEntry(){
+    public DatabaseEntry copyClickedEntry(){
         DatabaseEntry tmp = new DatabaseEntry(
                 profileTable.getSelectionModel().getSelectedItem().getId(),
                 profileTable.getSelectionModel().getSelectedItem().getUsername(),
@@ -85,12 +83,9 @@ public class mainViewController implements Initializable {
                 profileTable.getSelectionModel().getSelectedItem().getLastUpdate());
         System.out.println(profileTable.getSelectionModel().getSelectedItem().getId());
         System.out.print(tmp.getUsername()+", "+tmp.getPassword()+", "+tmp.getUrl()+", "+tmp.getHiddenPasswordTrick());
-        try {
-            startOpenSelectedItemsToView();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return tmp;
     }
+    
 
     public void startMouseClicks(){
         //Methode to listen to mouse clicks
@@ -98,7 +93,11 @@ public class mainViewController implements Initializable {
             @Override
             public void handle(javafx.scene.input.MouseEvent mouseEvent) {
                 if ((mouseEvent.getClickCount() == 2)) {
-                    copyClickedEntry();
+                    try {
+                        startOpenSelectedItemsToView(copyClickedEntry());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                     //TODO open view of the selected item
                 }
@@ -207,7 +206,8 @@ public class mainViewController implements Initializable {
 
     private static ObservableList populateTableViews(ObservableList entries) throws SQLException, ClassNotFoundException {
         entries.clear();
-        DatabaseEntryDao.getAll(entries);
+        DatabaseEntryDao newDao = new DatabaseEntryDao();
+        newDao.getAll(entries);
         return entries;
     }
 
@@ -267,17 +267,17 @@ public class mainViewController implements Initializable {
         System.exit(0);
     }
 
+    /*
     public void modifyProfileAction(ActionEvent event) throws IOException {
-        //TODO: Open view_item.fxml and edit the entry.
         System.out.println("Modify Profile Action");
 
         try {
             DatabaseEntry dbEntry = profileTable.getSelectionModel().getSelectedItem();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/view_item.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/add_new_item_view.fxml"));
             Parent root = loader.load();
 
-            viewItemController vieICont = loader.getController();
+            addNewItemController vieICont = loader.getController();
             vieICont.fillIn(dbEntry);
 
             Stage stage = new Stage();
@@ -289,6 +289,7 @@ public class mainViewController implements Initializable {
         }
 
     }
+     */
 
     @FXML private Button searchButton;
     public void searchAction(ActionEvent event){
@@ -328,31 +329,63 @@ public class mainViewController implements Initializable {
     }
 
     @FXML private Button deleteButton;
-    public void deleteProfileAction(ActionEvent event){
-        //TODO: Delete profile. Pop up alert.
+    public void deleteProfileAction(ActionEvent event) throws IOException, SQLException, ClassNotFoundException {
+        showAlert();
+        DatabaseEntryDao deleter = new DatabaseEntryDao();
+        try {
+            deleter.delete(copyClickedEntry());
+            System.out.println("entry has been deleted");
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println("delete not working");
+            throw e;
+        }
 
-        // Test to change cursor appearence to default. Its purpose is for after a search or load function to get back to default curser
-        System.out.println("Delete Profile Action");
-        Scene scene = searchButton.getScene();
-        scene.setCursor(Cursor.DEFAULT);
+        /*
+        TODO Implement alert windows: https://www.geeksforgeeks.org/javafx-alert-with-examples/
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("../gui/alert_view.fxml"));
+        Parent alertViewControllerParent = loader.load();
+        alertViewController controller = loader.getController();
+        controller.passTheData(copyClickedEntry());
+        Stage stage = new Stage();
+        stage.setTitle("Alert");
+        stage.setScene(new Scene(alertViewControllerParent, 400,400));
+        stage.show();
+         */
 
     }
 
+    public void showAlert(){
+        Button b = new Button("Confirmation alert");
+        Alert a = new Alert(Alert.AlertType.NONE);
+        // action event
+        EventHandler<ActionEvent> event = new
+                EventHandler<ActionEvent>() {
+                    public void handle(ActionEvent e)
+                    {
+                        // set alert type
+                        a.setAlertType(Alert.AlertType.CONFIRMATION);
 
+                        // show the dialog
+                        a.show();
+                    }
+                };
+    }
     public void deleteAccountAction(ActionEvent actionEvent) {
         //TODO: Define deleting account
         System.out.println("Delete Account Action");
     }
     //TODO: to delete?
     private TableView tableView;
-    public void startOpenSelectedItemsToView() throws IOException {
-        isNew = false;
-
-        FXMLLoader loader = new FXMLLoader(loginViewMasterpassphraseController.class.getResource("../gui/view_item.fxml"));
-        Parent root = loader.load();
+    public void startOpenSelectedItemsToView(DatabaseEntry dbentry) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("../gui/add_new_item_view.fxml"));
+        Parent viewItemControllerParent = loader.load();
+        addNewItemController controller = loader.getController();
+        controller.fillIn(copyClickedEntry(),fromMainView);
         Stage stage = new Stage();
-        stage.setTitle("C3rBytes modify entry");
-        stage.setScene(new Scene(root, 600, 400));
+        stage.setTitle("View item");
+        stage.setScene(new Scene(viewItemControllerParent, 600,400));
         stage.show();
 
     }

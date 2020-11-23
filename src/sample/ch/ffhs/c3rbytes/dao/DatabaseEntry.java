@@ -33,6 +33,17 @@ public class DatabaseEntry{
         passwordTrick = "* * * * *";
     }
 
+    public DatabaseEntry(String username, String description,
+                         String url, String password){
+        this.username = new SimpleStringProperty(username);
+        this.description = new SimpleStringProperty(description);
+        this.url = new SimpleStringProperty(url);
+        this.password = new SimpleStringProperty(password);
+        this.creationDate = new SimpleStringProperty(DatabaseEntry.getDateTime());
+        this.lastUpdate = new SimpleStringProperty(getCreationDate());
+        passwordTrick = "* * * * *";
+    }
+
 
     public String getDescription() {
         return description.get();

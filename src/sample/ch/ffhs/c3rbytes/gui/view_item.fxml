@@ -15,7 +15,7 @@
   <children>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="371.0" prefWidth="640.0" VBox.vgrow="ALWAYS">
       <children>
-            <TextField fx:id="viewUserNameField" editable="false" layoutX="160.0" layoutY="42.0" prefHeight="25.0" prefWidth="220.0" promptText="Username" text="john2020" />
+            <TextField fx:id="viewUserNameField" editable="false" layoutX="160.0" layoutY="42.0" prefHeight="25.0" prefWidth="220.0" promptText="Username"  />
             <TextField fx:id="viewTypeField" editable="false" layoutX="160.0" layoutY="140.0" prefHeight="25.0" prefWidth="220.0" promptText="Social or Private" text="Social" />
             <TextField fx:id="viewUrlField" editable="false" layoutX="160.0" layoutY="189.0" prefHeight="25.0" prefWidth="298.0" promptText="www.sitedomain.com" text="https://instagram.com" />
             <Label layoutX="57.0" layoutY="46.0" prefHeight="17.0" prefWidth="91.0" text="User name:" />
