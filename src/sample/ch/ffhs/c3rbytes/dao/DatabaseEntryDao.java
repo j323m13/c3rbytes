@@ -198,7 +198,7 @@ public class DatabaseEntryDao implements Dao{
         ps.setString(3, databaseEntry.getUrl());
         ps.setString(4, databaseEntry.getPassword());
         ps.setString(5, databaseEntry.getCreationDate());
-        ps.setString(6, databaseEntry.getLastUpdate());
+        ps.setString(6, databaseEntry.setLastUpdate().toString());
 
         int i = ps.executeUpdate();
         connection.close();

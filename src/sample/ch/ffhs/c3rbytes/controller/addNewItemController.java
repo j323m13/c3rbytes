@@ -107,6 +107,7 @@ public class addNewItemController {
         if(update){
             try {
                 updateDao.update(updateDao.createSimple(username, password, description, url));
+                update = false;
             }catch (SQLException | ClassNotFoundException e){
                 System.out.println(e);
             }

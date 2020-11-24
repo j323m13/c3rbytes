@@ -16,7 +16,7 @@ public class DatabaseEntry{
     private SimpleStringProperty  url;
     private SimpleStringProperty  password;
     private SimpleStringProperty  creationDate;
-    private SimpleStringProperty  lastUpdate;
+    private SimpleStringProperty lastUpdate;
     private String passwordTrick;
 
 
@@ -41,6 +41,17 @@ public class DatabaseEntry{
         this.password = new SimpleStringProperty(password);
         this.creationDate = new SimpleStringProperty(DatabaseEntry.getDateTime());
         this.lastUpdate = new SimpleStringProperty(getCreationDate());
+        passwordTrick = "* * * * *";
+    }
+
+    public DatabaseEntry(String username, String description,
+                         String url, String password, String creation){
+        this.username = new SimpleStringProperty(username);
+        this.description = new SimpleStringProperty(description);
+        this.url = new SimpleStringProperty(url);
+        this.password = new SimpleStringProperty(password);
+        this.creationDate = new SimpleStringProperty(creation);
+        this.lastUpdate = new SimpleStringProperty(DatabaseEntry.getDateTime());
         passwordTrick = "* * * * *";
     }
 
@@ -281,5 +292,11 @@ public class DatabaseEntry{
 
     public String getHiddenPasswordTrick() {
         return passwordTrick;
+    }
+
+    public StringProperty setLastUpdate() {
+        String time = getDateTime();
+        lastUpdate.set(time);
+        return lastUpdate;
     }
 }
