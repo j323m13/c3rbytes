@@ -4,9 +4,8 @@ import java.sql.*;
 
 public class DBConnection {
     private static final String userDB = "cerbytes";
-    public static String passwordDB;
-    //public static String passwordDB = "tH94mLBaKr";
-    public static String oldBootPassword = "c12345";
+    public static String passwordDB = "tH94mLBaKr";
+    public static String oldBootPassword;
     //public static String oldBootPassword = "f235c129089233ce3c9c85f1";
     public static String newBootPassword;
     public boolean newBootPasswordEnabled = false;
@@ -28,7 +27,7 @@ public class DBConnection {
      *
      */
     private static String createUrl(){
-        return JDBC_URL = "jdbc:derby:dbFactory;create=true";
+        return JDBC_URL = "jdbc:derby:dbFactory;create=true;user="+userDB;
 
     }
 
@@ -77,7 +76,7 @@ public class DBConnection {
 
         //DBConnection.close();
         //String url = getConnection()+";newBootPassword="+newBootMasterpassword;
-        String url = "jdbc:derby:"+databaseName+";user="+ userDB+";password="+passwordDB+";bootPassword="+oldBootMasterPassword+";newBootPassword="+newBootMasterpassword;
+        String url = "jdbc:derby:"+databaseName+";user="+userDB+";password="+passwordDB+";bootPassword="+oldBootMasterPassword+";newBootPassword="+newBootMasterpassword;
         System.out.println(url);
         DBConnection.oldBootPassword = newBootMasterpassword;
         connection = DriverManager.getConnection(url);
@@ -129,17 +128,49 @@ public class DBConnection {
     }
 
     //TODO to implement a setup routine
+    /*
+    * Create a user (userDB), a table in CERBYTES, set userDB password and encrypt the database with the masterpassword.
+     */
     public void setup() throws SQLException {
-        connection = DriverManager.getConnection(JDBC_URL);
-        String sqlCreate = "CREATE TABLE CERBYTES.\"user\" (\n" +
+        connection = DriverManager.getConnection(createUrl());
+        //create a simple url with a username (necessary). table belongs to this username afterwards.
+        System.out.println(createUrl());
+        //create a password for userdb
+        CallableStatement setup = connection.prepareCall("CALL SYSCS_UTIL.SYSCS_CREATE_USER(?, ?)");
+        setup.setString(1, DBConnection.userDB);
+        setup.setString(2, DBConnection.passwordDB);
+        setup.executeQuery();
+        setup = null;
+        // restart db
+        connection.close();
+        Connection connection = DriverManager.getConnection(createUrl());
+        // create table data_entries
+        String sqlCreate = "CREATE TABLE CERBYTES.\"data_entries\" (\n" +
                 "                        \"user_id\" INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY(Start with 1, Increment by 1),\n" +
                 "                        \"username\" VARCHAR(255) DEFAULT NULL,\n" +
                 "                        \"description\" VARCHAR(255) DEFAULT NULL,\n" +
                 "                        \"url_content\" VARCHAR(255) DEFAULT NULL,\n" +
                 "                        \"password_text\" VARCHAR(255) DEFAULT NULL,\n" +
                 "                        \"date_creation\" VARCHAR(20) DEFAULT NULL,\n" +
-                "                        \"date_update\" VARCHAR(20) DEFAULT NULL\n)";
-        //dbAccess.update(connection, sqlCreate);
+                "                        \"date_update\" VARCHAR(20) DEFAULT NULL,\n" +
+                "                       \"note\" CLOB(2K) DEFAULT NULL)";
+        try {
+            setup.executeQuery(sqlCreate);
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        connection.close();
+
+        // create url with all the parameters and encryption
+        System.out.println(createUrlWithParamenters());
+        try{
+            Connection secure = DriverManager.getConnection(createUrlWithParamenters());
+            secure.close();
+
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+
     }
 
     /*
