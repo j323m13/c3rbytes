@@ -8,6 +8,7 @@ public class DBConnection {
     public static String oldBootPassword;
     //public static String oldBootPassword = "f235c129089233ce3c9c85f1";
     public static String newBootPassword;
+    public static String bootPassword;
     public boolean newBootPasswordEnabled = false;
     private static final int encryptionKeyLength = 192;
     private static final String encryptionAlgorithm = "AES/CBC/NoPadding";
@@ -44,7 +45,7 @@ public class DBConnection {
                 ";dataEncryption="+databaseEncryption+
                 ";encryptionKeyLength="+encryptionKeyLength+
                 ";encryptionAlgorithm="+encryptionAlgorithm+
-                ";bootPassword="+ oldBootPassword +"";
+                ";bootPassword="+ bootPassword +"";
         return JDBC_URL;
     }
 
@@ -74,31 +75,24 @@ public class DBConnection {
         DBConnection.oldBootPassword = oldBootMasterPassword;
         DBConnection.newBootPassword = newBootMasterpassword;
 
-        //DBConnection.close();
-        //String url = getConnection()+";newBootPassword="+newBootMasterpassword;
-        String url = "jdbc:derby:"+databaseName+";user="+userDB+";password="+passwordDB+";bootPassword="+oldBootMasterPassword+";newBootPassword="+newBootMasterpassword;
-        System.out.println(url);
-        DBConnection.oldBootPassword = newBootMasterpassword;
-        connection = DriverManager.getConnection(url);
-        DBConnection.close();
-        connection = getConnection();
-        //DBConnection.close();
-        //DriverManager.getConnection("jdbc:derby:"+databaseName+";shutdown=true");
-
-        /*
-
-        CallableStatement cs = conn.prepareCall("CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY(?, ?, ?)");
-        cs.setString(1,"bootPassword");
-        cs.setString(2, oldBootMasterPassword);
-        cs.setString(3, newBootMasterpassword);
-        cs.execute();
-        cs.close();
-        conn.close();
-
-/*
-        DBConnection.JDBC_URL = createUrlWithParamenters() + ";newBootPassword="+newBootMasterpassword;
-        DBConnection.getConnection();
-*/
+        //connect to the db with old bootpassword and apply newBootPassword
+        //jdbc:derby:cerbytesdb;user=cerbytes;password=tH94mLBaKr;dataEncryption=true;encryptionKeyLength=192;encryptionAlgorithm=AES/CBC/NoPadding;
+        // bootPassword=654321654321Access to DB granted
+        Connection connection = DriverManager.getConnection(createUrlWithParamenters()+";newBootPassword="+newBootMasterpassword);
+        System.out.println(createUrlWithParamenters()+";newBootPassword="+newBootMasterpassword);
+        DBConnection.bootPassword = newBootPassword;
+        //shutdown the DB to apply newbootPassword
+        connection.close();
+        System.out.println("new url after bootpassword change: ");
+        System.out.println(createUrlWithParamenters());
+        //try the connection with the new bootPassword
+        try{
+            Connection connection2 = DriverManager.getConnection(createUrlWithParamenters());
+            connection2.close();
+            System.out.println("connection is close. bootPassword was sucessfully changed");
+        }catch (SQLException e){
+            System.out.println("the connection with new bootpassword does not work.");
+        }
 
     }
 
@@ -118,8 +112,9 @@ public class DBConnection {
     }
 
     public static Connection close() throws SQLException, ClassNotFoundException{
-        connection.close();
+
         try{
+            DBConnection.close();
              DriverManager.getConnection(createUrlWithParamenters()+"shutdown=true");
         }catch (Exception e){
             System.out.print(e);

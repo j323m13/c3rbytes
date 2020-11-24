@@ -35,17 +35,18 @@ public class loginViewController {
         System.out.println("masterpassword: " + mpTextField);
 
         //TODO:hash masterpw and pass it to bootPassword
-        String dbPassword = mpTextField;
+        DBConnection.bootPassword = mpTextField;
         StringHasher stringHasher = new StringHasher();
-        //String hashedPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM,dbPassword).substring(0,24);
-        String hashedPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM,dbPassword);
+       //String hashedPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM,DBConnection.bootPassword).substring(0,24);
+        //String hashedPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM,DBConnection.bootPassword);
 
-        DBConnection.passwordDB = hashedPasswordDB;
+        //DBConnection.bootPassword = hashedPasswordDB;
 
-        System.out.println("DBConnPW: " + DBConnection.passwordDB);
+
+        //System.out.println("DBConnPW: " + DBConnection.passwordDB);
 
         //debugging for the url
-        System.out.print(DBConnection.createUrlWithParamenters());
+        System.out.println(DBConnection.createUrlWithParamenters());
 
         try {
             DBConnection.getConnection();
