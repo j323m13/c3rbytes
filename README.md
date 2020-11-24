@@ -12,6 +12,7 @@ description comes here.
 - build project
 - edit project configuration
 - add: --module-path %PATH_TO_FX% --add-modules javafx.controls,javafx.fxml
+
 		--module-path /Users/jeremieequey/Documents/programmation/workspace/c3rbytes/lib/javaFx/javafx-sdk-11.0.2/lib --add-modules javafx.controls,javafx.fxml 
 
 - rebuild project
@@ -30,3 +31,5 @@ the password was set by a the testclass FileEncrypterDecrypterTest
 
 bootPassword=654321654321
 user and password for the connection to the db -> check DBConnection.java
+
+git debugging: https://dangitgit.com/
