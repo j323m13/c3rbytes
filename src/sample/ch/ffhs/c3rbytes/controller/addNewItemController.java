@@ -19,9 +19,11 @@ import sample.ch.ffhs.c3rbytes.crypto.PasswordEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntry;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 
+import javax.xml.crypto.Data;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.util.Objects;
 
 
 public class addNewItemController {
@@ -83,7 +85,7 @@ public class addNewItemController {
         System.out.println(password);
         System.out.println(description);
         System.out.println(url);
-        DatabaseEntryDao updateDao = new DatabaseEntryDao();
+        DatabaseEntryDao newDao = new DatabaseEntryDao();
 
         // get secretKey of the file c3r.c3r
         String passwordDecrypterPassword = loginViewMasterpassphraseController.passwordDecrypterPassword;
@@ -102,11 +104,22 @@ public class addNewItemController {
         System.out.println("encryptedAccountPassword: " + encryptedAccountPassword);
         String decryptedAccountPassword = passwordEncrypterDecrypter.decrypt(encryptedAccountPassword, passwordDecrypterPassword);
         System.out.println("decryptedAccountPassword: " + decryptedAccountPassword);
+        DatabaseEntry tmp = new DatabaseEntry();
+        tmp.setUsername(username);
+        tmp.setPassword(password);
+        tmp.setDescription(description);
+        tmp.setUrl(url);
+        if(tmp.getCreationDate()==null){
+            tmp.setCreationDate(DatabaseEntry.getDateTime());
+        }
+        tmp.setLastUpdate(DatabaseEntry.getDateTime());
 
         // save to DB
         if(update){
             try {
-                updateDao.update(updateDao.createSimple(username, password, description, url));
+                if(tmp != null){
+                    newDao.update(tmp);
+                }
                 update = false;
             }catch (SQLException | ClassNotFoundException e){
                 System.out.println(e);
@@ -114,7 +127,7 @@ public class addNewItemController {
 
         }else{
             try {
-                updateDao.insertDatabaseEntry(updateDao.createSimple(username, password, description, url));
+                newDao.save(tmp);
             }catch (SQLException | ClassNotFoundException e){
                 System.out.print(e);
             }

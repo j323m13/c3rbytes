@@ -10,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
@@ -72,7 +73,7 @@ public class mainViewController implements Initializable {
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
 
 
-    public DatabaseEntry copyClickedEntry(){
+    public DatabaseEntry copyClickedEntry() {
         DatabaseEntry tmp = new DatabaseEntry(
                 profileTable.getSelectionModel().getSelectedItem().getId(),
                 profileTable.getSelectionModel().getSelectedItem().getUsername(),
@@ -82,12 +83,12 @@ public class mainViewController implements Initializable {
                 profileTable.getSelectionModel().getSelectedItem().getCreationDate(),
                 profileTable.getSelectionModel().getSelectedItem().getLastUpdate());
         System.out.println(profileTable.getSelectionModel().getSelectedItem().getId());
-        System.out.print(tmp.getUsername()+", "+tmp.getPassword()+", "+tmp.getUrl()+", "+tmp.getHiddenPasswordTrick());
+        System.out.print(tmp.getUsername() + ", " + tmp.getPassword() + ", " + tmp.getUrl() + ", " + tmp.getHiddenPasswordTrick());
         return tmp;
     }
-    
 
-    public void startMouseClicks(){
+
+    public void startMouseClicks() {
         //Methode to listen to mouse clicks
         profileTable.setOnMousePressed(new EventHandler<javafx.scene.input.MouseEvent>() {
             @Override
@@ -105,7 +106,7 @@ public class mainViewController implements Initializable {
         });
     }
 
-    public void startContextMenu(){
+    public void startContextMenu() {
         ContextMenu contextMenu = new ContextMenu();
         MenuItem copyUrlOption = new MenuItem("Copy url");
         MenuItem copyPasswordOption = new MenuItem("copy password");
@@ -136,7 +137,6 @@ public class mainViewController implements Initializable {
         });
 
 
-
         contextMenu.getItems().addAll(copyUrlOption, copyPasswordOption, deleteItemOption);
         profileTable.setContextMenu(contextMenu);
 
@@ -149,10 +149,6 @@ public class mainViewController implements Initializable {
         startMouseClicks();
         startContextMenu();
         ObservableList<DatabaseEntry> databaseEntries = FXCollections.observableArrayList();
-
-
-
-
 
 
         idColumn.setCellValueFactory(
@@ -175,73 +171,26 @@ public class mainViewController implements Initializable {
                 new PropertyValueFactory<>("url")
         );
 
+        loadDatabaseEntries();
+    }
 
-
-
-
-        /*
+    private void loadDatabaseEntries() {
         try {
-            Connection connection = connectionFactory.getConnection();
-            DatabaseEntryDao newDao = new DatabaseEntryDao();
-            DatabaseEntryDao.getAll();
-
+            ObservableList<DatabaseEntry> entries = DatabaseEntryDao.getAll();
+            populateTableView(entries);
         } catch (SQLException | ClassNotFoundException throwables) {
-            throwables.printStackTrace();
-        }
-    */
-
-        try {
-            profileTable.setItems(populateTableViews(databaseEntries));
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-
-
-
-
-    }
-
-    private static ObservableList populateTableViews(ObservableList entries) throws SQLException, ClassNotFoundException {
-        entries.clear();
-        DatabaseEntryDao newDao = new DatabaseEntryDao();
-        newDao.getAll(entries);
-        return entries;
-    }
-
-
-    /*
-    @FXML
-    private void populateTableView(DatabaseEntryDao entry) throws ClassNotFoundException, SQLException {
-        ObservableList<DatabaseEntryDao> entriesData = (ObservableList<DatabaseEntryDao>) DatabaseEntryDao.getAll();
-        entriesData.add(entry);
-        //populate TableView profileTable
-        profileTable.setItems(entriesData);
-    }
-     */
-
-    @FXML
-    private void populateTableView(DatabaseEntry result) throws SQLException, ClassNotFoundException {
-
-        /*
-        ObservableList<DatabaseEntry> entriesData = FXCollections.observableArrayList();
-        entriesData.add(result);
-        //populate TableView profileTable
-        profileTable.setItems(entriesData);
-         */
-
-    }
-
-    @FXML
-    private void populateTableViewAndDisplay(DatabaseEntry result) throws ClassNotFoundException, SQLException {
-        if(result != null){
-            populateTableView(result);
 
         }
+    }
+
+
+    @FXML
+    private void populateTableView(ObservableList<DatabaseEntry> entries) throws SQLException, ClassNotFoundException {
+        profileTable.setItems(entries);
+
 
     }
+
 
     @FXML private Button addButton;
     public void addNewItemAction(ActionEvent event){

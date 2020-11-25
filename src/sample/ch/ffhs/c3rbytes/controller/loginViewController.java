@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class loginViewController {
@@ -21,6 +22,9 @@ public class loginViewController {
     @FXML private javafx.scene.control.Button loginButton;
     @FXML private javafx.scene.control.Button logoutButton;
     private final String HASHALGORITHM = "SHA3-512";
+    private String mpTextField = null;
+
+
 
     public void loginAction(javafx.event.ActionEvent actionEvent) throws IOException, SQLException, ClassNotFoundException {
         //TODO: Correct login authentication with dB
@@ -31,11 +35,16 @@ public class loginViewController {
         //boolean dbLogincorrect = true;
 
         // password to forward to the db
-        String mpTextField = loginViewPasswordField.getText();
+        mpTextField = loginViewPasswordField.getText();
         System.out.println("masterpassword: " + mpTextField);
 
         //TODO:hash masterpw and pass it to bootPassword
-        DBConnection.bootPassword = mpTextField;
+
+        String bootPassword = mpTextField;
+        DBConnection.bootPassword = bootPassword;
+        //DBConnection.JDBC_URL = DBConnection.JDBC_URL+";bootPassword="+bootPassword;
+        System.out.println(bootPassword);
+
         StringHasher stringHasher = new StringHasher();
        //String hashedPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM,DBConnection.bootPassword).substring(0,24);
         //String hashedPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM,DBConnection.bootPassword);
@@ -46,10 +55,11 @@ public class loginViewController {
         //System.out.println("DBConnPW: " + DBConnection.passwordDB);
 
         //debugging for the url
-        System.out.println(DBConnection.createUrlWithParamenters());
+        System.out.println("URL "+DBConnection.JDBC_URL);
 
         try {
-            DBConnection.getConnection();
+            Connection conn = DBConnection.dbConnect();
+            System.out.println("success");
 
             System.out.println("Access to DB granted");
             Parent parent = FXMLLoader.load(getClass().getResource("../gui/login_view_masterpassphrase.fxml"));

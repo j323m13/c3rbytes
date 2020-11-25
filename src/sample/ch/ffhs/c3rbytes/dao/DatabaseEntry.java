@@ -19,7 +19,16 @@ public class DatabaseEntry{
     private SimpleStringProperty lastUpdate;
     private String passwordTrick;
 
-
+    public DatabaseEntry(){
+        this.id = new SimpleStringProperty();
+        this.username = new SimpleStringProperty();
+        this.description = new SimpleStringProperty();
+        this.url = new SimpleStringProperty();
+        this.password = new SimpleStringProperty();
+        this.creationDate = new SimpleStringProperty();
+        this.lastUpdate = new SimpleStringProperty();
+        passwordTrick = "* * * * *";
+    }
     public DatabaseEntry(String id, String username, String description,
                          String url, String password, String creationDate,
                          String lastUpdate){

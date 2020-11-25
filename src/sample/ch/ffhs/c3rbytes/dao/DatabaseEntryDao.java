@@ -1,8 +1,9 @@
 package sample.ch.ffhs.c3rbytes.dao;
 
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
 import org.apache.commons.dbutils.QueryRunner;
 
 import javax.xml.crypto.Data;
@@ -12,6 +13,8 @@ public class DatabaseEntryDao implements Dao{
 
 
     private static final QueryRunner dbAccess = new QueryRunner();
+    private final ResultSet rs = null;
+    private DBConnection connection;
 
     private DatabaseEntry createSimple(String id, String username, String description,
                                  String url, String password){
@@ -20,36 +23,28 @@ public class DatabaseEntryDao implements Dao{
 
 
 
-    public ObservableList<DatabaseEntry> getAll(ObservableList<DatabaseEntry> databaseEntries) throws SQLException, ClassNotFoundException {
-        Connection connection = DBConnection.getConnection();
-        PreparedStatement ps = null;
-
-        ps = connection.prepareStatement("SELECT * FROM CERBYTES.\"database_entries\"");
+    public static ObservableList<DatabaseEntry> getAll() throws SQLException, ClassNotFoundException {
+        String getAll = "SELECT * FROM \"CERBYTES\".\"database_entries\"";
+        Connection con = DBConnection.dbConnect();
+        PreparedStatement ps = con.prepareStatement(getAll);
         ResultSet rs = null;
-        rs = ps.executeQuery();
+        ObservableList<DatabaseEntry> databaseEntries = FXCollections.observableArrayList();
+        databaseEntries = getEntries(rs);
+        try{
+            rs = ps.executeQuery();
 
-        //TODO implement List as DataEntry Type
-
-
-
-
-        while(rs.next()) {
-            String tmpId = rs.getString(1);
-            String tmpUsername = rs.getString(2);
-            String tmpDescription = rs.getString(3);
-            String tmpUrl = rs.getString(4);
-            String tmpPassword = rs.getString(5);
-            String tmpCreationDate = rs.getString(6);
-            String tmpLastUpdate = rs.getString(7);
-            DatabaseEntry catchResults = new DatabaseEntry(
-                    tmpId,
-                    tmpUsername,
-                    tmpDescription,
-                    tmpUrl,
-                    tmpPassword,
-                    tmpCreationDate,
-                    tmpLastUpdate
-            );
+            while(rs.next()) {
+                DatabaseEntry entry = new DatabaseEntry();
+                entry.setId(rs.getString("user_id"));
+                entry.setUsername(rs.getString("username"));
+                entry.setDescription(rs.getString("description"));
+                entry.setPassword(rs.getString("password_text"));
+                entry.setUrl(rs.getString("url_content"));
+                entry.setCreationDate(rs.getString("date_creation"));
+                entry.setLastUpdate(rs.getString("date_update"));
+                //entry.getNote(rs.getString("notes"));
+                databaseEntries.addAll(entry);
+            }
 
             //Print results in terminal for debugging
             System.out.println(rs.getInt(1) + "," +
@@ -58,16 +53,38 @@ public class DatabaseEntryDao implements Dao{
                     rs.getString(6) + ", " +
                     rs.getString(7)
             );
-            databaseEntries.add(catchResults);
-
+        }catch (SQLException e){
+            System.out.println("Table is empty? "+e);
+        }finally {
+            ps.close();
+            rs.close();
+            DBConnection.dbDisconnect();
         }
-        //contain all the entries from the database CERBYTES (user only)
-        //TODO implement join statement
-        connection.close();
+
         return databaseEntries;
 
+    }
+
+
+
+    private static ObservableList<DatabaseEntry> getEntries (ResultSet rs) throws SQLException {
+        ObservableList<DatabaseEntry> databaseEntries = FXCollections.observableArrayList();
+
+        if(rs.next()) {
+            DatabaseEntry entry = new DatabaseEntry();
+            entry.setId(rs.getString("user_id"));
+            entry.setUsername(rs.getString("username"));
+            entry.setPassword(rs.getString("password_text"));
+            entry.setUrl(rs.getString("url"));
+            entry.setCreationDate(rs.getString("date_creation"));
+            entry.setLastUpdate(rs.getString("date_update"));
+            //entry.getNote(rs.getString("notes"));
+            databaseEntries.addAll(entry);
+        }
+        return databaseEntries;
 
     }
+
 
     @Override
     public Dao getEntryById(int id) throws SQLException, ClassNotFoundException {
@@ -75,14 +92,33 @@ public class DatabaseEntryDao implements Dao{
     }
 
     @Override
-    public Dao save() {
+    public Dao save(DatabaseEntry entry) throws SQLException, ClassNotFoundException {
+
+        String saveStmt =
+                        "INSERT INTO database_entries\n" +
+                        "(user_id, username, description, url_content, password_text, date_creation, date_update )\n" +
+                        "VALUES\n" +
+                        "('"+entry.getUsername()+"','"+entry.getDescription()+"','"+entry.getUrl()+"','"+entry.getPassword()+
+                        "','"+entry.getCreationDate()+"','"+entry.getLastUpdate()+"')";
+
+
+        //Execute DELETE operation
+        try {
+            DBConnection.dbExecuteUpdate(saveStmt);
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.print("Error occurred while DELETE Operation: " + e);
+            throw e;
+        }
         return null;
     }
 
+
     @Override
     public Dao update(DatabaseEntry entry) throws SQLException, ClassNotFoundException {
+/*
         if(entry !=null){
-            Connection connection = DBConnection.getConnection();
+            DBConnection helper = new DBConnection();
+            //Connection connection = helper.getConnection(helper.getUrlWithParameters());
             PreparedStatement update = null;
             update = connection.prepareStatement(
                     "UPDATE \"CERBYTES\".\"database_entries\" SET \"username\" = ?,"+
@@ -108,7 +144,9 @@ public class DatabaseEntryDao implements Dao{
                 System.out.print(e);
             }
         }
+         */
         return null;
+
     }
 
 
@@ -119,10 +157,11 @@ public class DatabaseEntryDao implements Dao{
     @Override
     public Dao delete(DatabaseEntry entry) throws SQLException, ClassNotFoundException {
         if(entry !=null){
-            Connection connection = DBConnection.getConnection();
+            DBConnection helper = new DBConnection();
+            //Connection connection = helper.getConnection(helper.getUrlWithParameters());
             PreparedStatement delete = null;
 
-            delete = connection.prepareStatement("DELETE FROM \"CERBYTES\".\"database_entries\" WHERE \"user_id\"="+entry.getId()+"");
+            //delete = connection.prepareStatement("DELETE FROM \"CERBYTES\".\"database_entries\" WHERE \"user_id\"="+entry.getId()+"");
             try {
                 delete.executeUpdate();
             }catch (SQLException e){
@@ -189,9 +228,12 @@ public class DatabaseEntryDao implements Dao{
      *
     */
     public void insertDatabaseEntry(DatabaseEntry databaseEntry) throws SQLException, ClassNotFoundException {
-        Connection connection = DBConnection.getConnection();
-        PreparedStatement ps = connection.prepareStatement("INSERT INTO CERBYTES.\"database_entries\" " +
-                "(\"username\", \"description\", \"url_content\", \"password_text\", \"date_creation\", \"date_update\")" +
+        /*
+        DBConnection helper = new DBConnection();
+        //System.out.println("connection to insert "+helper.getUrlWithParameters());
+        //Connection connection = DriverManager.getConnection(helper.getUrlWithParameters());
+        //PreparedStatement ps = connection.prepareStatement("INSERT INTO database_entries " +
+                "(username, description, url_content, password_text, date_creation, date_update)" +
                 " VALUES (?,?,?,?,?,?)");
         ps.setString(1, databaseEntry.getUsername());
         ps.setString(2, databaseEntry.getDescription());
@@ -201,7 +243,8 @@ public class DatabaseEntryDao implements Dao{
         ps.setString(6, databaseEntry.setLastUpdate().toString());
 
         int i = ps.executeUpdate();
-        connection.close();
+        //connection.close();
+         */
 
     }
 
