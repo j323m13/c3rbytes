@@ -18,9 +18,11 @@ public class loginViewMasterpassphraseController {
     @FXML private javafx.scene.control.PasswordField masterPassPhraseField;
     @FXML private javafx.scene.control.Button loginButtonMPP;
     @FXML private javafx.scene.control.Button logoutButtonMPP;
+    @FXML private javafx.scene.control.Label wrongLogin;
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
     private final String filename = ".c3r.c3r";
     public static String passwordDecrypterPassword;
+    private int loginCounter = 0;
 
     public void loginActionMPP() throws Exception {
 
@@ -41,6 +43,14 @@ public class loginViewMasterpassphraseController {
         }catch(javax.crypto.AEADBadTagException e){
             //TODO: Here should come a notification to the user --> login failed
             System.out.println("Access denied");
+            loginCounter++;
+            int leftLogins = 3 - loginCounter;
+            masterPassPhraseField.setText("");
+            masterPassPhraseField.requestFocus();
+            wrongLogin.setText("Login failed. " + leftLogins + " attempts left");
+            if (loginCounter == 3){
+                logoutActionMPP();
+            }
         }catch (IOException e) {
         e.printStackTrace();
     }

@@ -17,5 +17,6 @@
       <Button fx:id="logoutButtonMPP" layoutX="286.0" layoutY="289.0" mnemonicParsing="false" onAction="#logoutActionMPP" prefHeight="25.0" prefWidth="73.0" text="Logout" />
       <Polygon fill="Orange" layoutX="277.0" layoutY="102.0" points="0.0, 39.5, 0.0, 39.5, 36.0, -17.0, 36.0, -51.0, 0.0, -60.0, -37.0, -51.0, -37.0, -17.0" stroke="BLACK" strokeType="INSIDE" />
       <Label layoutX="149.0" layoutY="164.0" prefHeight="63.0" prefWidth="256.0" text="Your Password Manager is still locked. Please enter your masterpassphrase to unlock and continue." wrapText="true" />
+      <Label fx:id="wrongLogin" layoutX="148.0" layoutY="325.0" prefHeight="25.0" prefWidth="256.0" wrapText="true" />
    </children>
 </AnchorPane>
