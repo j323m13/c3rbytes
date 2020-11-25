@@ -33,7 +33,7 @@ public class FileHandler {
         File file = new File(filename);
 
         // if not exists return, else read and cast content to string
-        if (!file.exists()) {
+        if (!fileExists(file)) {
             return "File does not exist";
         } else {
             byte[] fileContent = Files.readAllBytes(Paths.get(filename));
@@ -45,7 +45,7 @@ public class FileHandler {
     }
 
 
-    public void setReadWriteAttributes(String file, boolean isHidden) throws IOException {
+    public void setReadWriteAttributes(String file, boolean lock) throws IOException {
         File file1 = new File(file);
 
         //Path path = Paths.get(file);
@@ -53,12 +53,13 @@ public class FileHandler {
         System.out.println("fileabspath: " + file1.getAbsolutePath());
 
 
-        if (isHidden){
+        if (lock){
             //Runtime.getRuntime().exec(new String[]{"attrib", "+H", file});
-            Runtime.getRuntime().exec("attrib +H " + file);
-            file1.setWritable(false);
+            Runtime.getRuntime().exec("attrib +H +S +R " + file);
+            //file1.setWritable(false);
         } else{
-            file1.setWritable(true);
+            Runtime.getRuntime().exec("attrib +H +S -R " + file);
+            //file1.setWritable(true);
         }
 
         /*
@@ -81,10 +82,30 @@ public class FileHandler {
          */
     }
 
+    public void deleteFile(String filename){
+        File file = new File(filename);
+
+        if (fileExists(file)){
+            file.delete();
+        } else {
+            System.out.println("File does not exist");
+        }
+    }
+
+    public boolean fileExists(File filename){
+        if (filename.exists()){
+            return true;
+        }
+        return false;
+    }
 
     public static void main(String[] args) throws IOException {
         FileHandler fileHandler = new FileHandler();
-        fileHandler.setReadWriteAttributes("testfile.txt", true);
+
+        byte[] content = "Test".getBytes(UTF_8);
+        //fileHandler.writeToFile("testfile.txt",content);
+        //fileHandler.setReadWriteAttributes("testfile.txt", false);
+        fileHandler.deleteFile("testfile.txt");
 
     }
 

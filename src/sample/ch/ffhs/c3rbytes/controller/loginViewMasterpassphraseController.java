@@ -19,12 +19,12 @@ public class loginViewMasterpassphraseController {
     @FXML private javafx.scene.control.Button loginButtonMPP;
     @FXML private javafx.scene.control.Button logoutButtonMPP;
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
-    private final String filename = "c3r.c3r";
+    private final String filename = ".c3r.c3r";
     public static String passwordDecrypterPassword;
 
     public void loginActionMPP() throws Exception {
 
-        // check pw in c3r.c3r file and assign to passwordDecrypterpassword
+        // check pw in .c3r.c3r file and assign to passwordDecrypterpassword
         String masterPassPhrase = masterPassPhraseField.getText();
 
         try {
@@ -54,7 +54,7 @@ public class loginViewMasterpassphraseController {
         System.exit(0);
     }
 
-    public static void startMainView() throws IOException {
+    public void startMainView() throws IOException {
         FXMLLoader loader = new FXMLLoader(loginViewMasterpassphraseController.class.getResource("../gui/main_view_2.fxml"));
         Parent root = loader.load();
         Stage stage = new Stage();

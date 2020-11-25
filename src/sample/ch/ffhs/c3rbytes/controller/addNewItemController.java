@@ -85,7 +85,7 @@ public class addNewItemController {
         System.out.println(url);
         DatabaseEntryDao updateDao = new DatabaseEntryDao();
 
-        // get secretKey of the file c3r.c3r
+        // get secretKey of the file .c3r.c3r
         String passwordDecrypterPassword = loginViewMasterpassphraseController.passwordDecrypterPassword;
 
         // debugging

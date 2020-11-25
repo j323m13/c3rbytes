@@ -54,7 +54,7 @@ public class Main extends Application {
 
         // First Init
         FileHandler fileHandler = new FileHandler();
-        String file = "c3r.c3r";
+        String file = ".c3r.c3r";
         //fileHandler.setReadWriteAttributes(file,"allow");
         if (fileHandler.readFromFile(file).equals("File does not exist")){
             System.out.println("Enter Masterpassword Dialog");

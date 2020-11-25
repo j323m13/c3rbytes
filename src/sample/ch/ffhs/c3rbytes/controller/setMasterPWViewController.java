@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.StringHasher;
 import sample.ch.ffhs.c3rbytes.dao.DBConnection;
+import sample.ch.ffhs.c3rbytes.utils.FileHandler;
 
 import java.io.IOException;
 import java.sql.SQLException;

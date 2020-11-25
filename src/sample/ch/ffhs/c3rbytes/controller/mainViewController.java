@@ -68,7 +68,7 @@ public class mainViewController implements Initializable {
     @FXML
     public ObservableList<DatabaseEntry> databaseEntries = FXCollections.observableArrayList();
 
-    public static final String FILENAME = "c3r.c3r";
+    public static final String FILENAME = ".c3r.c3r";
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
 
 
