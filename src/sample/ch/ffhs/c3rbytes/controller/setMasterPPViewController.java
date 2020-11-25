@@ -2,16 +2,20 @@ package sample.ch.ffhs.c3rbytes.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.FileEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.crypto.PasswordGenerator;
 import sample.ch.ffhs.c3rbytes.utils.FileHandler;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 //import static sample.ch.ffhs.c3rbytes.controller.loginViewMasterpassphraseController.startMainView;
 
-public class setMasterPPViewController {
+public class setMasterPPViewController implements IController {
     public final String filename = ".c3r.c3r";
 
     @FXML javafx.scene.control.PasswordField setMPPViewPasswordField;
@@ -62,5 +66,24 @@ public class setMasterPPViewController {
     public void abordMPPAction() {
         System.out.println("System exit");
         System.exit(0);
+    }
+
+    public void getView() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/set_master_mpp_view.fxml"));
+        Parent root = loader.load();
+        Stage stage = new Stage();
+        stage.setTitle("Welcome to C3rBytes");
+        stage.setScene(new Scene(root, 552, 371));
+        stage.show();
+    }
+
+    @Override
+    public void getView(Stage stage) throws IOException {
+
+    }
+
+    @Override
+    public Object getController() throws IOException {
+        return null;
     }
 }

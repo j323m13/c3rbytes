@@ -6,12 +6,13 @@ import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.StringHasher;
 import sample.ch.ffhs.c3rbytes.dao.DBConnection;
 
+import java.io.IOException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class changePasswordController {
+public class changePasswordController implements IController {
 
     @FXML javafx.scene.control.TextField oldMasterPasswordField;
     @FXML javafx.scene.control.TextField newPasswordField;
@@ -76,5 +77,15 @@ public class changePasswordController {
     public void discardPasswordAction(ActionEvent actionEvent) {
         Stage stage = (Stage) discardPasswordButton.getScene().getWindow();
         stage.close();
+    }
+
+    @Override
+    public void getView(Stage stage) throws IOException {
+
+    }
+
+    @Override
+    public Object getController() throws IOException {
+        return null;
     }
 }

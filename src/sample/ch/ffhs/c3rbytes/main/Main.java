@@ -1,21 +1,18 @@
 package sample.ch.ffhs.c3rbytes.main;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import sample.ch.ffhs.c3rbytes.dao.DBConnection;
-import sample.ch.ffhs.c3rbytes.dao.DatabaseEntry;
-import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
+import sample.ch.ffhs.c3rbytes.controller.loginViewController;
+import sample.ch.ffhs.c3rbytes.controller.mainViewController;
+import sample.ch.ffhs.c3rbytes.controller.setMasterPPViewController;
+import sample.ch.ffhs.c3rbytes.controller.setMasterPWViewController;
 import sample.ch.ffhs.c3rbytes.utils.FileHandler;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Objects;
 
 public class Main extends Application {
+    private final String file = ".c3r.c3r";
 
 
     /*
@@ -54,23 +51,38 @@ public class Main extends Application {
 
         // First Init
         FileHandler fileHandler = new FileHandler();
-        String file = ".c3r.c3r";
+
         //fileHandler.setReadWriteAttributes(file,"allow");
         if (fileHandler.readFromFile(file).equals("File does not exist")){
             System.out.println("Enter Masterpassword Dialog");
+
+            setMasterPWViewController mpwvc = new setMasterPWViewController();
+            mpwvc.getView(stage);
+            /*
 
             Parent setMasterpasswordView = FXMLLoader.load(getClass().getResource("../gui/set_master_pw_view.fxml"));
             //stage stage = new Stage();
             stage.setTitle("Welcome to C3rBytes");
             stage.setScene(new Scene(setMasterpasswordView, 552, 371));
 
+             */
+
         }
         else{ // or just logging in
             //start login_view
+
+            loginViewController lvc = new loginViewController();
+            lvc.getView(stage);
+
+
+
+            /*
             Parent loginViewMP = FXMLLoader.load(getClass().getResource("../gui/login_view.fxml"));
             //stage stage = new Stage();
             stage.setTitle("C3rBytes Login Masterpassword");
             stage.setScene(new Scene(loginViewMP, 552, 371));
+
+             */
         }
         //fileHandler.setReadWriteAttributes(file,"deny");
         stage.show();

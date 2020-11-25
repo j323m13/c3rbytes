@@ -2,29 +2,25 @@ package sample.ch.ffhs.c3rbytes.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.StringHasher;
 import sample.ch.ffhs.c3rbytes.dao.DBConnection;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 
-public class loginViewController {
+public class loginViewController implements IController{
 
     //@FXML private javafx.scene.control.TextField masterPasswordField;
     @FXML private javafx.scene.control.PasswordField loginViewPasswordField;
     @FXML private javafx.scene.control.Button loginButton;
     @FXML private javafx.scene.control.Button logoutButton;
-    @FXML private javafx.scene.control.Label wrongLogin;
+    @FXML private javafx.scene.control.Label wrongLoginLabel;
     private final String HASHALGORITHM = "SHA3-512";
     private int loginCounter = 0;
+    FXMLLoader loader = null;
 
     public void loginAction(javafx.event.ActionEvent actionEvent) throws IOException, SQLException, ClassNotFoundException {
         //TODO: Correct login authentication with dB
@@ -55,6 +51,10 @@ public class loginViewController {
         try {
             DBConnection.getConnection();
 
+            loginViewMasterpassphraseController loginViewMasterpassphraseController = new loginViewMasterpassphraseController();
+            loginViewMasterpassphraseController.getLoginViewMasterpassphrase(actionEvent);
+
+            /*
             System.out.println("Access to DB granted");
             Parent parent = FXMLLoader.load(getClass().getResource("../gui/login_view_masterpassphrase.fxml"));
             Scene loginView = new Scene(parent);
@@ -64,7 +64,7 @@ public class loginViewController {
 
             window.setScene(loginView);
             window.show();
-
+            */
 
 
         }catch ( SQLException e){
@@ -72,7 +72,7 @@ public class loginViewController {
             int leftLogins = 3 - loginCounter;
             loginViewPasswordField.setText("");
             loginViewPasswordField.requestFocus();
-            wrongLogin.setText("Login failed. " + leftLogins + " attempts left");
+            wrongLoginLabel.setText("Login failed. " + leftLogins + " attempts left");
             if (loginCounter == 3){
                 logoutAction();
             }
@@ -91,6 +91,25 @@ public class loginViewController {
         System.out.println("LogoutAction");
         System.exit(0);
     }
+
+    @Override
+    public void getView(Stage stage) throws IOException {
+        loader = new FXMLLoader(getClass().getResource("../gui/login_view.fxml"));
+        Parent loginViewMP = loader.load();
+        //stage stage = new Stage();
+        stage.setTitle("C3rBytes Login Masterpassword");
+        stage.setScene(new Scene(loginViewMP, 552, 371));
+    }
+
+
+
+    @Override
+    public Object getController() throws IOException {
+        return loader.getController();
+    }
+
+
+
     /*
     public void loginAction(javafx.event.ActionEvent actionEvent) {
 

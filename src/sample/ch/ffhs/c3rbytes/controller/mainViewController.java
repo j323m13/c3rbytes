@@ -33,7 +33,7 @@ import java.util.*;
 import static java.lang.String.valueOf;
 
 
-public class mainViewController implements Initializable {
+public class mainViewController implements Initializable, IController {
 
 
     private static boolean isNew;
@@ -463,5 +463,13 @@ public class mainViewController implements Initializable {
         System.out.print(dbEntry.getId());
     }
 
+    @Override
+    public void getView(Stage stage) throws IOException {
 
+    }
+
+    @Override
+    public Object getController() throws IOException {
+        return null;
+    }
 }

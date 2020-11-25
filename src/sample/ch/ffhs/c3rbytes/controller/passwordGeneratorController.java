@@ -15,7 +15,7 @@ import sample.ch.ffhs.c3rbytes.utils.ClipboardHandler;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class passwordGeneratorController {
+public class passwordGeneratorController implements IController {
     int useDigits;
     int useLower;
     int useUpper;
@@ -162,5 +162,14 @@ public class passwordGeneratorController {
         stage.close();
     }
 
+    @Override
+    public void getView(Stage stage) throws IOException {
+
+    }
+
+    @Override
+    public Object getController() throws IOException {
+        return null;
+    }
 }
 

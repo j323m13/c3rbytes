@@ -33,14 +33,15 @@ public class FileHandler {
         File file = new File(filename);
 
         // if not exists return, else read and cast content to string
-        if (!fileExists(file)) {
-            return "File does not exist";
-        } else {
+        if (file.exists()) {
             byte[] fileContent = Files.readAllBytes(Paths.get(filename));
 
             String content = new String(fileContent, StandardCharsets.UTF_8);
-
+            System.out.println(content);
             return content;
+        } else {
+            System.out.println("not exist");
+            return "File does not exist";
         }
     }
 
@@ -55,10 +56,10 @@ public class FileHandler {
 
         if (lock){
             //Runtime.getRuntime().exec(new String[]{"attrib", "+H", file});
-            Runtime.getRuntime().exec("attrib +H +S +R " + file);
+            Runtime.getRuntime().exec("attrib +H +R " + file);
             //file1.setWritable(false);
         } else{
-            Runtime.getRuntime().exec("attrib +H +S -R " + file);
+            Runtime.getRuntime().exec("attrib +H -R " + file);
             //file1.setWritable(true);
         }
 
@@ -85,7 +86,7 @@ public class FileHandler {
     public void deleteFile(String filename){
         File file = new File(filename);
 
-        if (fileExists(file)){
+        if (file.exists()){
             file.delete();
         } else {
             System.out.println("File does not exist");
@@ -104,8 +105,9 @@ public class FileHandler {
 
         byte[] content = "Test".getBytes(UTF_8);
         //fileHandler.writeToFile("testfile.txt",content);
-        //fileHandler.setReadWriteAttributes("testfile.txt", false);
-        fileHandler.deleteFile("testfile.txt");
+        fileHandler.readFromFile("testfile.txt");
+        //fileHandler.setReadWriteAttributes("testfile.txt", true);
+        //fileHandler.deleteFile("testfile.txt");
 
     }
 
