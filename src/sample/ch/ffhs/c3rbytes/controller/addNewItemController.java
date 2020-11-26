@@ -6,14 +6,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
-import javafx.scene.control.TextInputControl;
 import sample.ch.ffhs.c3rbytes.crypto.FileEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.crypto.PasswordEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntry;
@@ -30,20 +27,15 @@ public class addNewItemController {
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
     @FXML public TextField passwordField;
     @FXML public TextField userNameField;
+    @FXML private TextField notesField;
     @FXML private javafx.scene.control.Label viewLastUpdateLabel;
     @FXML private javafx.scene.control.Button saveButton;
     @FXML private javafx.scene.control.Button showPasswordButton;
-    @FXML TextInputControl typeField;
-    @FXML TextInputControl urlField;
-    @FXML TextField idField;
-    @FXML TextField creationDateField;
-    String id;
-    String creation;
-    private boolean update = true;
-
-
+    @FXML TextField typeField;
+    @FXML TextField urlField;
+    private String id;
+    private String creation;
     @FXML javafx.scene.control.Button discardButton;
-    private boolean reload;
 
     //@FXML private javafx.scene.control.Button generatePasswordButton;
     public void generatePassword(ActionEvent event){
@@ -73,14 +65,19 @@ public class addNewItemController {
     methode to populate the field of for add new Item
      */
     public void fillIn(DatabaseEntry dbentry, boolean fromMainView){
-        id = dbentry.getId();
-        creation = dbentry.getCreationDate();
-        userNameField.setText(dbentry.getUsername());
-        passwordField.setText(dbentry.getPassword());
-        urlField.setText(dbentry.getUrl());
-        //viewNotesField.setText(dbentry.getDescription());
+        try{
+            id = dbentry.getId();
+            creation = dbentry.getCreationDate();
+            userNameField.setText(dbentry.getUsername());
+            passwordField.setText(dbentry.getPassword());
+            urlField.setText(dbentry.getUrl());
+            typeField.setText(dbentry.getDescription());
+            notesField.setText(dbentry.getNote());
+            viewLastUpdateLabel.setText(dbentry.getLastUpdate().toString());
+        }catch (Exception e){
+            System.out.println("a field is null.");
+        }
 
-        viewLastUpdateLabel.setText(dbentry.getLastUpdate().toString());
     }
 
     public void onDiscardButton(ActionEvent actionEvent) {
@@ -92,13 +89,17 @@ public class addNewItemController {
         String password = passwordField.getText();
         String description = typeField.getText();
         String url = urlField.getText();
+        String notes = notesField.getText();
 
+
+        //debugging
         System.out.println(id);
         System.out.println(username);
         System.out.println(password);
         System.out.println(description);
         System.out.println(url);
         System.out.println("creation date "+creation);
+        System.out.println(notes);
 
         DatabaseEntryDao newDao = new DatabaseEntryDao();
 
@@ -124,8 +125,10 @@ public class addNewItemController {
         tmp.setPassword(password);
         tmp.setDescription(description);
         tmp.setUrl(url);
+        //debuging
+        tmp.setNote(notes);
+        //tmp.setNote(noteField.getText());
         if(tmp.getCreationDate()==null){
-            update = false;
             tmp.setCreationDate(DatabaseEntry.getDateTime());
         }
         tmp.setLastUpdate(DatabaseEntry.getDateTime());
@@ -133,23 +136,24 @@ public class addNewItemController {
         if(id != null){
             tmp.setId(id);
         }
-        System.out.println("status of update boolean before save() or update(): "+update);
+
         // save to DB
-        if(update){
+        boolean reload;
+        if(id!=null){
             try {
+                System.out.println("update() -->");
                 newDao.update(tmp);
-                reload=true;
+                reload =true;
                 reloadMainView(reload);
-                update = false;
             }catch (SQLException | ClassNotFoundException e){
                 System.out.println(e);
             }
 
         }else{
             try {
+                System.out.println("save() -->");
                 newDao.save(tmp);
-                reload=true;
-                update = true;
+                reload =true;
                 reloadMainView(reload);
             }catch (SQLException | ClassNotFoundException e){
                 System.out.print(e);
@@ -160,8 +164,6 @@ public class addNewItemController {
         Stage stage = (Stage) saveButton.getScene().getWindow();
         stage.close();
 
-
-        reload = false;
     }
     /*
     * Methode to allow a reload from the MainView after updating, adding an item

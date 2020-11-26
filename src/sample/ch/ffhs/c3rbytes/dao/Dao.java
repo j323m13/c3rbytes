@@ -11,4 +11,5 @@ public interface Dao {
     Dao save(DatabaseEntry databaseEntry) throws SQLException, ClassNotFoundException;
     Dao update(DatabaseEntry databaseEntry) throws SQLException, ClassNotFoundException;
     Dao delete(DatabaseEntry databaseEntry) throws SQLException, ClassNotFoundException;
+    Dao deleteAccount() throws SQLException, ClassNotFoundException;
 }

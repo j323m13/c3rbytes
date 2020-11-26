@@ -85,8 +85,9 @@ public class mainViewController implements Initializable {
                 profileTable.getSelectionModel().getSelectedItem().getCreationDate(),
                 profileTable.getSelectionModel().getSelectedItem().getLastUpdate(),
                 profileTable.getSelectionModel().getSelectedItem().getNote());
-        System.out.println(profileTable.getSelectionModel().getSelectedItem().getId());
-        System.out.print(tmp.getUsername() + ", " + tmp.getPassword() + ", " + tmp.getUrl() + ", " + tmp.getHiddenPasswordTrick());
+        System.out.println("id from profiletable :"+profileTable.getSelectionModel().getSelectedItem().getId());
+        System.out.print("the object: "+tmp.getUsername() + ", " + tmp.getPassword() + ", " + tmp.getUrl() + ", " + tmp.getHiddenPasswordTrick()
+        +", "+tmp.getNote()+", "+tmp.getCreationDate()+", "+tmp.getLastUpdate());
         return tmp;
     }
 
@@ -179,14 +180,8 @@ public class mainViewController implements Initializable {
     }
 
     @FXML
-    void reloadMainView(boolean reload){
-        if(reload){
+    void reloadMainView(){
             loadDatabaseEntries(databaseEntries);
-        }
-        if(start){
-            loadDatabaseEntries(databaseEntries);
-            start = false;
-        }
     }
 
     private void loadDatabaseEntries(ObservableList<DatabaseEntry> databaseEntries) {
@@ -315,9 +310,11 @@ public class mainViewController implements Initializable {
                     }
                 };
     }
-    public void deleteAccountAction(ActionEvent actionEvent) {
+    public void deleteAccountAction(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
         //TODO: Define deleting account
         System.out.println("Delete Account Action");
+        DatabaseEntryDao deleteDao = new DatabaseEntryDao();
+        deleteDao.deleteAccount();
     }
     //TODO: to delete?
     private TableView tableView;
@@ -409,7 +406,7 @@ public class mainViewController implements Initializable {
 
 
     public void reload(ActionEvent actionEvent) {
-        reloadMainView(reload);
-        reload = false;
+        reloadMainView();
+
     }
 }

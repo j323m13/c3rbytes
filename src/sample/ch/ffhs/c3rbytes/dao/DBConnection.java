@@ -70,7 +70,7 @@ public class DBConnection {
                 entry.setUrl(rs.getString("url_content"));
                 entry.setCreationDate(rs.getString("date_creation"));
                 entry.setLastUpdate(rs.getString("date_update"));
-                //entry.getNote(rs.getString("note"));
+                entry.setNote(rs.getString("note"));
                 databaseEntries.addAll(entry);
                 //Print results in terminal for debugging
                 System.out.println(rs.getInt(1) + "," +
