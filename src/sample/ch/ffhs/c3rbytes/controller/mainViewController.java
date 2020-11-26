@@ -65,6 +65,8 @@ public class mainViewController implements Initializable {
     private TableColumn<DatabaseEntry, String> urlColumn;
 
     private boolean fromMainView = true;
+    private boolean start = true;
+    public static boolean reload = false;
 
     @FXML
     public ObservableList<DatabaseEntry> databaseEntries = FXCollections.observableArrayList();
@@ -81,7 +83,8 @@ public class mainViewController implements Initializable {
                 profileTable.getSelectionModel().getSelectedItem().getUrl(),
                 profileTable.getSelectionModel().getSelectedItem().getPassword(),
                 profileTable.getSelectionModel().getSelectedItem().getCreationDate(),
-                profileTable.getSelectionModel().getSelectedItem().getLastUpdate());
+                profileTable.getSelectionModel().getSelectedItem().getLastUpdate(),
+                profileTable.getSelectionModel().getSelectedItem().getNote());
         System.out.println(profileTable.getSelectionModel().getSelectedItem().getId());
         System.out.print(tmp.getUsername() + ", " + tmp.getPassword() + ", " + tmp.getUrl() + ", " + tmp.getHiddenPasswordTrick());
         return tmp;
@@ -131,7 +134,8 @@ public class mainViewController implements Initializable {
 
         deleteItemOption.setOnAction((event) -> {
             //copyClickedEntry();
-            copyClickedEntry();
+            deleteButton.fire();
+            reload = true;
             //TODO call delete Mehtode;
             //TODO print alert when deleting entries
         });
@@ -171,13 +175,26 @@ public class mainViewController implements Initializable {
                 new PropertyValueFactory<>("url")
         );
 
-        loadDatabaseEntries();
+        loadDatabaseEntries(databaseEntries);
     }
 
-    private void loadDatabaseEntries() {
+    @FXML
+    void reloadMainView(boolean reload){
+        if(reload){
+            loadDatabaseEntries(databaseEntries);
+        }
+        if(start){
+            loadDatabaseEntries(databaseEntries);
+            start = false;
+        }
+    }
+
+    private void loadDatabaseEntries(ObservableList<DatabaseEntry> databaseEntries) {
         try {
             ObservableList<DatabaseEntry> entries = DatabaseEntryDao.getAll();
-            populateTableView(entries);
+            databaseEntries.clear();
+            databaseEntries.addAll(entries);
+            populateTableView(databaseEntries);
         } catch (SQLException | ClassNotFoundException throwables) {
 
         }
@@ -216,29 +233,6 @@ public class mainViewController implements Initializable {
         System.exit(0);
     }
 
-    /*
-    public void modifyProfileAction(ActionEvent event) throws IOException {
-        System.out.println("Modify Profile Action");
-
-        try {
-            DatabaseEntry dbEntry = profileTable.getSelectionModel().getSelectedItem();
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/add_new_item_view.fxml"));
-            Parent root = loader.load();
-
-            addNewItemController vieICont = loader.getController();
-            vieICont.fillIn(dbEntry);
-
-            Stage stage = new Stage();
-            stage.setTitle("Modify entry");
-            stage.setScene(new Scene(root, 545, 420));
-            stage.show();
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-
-    }
-     */
 
     @FXML private Button searchButton;
     public void searchAction(ActionEvent event){
@@ -288,6 +282,7 @@ public class mainViewController implements Initializable {
             System.out.println("delete not working");
             throw e;
         }
+        reload = true;
 
         /*
         TODO Implement alert windows: https://www.geeksforgeeks.org/javafx-alert-with-examples/
@@ -413,4 +408,8 @@ public class mainViewController implements Initializable {
     }
 
 
+    public void reload(ActionEvent actionEvent) {
+        reloadMainView(reload);
+        reload = false;
+    }
 }

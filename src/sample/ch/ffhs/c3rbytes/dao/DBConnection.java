@@ -1,5 +1,8 @@
 package sample.ch.ffhs.c3rbytes.dao;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.sql.*;
 
 public class DBConnection {
@@ -16,14 +19,14 @@ public class DBConnection {
     private Boolean databaseEncryption = true;
     //public static String JDBC_URL = "jdbc:derby:cerbytesdb;create=true;username=cerbytes;password=tH94mLBaKr;"+
     //       "dataEncryption=true;encryptionKeyLength=192;encryptionAlgorithm=AES/CBC/NoPadding";
-    public static String JDBC_URL = "jdbc:derby:cerbytesdbTEST;create=true";
+    public static String JDBC_URL = "jdbc:derby:cerbytesdb;create=true;user=cerbytes;password=tH94mLBaKr";
     public static Connection connection = null;
     private boolean connectionOpen;
     private boolean connectionClose;
     //public final DBConnection helper = new DBConnection();
 
 
-    public static Connection dbConnect() throws SQLException {
+    public static void dbConnect() throws SQLException {
         try {
             System.out.println("url inside dbconnect(): "+JDBC_URL);
             connection = DriverManager.getConnection(JDBC_URL);
@@ -33,7 +36,6 @@ public class DBConnection {
             e.printStackTrace();
             throw e;
         }
-        return connection;
     }
 
     //Close Connection
@@ -47,50 +49,54 @@ public class DBConnection {
         }
     }
 
-    //query
-    public static ResultSet dbExecuteQuery(String queryStmt) throws SQLException, ClassNotFoundException {
+    /*
+    * this methode holds all the entries from the database and return them to an ObservableList. For insertion, use dbExecuteUpdate()
+    * @param getAll (String)
+    * @param databaseEntries (ObservableList)
+    * @see dbExecuteUpdate()
+     */
+    public static ObservableList<DatabaseEntry> dbExecuteQuery(String getAll, ObservableList<DatabaseEntry> databaseEntries) throws SQLException, ClassNotFoundException {
         //Declare statement, resultSet and CachedResultSet as null
-        Statement stmt = null;
-        ResultSet resultSet = null;
-        try {
-            //Connect to DB (Establish Oracle Connection)
-            System.out.println("Select statement: " + queryStmt + "\n");
+        dbConnect();
+        //databaseEntries = getEntries(rs);
+        try (PreparedStatement ps = connection.prepareStatement(getAll); ResultSet rs = ps.executeQuery()) {
 
-            //Create statement
-            stmt = connection.createStatement();
-
-            //Execute select (query) operation
-            resultSet = stmt.executeQuery(queryStmt);
+            while (rs.next()) {
+                DatabaseEntry entry = new DatabaseEntry();
+                entry.setId(rs.getString("user_id"));
+                entry.setUsername(rs.getString("username"));
+                entry.setDescription(rs.getString("description"));
+                entry.setPassword(rs.getString("password_text"));
+                entry.setUrl(rs.getString("url_content"));
+                entry.setCreationDate(rs.getString("date_creation"));
+                entry.setLastUpdate(rs.getString("date_update"));
+                //entry.getNote(rs.getString("note"));
+                databaseEntries.addAll(entry);
+                //Print results in terminal for debugging
+                System.out.println(rs.getInt(1) + "," +
+                        rs.getString(2) + ", " + rs.getString(3) + ", " +
+                        rs.getString(4) + ", " + rs.getString(5) + ", " +
+                        rs.getString(6) + ", " +
+                        rs.getString(7) + ", " + rs.getString(8)
+                );
+            }
 
         } catch (SQLException e) {
-            System.out.println("Problem occurred at executeQuery operation : " + e);
-            throw e;
+            System.out.println("Table is empty? " + e);
         } finally {
-            if (resultSet != null) {
-                //Close resultSet
-                resultSet.close();
-            }
-            if (stmt != null) {
-                //Close Statement
-                stmt.close();
-            }
-            //Close connection
-            dbDisconnect();
+            DBConnection.dbDisconnect();
         }
-        //Return resultSet
-        return resultSet;
+        return databaseEntries;
     }
 
     //DB Execute Update (For Update/Insert/Delete) Operation
     public static void dbExecuteUpdate(String sqlStmt) throws SQLException, ClassNotFoundException {
         //Declare statement as null
         Statement stmt = null;
+        System.out.println("query "+sqlStmt);
         try {
-            //Connect to DB (Establish Oracle Connection)
-            DBConnection.dbConnect();
-            //Create Statement
+            dbConnect();
             stmt = connection.createStatement();
-            //Run executeUpdate operation with given sql statement
             stmt.executeUpdate(sqlStmt);
         } catch (SQLException e) {
             System.out.println("Problem occurred at executeUpdate operation : " + e);
@@ -104,6 +110,53 @@ public class DBConnection {
             dbDisconnect();
         }
     }
+
+        /*
+        try {
+            //Connect to DB (Establish Oracle Connection)
+            dbConnect();
+            PreparedStatement ps = DBConnection.connection.prepareStatement(sqlStmt);
+            if(databaseEntry.getCreationDate() == null){
+                databaseEntry.setCreationDate(DatabaseEntry.getDateTime());
+            }
+            databaseEntry.setLastUpdate().toString();
+           if(databaseEntry.getNote() != null){
+               String emptyString = "";
+               databaseEntry.setNote(emptyString);
+           }
+           if
+
+            //debuuging
+            System.out.println("Debugging value from insert query");
+            System.out.println(databaseEntry.getId());
+            System.out.println(databaseEntry.getUsername());
+            System.out.println(databaseEntry.getDescription());
+            System.out.println(databaseEntry.getUrl());
+            System.out.println(databaseEntry.getPassword());
+            System.out.println(databaseEntry.getCreationDate());
+            System.out.println(databaseEntry.getLastUpdate());
+            System.out.println(databaseEntry.getNote());
+            ps.setString(1, databaseEntry.getUsername());
+            ps.setString(2, databaseEntry.getDescription());
+            ps.setString(3, databaseEntry.getUrl());
+            ps.setString(4, databaseEntry.getPassword());
+            ps.setString(5, databaseEntry.getCreationDate());
+            ps.setString(6, databaseEntry.getLastUpdate());
+            ps.setString(7, databaseEntry.getNote());
+            ps.setString(8,databaseEntry.getLastUpdate());
+            ps.executeUpdate();
+            //Create Statement
+
+            System.out.println("action successful (dbExecuteUpdate)");
+        } catch (SQLDataException e) {
+            System.out.println("Problem occurred at executeUpdate operation : " + e);
+            throw e;
+        } finally {
+            //Close connection
+            dbDisconnect();
+        }
+    }
+         */
 
     /*
      * Methode to change the bootpassword to encrypt the DB

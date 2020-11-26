@@ -34,6 +34,7 @@
                     </font>
             </Button>
                 <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchAction" prefHeight="36.0" prefWidth="102.0" text="Search" wrapText="true" />
+                <Button fx:id="reloaddata" mnemonicParsing="false" onAction="#reload" prefHeight="36.0" prefWidth="102.0" text="Reload data" wrapText="true" />
                 <Button fx:id="deleteAccountButton" mnemonicParsing="false" onAction="#deleteAccountAction" prefHeight="36.0" prefWidth="141.0" text="Delete Account" wrapText="true" GridPane.columnIndex="1">
                     <font>
                         <Font size="11.0" />

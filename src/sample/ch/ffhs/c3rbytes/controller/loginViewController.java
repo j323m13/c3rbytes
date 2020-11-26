@@ -58,7 +58,7 @@ public class loginViewController {
         System.out.println("URL "+DBConnection.JDBC_URL);
 
         try {
-            Connection conn = DBConnection.dbConnect();
+            DBConnection.dbConnect();
             System.out.println("success");
 
             System.out.println("Access to DB granted");

@@ -31,12 +31,19 @@ public class addNewItemController {
     @FXML public TextField passwordField;
     @FXML public TextField userNameField;
     @FXML private javafx.scene.control.Label viewLastUpdateLabel;
-    private boolean update = false;
     @FXML private javafx.scene.control.Button saveButton;
     @FXML private javafx.scene.control.Button showPasswordButton;
     @FXML TextInputControl typeField;
     @FXML TextInputControl urlField;
+    @FXML TextField idField;
+    @FXML TextField creationDateField;
+    String id;
+    String creation;
+    private boolean update = true;
+
+
     @FXML javafx.scene.control.Button discardButton;
+    private boolean reload;
 
     //@FXML private javafx.scene.control.Button generatePasswordButton;
     public void generatePassword(ActionEvent event){
@@ -57,19 +64,23 @@ public class addNewItemController {
         }
     }
 
-    public void write(String Te){
-        System.out.println(Te);
-    }
+    //@olaf delete?
     public void showPassword(ActionEvent event){
         passwordField.setText("Test");
     }
+
+    /*
+    methode to populate the field of for add new Item
+     */
     public void fillIn(DatabaseEntry dbentry, boolean fromMainView){
+        id = dbentry.getId();
+        creation = dbentry.getCreationDate();
         userNameField.setText(dbentry.getUsername());
         passwordField.setText(dbentry.getPassword());
         urlField.setText(dbentry.getUrl());
         //viewNotesField.setText(dbentry.getDescription());
-        viewLastUpdateLabel.setText(dbentry.getLastUpdate());
 
+        viewLastUpdateLabel.setText(dbentry.getLastUpdate().toString());
     }
 
     public void onDiscardButton(ActionEvent actionEvent) {
@@ -81,10 +92,14 @@ public class addNewItemController {
         String password = passwordField.getText();
         String description = typeField.getText();
         String url = urlField.getText();
+
+        System.out.println(id);
         System.out.println(username);
         System.out.println(password);
         System.out.println(description);
         System.out.println(url);
+        System.out.println("creation date "+creation);
+
         DatabaseEntryDao newDao = new DatabaseEntryDao();
 
         // get secretKey of the file c3r.c3r
@@ -110,16 +125,21 @@ public class addNewItemController {
         tmp.setDescription(description);
         tmp.setUrl(url);
         if(tmp.getCreationDate()==null){
+            update = false;
             tmp.setCreationDate(DatabaseEntry.getDateTime());
         }
         tmp.setLastUpdate(DatabaseEntry.getDateTime());
-
+        tmp.setCreationDate(creation);
+        if(id != null){
+            tmp.setId(id);
+        }
+        System.out.println("status of update boolean before save() or update(): "+update);
         // save to DB
         if(update){
             try {
-                if(tmp != null){
-                    newDao.update(tmp);
-                }
+                newDao.update(tmp);
+                reload=true;
+                reloadMainView(reload);
                 update = false;
             }catch (SQLException | ClassNotFoundException e){
                 System.out.println(e);
@@ -128,6 +148,9 @@ public class addNewItemController {
         }else{
             try {
                 newDao.save(tmp);
+                reload=true;
+                update = true;
+                reloadMainView(reload);
             }catch (SQLException | ClassNotFoundException e){
                 System.out.print(e);
             }
@@ -137,13 +160,15 @@ public class addNewItemController {
         Stage stage = (Stage) saveButton.getScene().getWindow();
         stage.close();
 
-        //reload mainview
-        reloadMainView();
 
+        reload = false;
     }
-
-    private void reloadMainView() {
-        //TODO create relaod methode in main view and call it here.
+    /*
+    * Methode to allow a reload from the MainView after updating, adding an item
+    * @param reload which is boolean. default is false.
+     */
+    private void reloadMainView(boolean reload) throws IOException {
+        mainViewController.reload = reload;
     }
 }
 
