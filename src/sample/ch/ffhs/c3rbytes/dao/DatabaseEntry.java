@@ -19,6 +19,7 @@ public class DatabaseEntry {
     private SimpleStringProperty lastUpdate;
     private String passwordTrick;
     private SimpleStringProperty note;
+    private String dummyId;
 
     public DatabaseEntry() {
         this.id = new SimpleStringProperty();
@@ -30,12 +31,14 @@ public class DatabaseEntry {
         this.lastUpdate = new SimpleStringProperty();
         this.note = new SimpleStringProperty();
         passwordTrick = "* * * * *";
+        dummyId = null;
     }
 
-    public DatabaseEntry(String id, String username, String description,
+    public DatabaseEntry(String id, String dummyId, String username, String description,
                          String url, String password, String creationDate,
                          String lastUpdate, String note) {
         this.id = new SimpleStringProperty(id);
+        this.dummyId = dummyId;
         this.username = new SimpleStringProperty(username);
         this.description = new SimpleStringProperty(description);
         this.url = new SimpleStringProperty(url);
@@ -130,6 +133,14 @@ public class DatabaseEntry {
 
     public String getId() {
         return id.get();
+    }
+
+    public String getDummyId() {
+        return dummyId;
+    }
+
+    public String setDummytId(String id) {
+        return this.dummyId = id;
     }
 
     public SimpleStringProperty idProperty() {

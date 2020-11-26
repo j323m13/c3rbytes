@@ -81,6 +81,7 @@ public class mainViewController implements Initializable {
 
     public DatabaseEntry copyClickedEntry() {
         DatabaseEntry tmp = new DatabaseEntry(
+                profileTable.getSelectionModel().getSelectedItem().getDummyId(),
                 profileTable.getSelectionModel().getSelectedItem().getId(),
                 profileTable.getSelectionModel().getSelectedItem().getUsername(),
                 profileTable.getSelectionModel().getSelectedItem().getDescription(),
@@ -161,7 +162,7 @@ public class mainViewController implements Initializable {
 
 
         idColumn.setCellValueFactory(
-                new PropertyValueFactory<>("id")
+                new PropertyValueFactory<>("dummyId")
         );
 
         categoryColumn.setCellValueFactory(

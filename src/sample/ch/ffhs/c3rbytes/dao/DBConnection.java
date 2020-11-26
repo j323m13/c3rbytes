@@ -60,9 +60,11 @@ public class DBConnection {
         dbConnect();
         //databaseEntries = getEntries(rs);
         try (PreparedStatement ps = connection.prepareStatement(getAll); ResultSet rs = ps.executeQuery()) {
-
+            int i = 1;
             while (rs.next()) {
+
                 DatabaseEntry entry = new DatabaseEntry();
+                entry.setDummytId(String.valueOf(i));
                 entry.setId(rs.getString("user_id"));
                 entry.setUsername(rs.getString("username"));
                 entry.setDescription(rs.getString("description"));
@@ -72,6 +74,7 @@ public class DBConnection {
                 entry.setLastUpdate(rs.getString("date_update"));
                 entry.setNote(rs.getString("note"));
                 databaseEntries.addAll(entry);
+                i++;
                 //Print results in terminal for debugging
                 System.out.println(rs.getInt(1) + "," +
                         rs.getString(2) + ", " + rs.getString(3) + ", " +
