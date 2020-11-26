@@ -1,5 +1,6 @@
 package sample.ch.ffhs.c3rbytes.controller;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -7,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -31,11 +33,27 @@ public class addNewItemController {
     @FXML private javafx.scene.control.Label viewLastUpdateLabel;
     @FXML private javafx.scene.control.Button saveButton;
     @FXML private javafx.scene.control.Button showPasswordButton;
-    @FXML TextField typeField;
+    @FXML ChoiceBox<String> typeField;
     @FXML TextField urlField;
     private String id;
     private String creation;
     @FXML javafx.scene.control.Button discardButton;
+
+    public ObservableList<String> options = FXCollections.observableArrayList(
+                "Social",
+                    "Business",
+                    "Shopping",
+                    "Productivity",
+                    "Entertainment",
+                    "Family",
+                    "Health",
+                    "Other"
+            );
+
+    public void createCombox(){
+        typeField.setItems(options);
+        typeField.setValue(options.get(1).toString());
+    }
 
     //@FXML private javafx.scene.control.Button generatePasswordButton;
     public void generatePassword(ActionEvent event){
@@ -54,6 +72,7 @@ public class addNewItemController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        createCombox();
     }
 
     //@olaf delete?
@@ -71,7 +90,10 @@ public class addNewItemController {
             userNameField.setText(dbentry.getUsername());
             passwordField.setText(dbentry.getPassword());
             urlField.setText(dbentry.getUrl());
-            typeField.setText(dbentry.getDescription());
+            //set Combox options
+            typeField.setItems(options);
+            //set option index from the option which was saved last time. return an index(int)
+            typeField.setValue(options.get(options.indexOf(dbentry.getDescription())));
             notesField.setText(dbentry.getNote());
             viewLastUpdateLabel.setText(dbentry.getLastUpdate().toString());
         }catch (Exception e){
@@ -87,7 +109,7 @@ public class addNewItemController {
     public void onSaveButton(ActionEvent actionEvent) throws Exception {
         String username = userNameField.getText();
         String password = passwordField.getText();
-        String description = typeField.getText();
+        String description = typeField.getValue().toString();
         String url = urlField.getText();
         String notes = notesField.getText();
 
@@ -100,6 +122,7 @@ public class addNewItemController {
         System.out.println(url);
         System.out.println("creation date "+creation);
         System.out.println(notes);
+        System.out.print(typeField.getSelectionModel().getSelectedItem());
 
         DatabaseEntryDao newDao = new DatabaseEntryDao();
 

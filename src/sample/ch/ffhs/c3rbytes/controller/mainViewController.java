@@ -37,7 +37,7 @@ import static java.lang.String.valueOf;
 public class mainViewController implements Initializable {
 
 
-    private static boolean isNew;
+
     @FXML
     private TextField entryIdText;
     @FXML
@@ -63,6 +63,10 @@ public class mainViewController implements Initializable {
     private TableColumn<DatabaseEntry, String> passwordColumn;
     @FXML
     private TableColumn<DatabaseEntry, String> urlColumn;
+    @FXML
+    private TableColumn<DatabaseEntry, String> updateColumn;
+    @FXML
+    private TableColumn<DatabaseEntry, String> noteColumn;
 
     private boolean fromMainView = true;
     private boolean start = true;
@@ -174,6 +178,12 @@ public class mainViewController implements Initializable {
 
         urlColumn.setCellValueFactory(
                 new PropertyValueFactory<>("url")
+        );
+        updateColumn.setCellValueFactory(
+                new PropertyValueFactory<>("creationDate")
+        );
+        noteColumn.setCellValueFactory(
+                new PropertyValueFactory<>("note")
         );
 
         loadDatabaseEntries(databaseEntries);
