@@ -230,6 +230,7 @@ public class addNewItemController {
             // close the window
             Stage stage = (Stage) saveButton.getScene().getWindow();
             stage.close();
+
         }
 
     }

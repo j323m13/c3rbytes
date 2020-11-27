@@ -63,6 +63,8 @@ public class loginViewController {
             DatabaseEntryDao setupDao = new DatabaseEntryDao();
             //setup the database on first launch. does not work.
             //setupDao.setup("123456789","654321654321");
+            //setupDao.setupUserDBWithPassword();
+            //setupDao.setupTable();
             setupDao.connect();
             System.out.println("success");
 

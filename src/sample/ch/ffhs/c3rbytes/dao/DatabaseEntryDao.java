@@ -45,6 +45,7 @@ public class DatabaseEntryDao implements Dao{
                 "VALUES('"+entry.getUsername()+"','"+entry.getDescription()+"','"+entry.getUrl()+"','"+entry.getPassword()+"','"+entry.getCreationDate()+"', '"+entry.getLastUpdate()+"','"+entry.getNote()+"')";
 
         try {
+            System.out.println("SAVE -> -> -> ");
             dbExecuteUpdate(saveStmt);
         } catch (SQLException | ClassNotFoundException e) {
             System.out.print("Error occurred while insert Operation: " + e);
@@ -125,11 +126,43 @@ public class DatabaseEntryDao implements Dao{
     public void setup(String passwordDB, String bootPasswordHashed) throws SQLException, ClassNotFoundException {
         String oldPassword = DBConnection.passwordDB;
         DBConnection.passwordDB = passwordDB;
-        String url = "jdbc:derby:"+DBConnection.databaseName+";create=true;username="+DBConnection.userDB+";password="+oldPassword+"";
+        String url = "jdbc:derby:"+DBConnection.databaseName+";create=true;username="+DBConnection.userDB+"";
         //first connection to the DB. create DB if not exist.
-        setupDBEncryption(url);
+        //setupDBEncryption(url,passwordDB, bootPasswordHashed);
         setupDatabase();
 
+
+    }
+
+    public void newStartup(boolean startup) throws SQLException, ClassNotFoundException {
+        if(startup){
+            setupUserDBWithPassword();
+            setupTable();
+            //setupEncryption()
+        }
+
+    }
+
+    public void setupUserDBWithPassword() throws SQLException {
+        String urlx = "jdbc:derby:"+ databaseName+";create=true;user="+userDB+"";
+        String setupPasswordString = "CALL SYSCS_UTIL.SYSCS_CREATE_USER(?,?)";
+        setupUserDBWithPasswordConnection(urlx, "123456789", setupPasswordString);
+    }
+
+    public void resetUserDBPassword(String newUserDBPassword){
+        //TODO
+        String resetPassord = "CALL SYSCS_UTIL.SYSCS_RESET_PASSWORD(?,?)";
+        resetUserPwd(resetPassord, newUserDBPassword);
+
+    }
+
+    public void setupTable() throws SQLException, ClassNotFoundException {
+        setupDatabase();
+
+    }
+
+    public void setupEncryption() throws SQLException {
+        setupDBEncryption();
 
     }
 

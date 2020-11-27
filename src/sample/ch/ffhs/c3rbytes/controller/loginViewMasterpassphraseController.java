@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.FileEncrypterDecrypter;
+import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.main.Main;
 
 import java.awt.event.ActionEvent;
@@ -26,6 +27,8 @@ public class loginViewMasterpassphraseController {
 
         // check pw in c3r.c3r file and assign to passwordDecrypterpassword
         String masterPassPhrase = masterPassPhraseField.getText();
+        DatabaseEntryDao setupEncryptionDao = new DatabaseEntryDao();
+        //setupEncryptionDao.setupEncryption();
 
         try {
             FileEncrypterDecrypter fileEncrypterDecrypter = new FileEncrypterDecrypter();

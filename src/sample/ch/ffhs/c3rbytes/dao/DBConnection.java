@@ -9,6 +9,8 @@ public class DBConnection {
     public static boolean firstBoot = true;
     public static String userDB = "cerbytes";
     public static String passwordDB = "tH94mLBaKr";
+    //public static String passwordDB = "123456789";
+    //public static String passwordDB;
     private String oldBootPassword;
     //public static String oldBootPassword = "f235c129089233ce3c9c85f1";
     private String newBootPassword;
@@ -26,23 +28,21 @@ public class DBConnection {
     private boolean connectionClose;
     //public final DBConnection helper = new DBConnection();
 
-    private static String createURL(){
-        JDBC_URL = "jdbc:derby:cerbytesdb;create=true;user=cerbytes;password="+passwordDB+";databaseEncryption="+databaseEncryption+"" +
-                ";encryptionKeyLength="+encryptionKeyLength+";encryptionAlgorithm="+encryptionAlgorithm+";bootPassword="+bootPassword+"";
-        System.out.print("createURL() -> "+JDBC_URL);
-        return JDBC_URL;
-    }
+
+
+
 
     public static void dbConnect() throws SQLException {
-            try {
-                System.out.println("url inside dbconnect(): "+createURL());
-                connection = DriverManager.getConnection(createURL());
-                System.out.println("connection successful");
-            } catch (SQLException e) {
-                System.out.println("Connection Failed! Check output console" + e);
-                e.printStackTrace();
-                throw e;
-            }
+        try {
+            System.out.println("Connecting to db ... ");
+            //System.out.println("url inside dbconnect(): " + createURL());
+            connection = DriverManager.getConnection(createURL());
+            System.out.println("connection successful");
+        } catch (SQLException e) {
+            System.out.println("Connection Failed! Check output console" + e);
+            e.printStackTrace();
+            throw e;
+        }
 
     }
 
@@ -50,99 +50,22 @@ public class DBConnection {
     public static void dbDisconnect() throws SQLException {
         try {
             if (connection != null && !connection.isClosed()) {
-                connection = DriverManager.getConnection(createURL()+"shutdown=true");
+                //System.out.println("url inside dbDisconnect(): " + createURL());
+                System.out.println("shutdown? " + createURL() + ";shutdown=true");
+                connection = DriverManager.getConnection(createURL() + ";shutdown=true");
+                System.out.println("disconnect() successful");
                 connection.close();
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             throw e;
         }
     }
 
-
-    public static void setupDBEncryption(String url) throws SQLException {
-
-        //create user for the DB
-        //String setupUser = "CALL SYSCS_UTIL.SYSCS_CREATE_USER(?,?)";
-        //set password for the DB
-        String setupPassword = "CALL SYSCS_UTIL.SYSCS_RESET_PASSWORD(?,?)";
-        Connection firstConnection = null;
-        try {
-            System.out.println(url);
-            firstConnection = DriverManager.getConnection(url);
-            System.out.println("password was created");
-        }catch (SQLException e){
-            System.out.println("Problem with firstConnection. "+ e);
-            System.out.print("Error occurred while setting up the passwordDB : " + e);
-
-        }
-        try{
-            firstConnection = DriverManager.getConnection(url+";shutdown=true");
-        }catch (SQLException e){
-            System.out.println(e);
-        }
-        try{
-            firstConnection = DriverManager.getConnection(url);
-            System.out.println("Connect success -> "+url);
-            CallableStatement cs = firstConnection.prepareCall(setupPassword);
-            cs.setString(1, DBConnection.userDB);
-            cs.setString(2, DBConnection.passwordDB);
-            cs.execute();
-            cs.close();
-        }catch (SQLException e){
-            System.out.println(e);
-        }
-        try{
-            url = url+";password="+passwordDB+"";
-            firstConnection = DriverManager.getConnection(url + "shutdown=true");
-            firstConnection.close();
-            System.out.println("disconnect success -> "+url);
-        }catch (SQLException e){
-            System.out.print("Problem with closing firstConnection. "+e);
-        }
-
-    }
-
-    public static void setupDatabase() throws SQLException, ClassNotFoundException {
-        //encrypt Database with bootPassword
-        dbConnect();
-        //disconnect to encrypt the database (without reboot, change will be overturned.
-        dbDisconnect();
-
-        //set schema
-        String slqCreateSchema = "CREATE SCHEMA \"CERBYTES\"";
-        try{
-            dbExecuteUpdate(slqCreateSchema);
-        }catch (SQLException | ClassNotFoundException e){
-            System.out.println("Schema was not created.");
-        }
-
-        String sqlCreateTable = "CREATE TABLE CERBYTES.\"data_entries\" (\n" +
-                "                        \"user_id\" INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY(Start with 1, Increment by 1),\n" +
-                "                        \"username\" VARCHAR(255) DEFAULT NULL,\n" +
-                "                        \"description\" VARCHAR(255) DEFAULT NULL,\n" +
-                "                        \"url_content\" VARCHAR(255) DEFAULT NULL,\n" +
-                "                        \"password_text\" VARCHAR(255) DEFAULT NULL,\n" +
-                "                        \"date_creation\" VARCHAR(50) DEFAULT NULL,\n" +
-                "                        \"date_update\" VARCHAR(50) DEFAULT NULL,\n" +
-                "                       \"note\" CLOB(2K) DEFAULT NULL)";
-
-        try {
-            dbExecuteUpdate(sqlCreateTable);
-        }catch (SQLException | ClassNotFoundException e){
-            System.out.print("Table was not created");
-        }
-
-    }
-
-
-
-
-
     /*
-    * this methode holds all the entries from the database and return them to an ObservableList. For insertion, use dbExecuteUpdate()
-    * @param getAll (String)
-    * @param databaseEntries (ObservableList)
-    * @see dbExecuteUpdate()
+     * this methode holds all the entries from the database and return them to an ObservableList. For insertion, use dbExecuteUpdate()
+     * @param getAll (String)
+     * @param databaseEntries (ObservableList)
+     * @see dbExecuteUpdate()
      */
     public static ObservableList<DatabaseEntry> dbExecuteQuery(String getAll, ObservableList<DatabaseEntry> databaseEntries) throws SQLException, ClassNotFoundException {
         //Declare statement, resultSet and CachedResultSet as null
@@ -151,7 +74,6 @@ public class DBConnection {
         try (PreparedStatement ps = connection.prepareStatement(getAll); ResultSet rs = ps.executeQuery()) {
             int i = 1;
             while (rs.next()) {
-
                 DatabaseEntry entry = new DatabaseEntry();
                 entry.setDummytId(String.valueOf(i));
                 entry.setId(rs.getString("user_id"));
@@ -172,20 +94,23 @@ public class DBConnection {
                         rs.getString(7) + ", " + rs.getString(8)
                 );
             }
+            ps.close();
 
         } catch (SQLException e) {
             System.out.println("Table is empty? " + e);
         } finally {
-            DBConnection.dbDisconnect();
+            //dbDisconnect();
         }
+
         return databaseEntries;
     }
+
 
     //DB Execute Update (For Update/Insert/Delete) Operation
     public static void dbExecuteUpdate(String sqlStmt) throws SQLException, ClassNotFoundException {
         //Declare statement as null
         Statement stmt = null;
-        System.out.println("query "+sqlStmt);
+        System.out.println("query " + sqlStmt);
         try {
             dbConnect();
             stmt = connection.createStatement();
@@ -199,164 +124,145 @@ public class DBConnection {
                 stmt.close();
             }
             //Close connection
-            dbDisconnect();
+            //dbDisconnect();
+            connection.close();
         }
     }
 
-        /*
-        try {
-            //Connect to DB (Establish Oracle Connection)
-            dbConnect();
-            PreparedStatement ps = DBConnection.connection.prepareStatement(sqlStmt);
-            if(databaseEntry.getCreationDate() == null){
-                databaseEntry.setCreationDate(DatabaseEntry.getDateTime());
-            }
-            databaseEntry.setLastUpdate().toString();
-           if(databaseEntry.getNote() != null){
-               String emptyString = "";
-               databaseEntry.setNote(emptyString);
-           }
-           if
 
-            //debuuging
-            System.out.println("Debugging value from insert query");
-            System.out.println(databaseEntry.getId());
-            System.out.println(databaseEntry.getUsername());
-            System.out.println(databaseEntry.getDescription());
-            System.out.println(databaseEntry.getUrl());
-            System.out.println(databaseEntry.getPassword());
-            System.out.println(databaseEntry.getCreationDate());
-            System.out.println(databaseEntry.getLastUpdate());
-            System.out.println(databaseEntry.getNote());
-            ps.setString(1, databaseEntry.getUsername());
-            ps.setString(2, databaseEntry.getDescription());
-            ps.setString(3, databaseEntry.getUrl());
-            ps.setString(4, databaseEntry.getPassword());
-            ps.setString(5, databaseEntry.getCreationDate());
-            ps.setString(6, databaseEntry.getLastUpdate());
-            ps.setString(7, databaseEntry.getNote());
-            ps.setString(8,databaseEntry.getLastUpdate());
-            ps.executeUpdate();
-            //Create Statement
+    //NOT WORKING YET -> DO NOT TOUCH
+    public static void setupUserDBWithPasswordConnection(String urlx, String passwordDB, String setupPasswordString) throws SQLException {
 
-            System.out.println("action successful (dbExecuteUpdate)");
-        } catch (SQLDataException e) {
-            System.out.println("Problem occurred at executeUpdate operation : " + e);
-            throw e;
-        } finally {
-            //Close connection
-            dbDisconnect();
-        }
-    }
-         */
+        System.out.println(urlx);
+        Connection con = DriverManager.getConnection(urlx);
+        System.out.println("Connect success -> " + urlx);
+        DBConnection.passwordDB = passwordDB;
+        System.out.println("DBConnection.password: " + DBConnection.passwordDB);
 
-    /*
-     * Methode to change the bootpassword to encrypt the DB
-     * jdbc:derby:salesdb;bootPassword=abc1234xyz;newBootPassword=new1234xyz
-     * @param the newBootPassword
-     */
-  /*¨
-    public static void changebootPasswordAndEncryptDBWithNewBootPassword(String oldPassword, String newMasterpassword) throws SQLException, ClassNotFoundException {
-        DBConnection.passwordDB = oldPassword;
-
-        String connectionString = createUrlWithParamenters();
-
-        System.out.println(connectionString);
-
-        Connection conn = DBConnection.getConnection();
-        CallableStatement cs = conn.prepareCall("CALL SYSCS_UTIL.SYSCS_RESET_PASSWORD(?, ?)");
-        cs.setString(1, "cerbytes");
-        cs.setString(2, newMasterpassword);
+        CallableStatement cs = con.prepareCall(setupPasswordString);
+        cs.setString(1, DBConnection.userDB);
+        cs.setString(2, DBConnection.passwordDB);
         cs.execute();
         cs.close();
-        conn.close();
-        //return connection;
+        try {
+            System.out.println("Connect -> " + urlx + ";password=" + passwordDB + "");
+            con = DriverManager.getConnection(urlx + ";password=" + passwordDB + "");
+            System.out.println("success with password");
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        try {
+            System.out.println("disconnect");
+            con.close();
+            //con = DriverManager.getConnection(urlx+";password="+ passwordDB+";shutdown=true");
+            System.out.println("success disconnect with password");
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
     }
-   */
-    /*
+
+    public static void resetUserPwd(String reset, String newUserDBPassword) {
+        try {
+            connection = DriverManager.getConnection(createURL());
+            System.out.println("Connect success -> " + createURL());
+            CallableStatement cs = connection.prepareCall(reset);
+            cs.setString(1, DBConnection.userDB);
+            cs.setString(2, newUserDBPassword);
+            cs.execute();
+            cs.close();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+    public static void setupDBEncryption() {
+        Connection connection = null;
+        try {
+            dbConnect();
+            System.out.println("Database is almost encrypted");
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        try {
+            //connection = DriverManager.getConnection(createURL()+";shutdown=true");
+            if (connection != null) {
+                connection.close();
+            }
+            System.out.println("DB ist encrypted with: ");
+            System.out.println("bootPassword:  " + DBConnection.bootPassword);
+            System.out.println("passwordDB: " + DBConnection.passwordDB);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
 
 
-    public static void changeBootPassword(String oldBootMasterPassword, String newBootMasterpassword ) throws SQLException, ClassNotFoundException {
-
-        DBConnection helper = new DBConnection();
-        helper.setBootPassword(oldBootMasterPassword);
-        helper.setNewBootPassword(newBootMasterpassword);
-
-
-        //connect to the db with old bootpassword and apply newBootPassword
-        //jdbc:derby:cerbytesdb;user=cerbytes;password=tH94mLBaKr;dataEncryption=true;encryptionKeyLength=192;encryptionAlgorithm=AES/CBC/NoPadding;
-        // bootPassword=654321654321Access to DB granted
-        String url = helper.getURL();
-        System.out.println("url for changing bootPassword");
-        Connection connection = DriverManager.getConnection(helper.getURL()+";newBootPassword="+newBootMasterpassword);
-        System.out.println(helper.setURL()+";newBootPassword="+newBootMasterpassword);
-        helper.setBootPassword(newBootMasterpassword);
-        //shutdown the DB to apply newbootPassword
-        connection.close();
-        System.out.println("new url after bootpassword change: ");
-        System.out.println(helper.createUrlWithParamenters());
-        //try the connection with the new bootPassword
-        try{
-            Connection connection2 = DriverManager.getConnection(helper.createUrlWithParamenters());
-            connection2.close();
-            System.out.println("connection is close. bootPassword was sucessfully changed");
-        }catch (SQLException e){
-            System.out.println("the connection with new bootpassword does not work.");
+    public static void setupDatabase() throws SQLException, ClassNotFoundException {
+        //encrypt Database with bootPassword
+        connection = DriverManager.getConnection(createURLSimple() + ";password=" + passwordDB + "");
+        //set schema
+        String slqCreateSchema = "CREATE SCHEMA \"CERBYTES\"";
+        Statement stmt = null;
+        try {
+            stmt = connection.createStatement();
+            stmt.executeUpdate(slqCreateSchema);
+            System.out.println("Schema was created.");
+        } catch (SQLException e) {
+            System.out.println("Schema was not created." + e);
+            throw e;
+        } finally {
+            if (stmt != null) {
+                //Close statement
+                stmt.close();
+            }
         }
 
-    }
-    */
-
-
-    //TODO to implement a setup routine
-    /*
-    * Create a user (userDB), a table in CERBYTES, set userDB password and encrypt the database with the masterpassword.
-     */
-    /*
-    public void setup() throws SQLException {
-        DBConnection helper = new DBConnection();
-        connection = DriverManager.getConnection(helper.getUrlWithParameters());
-        //create a simple url with a username (necessary). table belongs to this username afterwards.
-        System.out.println(createUrl());
-        //create a password for userdb
-        CallableStatement setup = connection.prepareCall("CALL SYSCS_UTIL.SYSCS_CREATE_USER(?, ?)");
-        setup.setString(1, helper.userDB);
-        setup.setString(2, helper.passwordDB);
-        setup.executeQuery();
-        setup = null;
-        // restart db
-        connection.close();
-        Connection connection = DriverManager.getConnection(createUrl());
-        // create table data_entries
-        String sqlCreate = "CREATE TABLE CERBYTES.\"data_entries\" (\n" +
+        String sqlCreateTable = "CREATE TABLE \"CERBYTES\".\"database_entries\" (\n" +
                 "                        \"user_id\" INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY(Start with 1, Increment by 1),\n" +
                 "                        \"username\" VARCHAR(255) DEFAULT NULL,\n" +
                 "                        \"description\" VARCHAR(255) DEFAULT NULL,\n" +
                 "                        \"url_content\" VARCHAR(255) DEFAULT NULL,\n" +
                 "                        \"password_text\" VARCHAR(255) DEFAULT NULL,\n" +
-                "                        \"date_creation\" VARCHAR(20) DEFAULT NULL,\n" +
-                "                        \"date_update\" VARCHAR(20) DEFAULT NULL,\n" +
+                "                        \"date_creation\" VARCHAR(50) DEFAULT NULL,\n" +
+                "                        \"date_update\" VARCHAR(50) DEFAULT NULL,\n" +
                 "                       \"note\" CLOB(2K) DEFAULT NULL)";
+
+        Statement stmt2 = null;
         try {
-            setup.executeQuery(sqlCreate);
-        }catch (SQLException e){
-            System.out.println(e);
+            stmt2 = connection.createStatement();
+            stmt2.executeUpdate(sqlCreateTable);
+            System.out.println("table was created.");
+        } catch (SQLException e) {
+            System.out.println("table was not created." + e);
+            throw e;
+        } finally {
+            if (stmt2 != null) {
+                //Close statement
+                stmt2.close();
+            }
+            System.out.println("Table was created");
+
+            //disconnect to encrypt the database (without reboot, change will be overturned.
+            connection.close();
+
         }
-        connection.close();
-
-        // create url with all the parameters and encryption
-        System.out.println(createUrlWithParamenters());
-        try{
-            Connection secure = DriverManager.getConnection(createUrlWithParamenters());
-            secure.close();
-
-        }catch (SQLException e){
-            System.out.println(e);
-        }
-
     }
-    */
 
+
+    private static String createURL() {
+        JDBC_URL = "jdbc:derby:" + databaseName + ";user=" + userDB + ";password=" + passwordDB + ";databaseEncryption=" + databaseEncryption + "" +
+                ";encryptionKeyLength=" + encryptionKeyLength + ";encryptionAlgorithm=" + encryptionAlgorithm + ";bootPassword=" + bootPassword + "";
+        System.out.println("createURL() -> " + JDBC_URL);
+        return JDBC_URL;
+    }
+
+
+    private static String createURLSimple() {
+        JDBC_URL = "jdbc:derby:" + databaseName + ";create=true;user=cerbytes;password=" + passwordDB + "";
+        System.out.println("createURL() -> " + JDBC_URL);
+        return JDBC_URL;
+    }
 
 
 

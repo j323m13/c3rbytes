@@ -35,19 +35,9 @@ import static java.lang.String.valueOf;
 
 
 public class mainViewController implements Initializable {
+    @FXML
+     private Label foundLabel;
 
-
-
-    @FXML
-    private TextField entryIdText;
-    @FXML
-    private TextField entryCategoryText;
-    @FXML
-    private TextField entryUserNameText;
-    @FXML
-    private TextField entryPasswordText;
-    @FXML
-    private TextField entryUrlText;
     //TODO EntryDateCreationText and EntryLastUpdate
 
     @FXML
@@ -201,10 +191,12 @@ public class mainViewController implements Initializable {
             databaseEntries.clear();
             databaseEntries.addAll(entries);
             populateTableView(databaseEntries);
+            foundLabel.setText(valueOf(databaseEntries.size()));
         } catch (SQLException | ClassNotFoundException throwables) {
 
         }
     }
+
 
 
     @FXML
@@ -246,8 +238,7 @@ public class mainViewController implements Initializable {
 
     @FXML private Button searchButton;
     public void searchAction(ActionEvent event){
-        //TODO: Search entries based on parameter.
-        //TODO: Define how search works.
+
         System.out.println("Search Action");
         Scene scene = searchButton.getScene();
         scene.setCursor(Cursor.WAIT);
@@ -331,8 +322,7 @@ public class mainViewController implements Initializable {
         DatabaseEntryDao deleteDao = new DatabaseEntryDao();
         deleteDao.deleteAccount();
     }
-    //TODO: to delete?
-    private TableView tableView;
+
     public void startOpenSelectedItemsToView(DatabaseEntry dbentry) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("../gui/add_new_item_view.fxml"));
