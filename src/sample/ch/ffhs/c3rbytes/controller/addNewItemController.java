@@ -231,6 +231,10 @@ public class addNewItemController {
             Stage stage = (Stage) saveButton.getScene().getWindow();
             stage.close();
 
+
+
+
+
         }
 
     }

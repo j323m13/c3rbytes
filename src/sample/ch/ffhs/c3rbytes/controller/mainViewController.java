@@ -53,6 +53,8 @@ public class mainViewController implements Initializable {
     private TableColumn<DatabaseEntry, String> updateColumn;
     @FXML
     private TableColumn<DatabaseEntry, String> noteColumn;
+    @FXML
+    public Button reloaddata;
 
     private boolean fromMainView = true;
     private boolean start = true;
@@ -337,7 +339,6 @@ public class mainViewController implements Initializable {
         stage.setTitle("View item");
         stage.setScene(new Scene(viewItemControllerParent, 600,400));
         stage.show();
-
     }
 
 
@@ -417,5 +418,9 @@ public class mainViewController implements Initializable {
     public void reload(ActionEvent actionEvent) {
         reloadMainView();
 
+    }
+
+    public void onModifyProfile(ActionEvent actionEvent) throws IOException {
+        startOpenSelectedItemsToView(copyClickedEntry());
     }
 }
