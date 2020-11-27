@@ -6,48 +6,137 @@ import javafx.collections.ObservableList;
 import java.sql.*;
 
 public class DBConnection {
-    private String userDB = "cerbytes";
-    private String passwordDB = "tH94mLBaKr";
+    public static boolean firstBoot = true;
+    public static String userDB = "cerbytes";
+    public static String passwordDB = "tH94mLBaKr";
     private String oldBootPassword;
     //public static String oldBootPassword = "f235c129089233ce3c9c85f1";
     private String newBootPassword;
     public static String bootPassword;
-    private boolean newBootPasswordEnabled = false;
-    private int encryptionKeyLength = 192;
-    private String encryptionAlgorithm = "AES/CBC/NoPadding";
-    private String databaseName = "cerbytesdb";
-    private Boolean databaseEncryption = true;
+    public boolean newBootPasswordEnabled = false;
+    private static int encryptionKeyLength = 256;
+    private static String encryptionAlgorithm = "AES/CBC/NoPadding";
+    public static String databaseName = "cerbytesdb";
+    private static Boolean databaseEncryption = true;
     //public static String JDBC_URL = "jdbc:derby:cerbytesdb;create=true;username=cerbytes;password=tH94mLBaKr;"+
     //       "dataEncryption=true;encryptionKeyLength=192;encryptionAlgorithm=AES/CBC/NoPadding";
-    public static String JDBC_URL = "jdbc:derby:cerbytesdb;create=true;user=cerbytes;password=tH94mLBaKr";
+    public static String JDBC_URL;
     public static Connection connection = null;
     private boolean connectionOpen;
     private boolean connectionClose;
     //public final DBConnection helper = new DBConnection();
 
+    private static String createURL(){
+        JDBC_URL = "jdbc:derby:cerbytesdb;create=true;user=cerbytes;password="+passwordDB+";databaseEncryption="+databaseEncryption+"" +
+                ";encryptionKeyLength="+encryptionKeyLength+";encryptionAlgorithm="+encryptionAlgorithm+";bootPassword="+bootPassword+"";
+        System.out.print("createURL() -> "+JDBC_URL);
+        return JDBC_URL;
+    }
 
     public static void dbConnect() throws SQLException {
-        try {
-            System.out.println("url inside dbconnect(): "+JDBC_URL);
-            connection = DriverManager.getConnection(JDBC_URL);
-            System.out.println("connection successful");
-        } catch (SQLException e) {
-            System.out.println("Connection Failed! Check output console" + e);
-            e.printStackTrace();
-            throw e;
-        }
+            try {
+                System.out.println("url inside dbconnect(): "+createURL());
+                connection = DriverManager.getConnection(createURL());
+                System.out.println("connection successful");
+            } catch (SQLException e) {
+                System.out.println("Connection Failed! Check output console" + e);
+                e.printStackTrace();
+                throw e;
+            }
+
     }
 
     //Close Connection
     public static void dbDisconnect() throws SQLException {
         try {
             if (connection != null && !connection.isClosed()) {
+                connection = DriverManager.getConnection(createURL()+"shutdown=true");
                 connection.close();
             }
         } catch (Exception e){
             throw e;
         }
     }
+
+
+    public static void setupDBEncryption(String url) throws SQLException {
+
+        //create user for the DB
+        //String setupUser = "CALL SYSCS_UTIL.SYSCS_CREATE_USER(?,?)";
+        //set password for the DB
+        String setupPassword = "CALL SYSCS_UTIL.SYSCS_RESET_PASSWORD(?,?)";
+        Connection firstConnection = null;
+        try {
+            System.out.println(url);
+            firstConnection = DriverManager.getConnection(url);
+            System.out.println("password was created");
+        }catch (SQLException e){
+            System.out.println("Problem with firstConnection. "+ e);
+            System.out.print("Error occurred while setting up the passwordDB : " + e);
+
+        }
+        try{
+            firstConnection = DriverManager.getConnection(url+";shutdown=true");
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        try{
+            firstConnection = DriverManager.getConnection(url);
+            System.out.println("Connect success -> "+url);
+            CallableStatement cs = firstConnection.prepareCall(setupPassword);
+            cs.setString(1, DBConnection.userDB);
+            cs.setString(2, DBConnection.passwordDB);
+            cs.execute();
+            cs.close();
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        try{
+            url = url+";password="+passwordDB+"";
+            firstConnection = DriverManager.getConnection(url + "shutdown=true");
+            firstConnection.close();
+            System.out.println("disconnect success -> "+url);
+        }catch (SQLException e){
+            System.out.print("Problem with closing firstConnection. "+e);
+        }
+
+    }
+
+    public static void setupDatabase() throws SQLException, ClassNotFoundException {
+        //encrypt Database with bootPassword
+        dbConnect();
+        //disconnect to encrypt the database (without reboot, change will be overturned.
+        dbDisconnect();
+
+        //set schema
+        String slqCreateSchema = "CREATE SCHEMA \"CERBYTES\"";
+        try{
+            dbExecuteUpdate(slqCreateSchema);
+        }catch (SQLException | ClassNotFoundException e){
+            System.out.println("Schema was not created.");
+        }
+
+        String sqlCreateTable = "CREATE TABLE CERBYTES.\"data_entries\" (\n" +
+                "                        \"user_id\" INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY(Start with 1, Increment by 1),\n" +
+                "                        \"username\" VARCHAR(255) DEFAULT NULL,\n" +
+                "                        \"description\" VARCHAR(255) DEFAULT NULL,\n" +
+                "                        \"url_content\" VARCHAR(255) DEFAULT NULL,\n" +
+                "                        \"password_text\" VARCHAR(255) DEFAULT NULL,\n" +
+                "                        \"date_creation\" VARCHAR(50) DEFAULT NULL,\n" +
+                "                        \"date_update\" VARCHAR(50) DEFAULT NULL,\n" +
+                "                       \"note\" CLOB(2K) DEFAULT NULL)";
+
+        try {
+            dbExecuteUpdate(sqlCreateTable);
+        }catch (SQLException | ClassNotFoundException e){
+            System.out.print("Table was not created");
+        }
+
+    }
+
+
+
+
 
     /*
     * this methode holds all the entries from the database and return them to an ObservableList. For insertion, use dbExecuteUpdate()

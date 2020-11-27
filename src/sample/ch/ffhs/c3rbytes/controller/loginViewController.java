@@ -8,6 +8,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.StringHasher;
 import sample.ch.ffhs.c3rbytes.dao.DBConnection;
+import sample.ch.ffhs.c3rbytes.dao.DatabaseEntry;
+import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -55,10 +57,13 @@ public class loginViewController {
         //System.out.println("DBConnPW: " + DBConnection.passwordDB);
 
         //debugging for the url
-        System.out.println("URL "+DBConnection.JDBC_URL);
+        //System.out.println("URL "+DBConnection.JDBC_URL);
 
         try {
-            DBConnection.dbConnect();
+            DatabaseEntryDao setupDao = new DatabaseEntryDao();
+            //setup the database on first launch. does not work.
+            //setupDao.setup("123456789","654321654321");
+            setupDao.connect();
             System.out.println("success");
 
             System.out.println("Access to DB granted");

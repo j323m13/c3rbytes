@@ -6,10 +6,9 @@ import org.apache.commons.dbutils.QueryRunner;
 
 import java.sql.*;
 
+import static sample.ch.ffhs.c3rbytes.dao.DBConnection.*;
+
 public class DatabaseEntryDao implements Dao{
-
-
-    private static final QueryRunner dbAccess = new QueryRunner();
     private final ResultSet rs = null;
     private DBConnection connection;
 
@@ -18,12 +17,15 @@ public class DatabaseEntryDao implements Dao{
         return new DatabaseEntry(username, description, url, password);
     }
 
-
-
+    /*
+    * Methode to retrieve all the entries from the Database.
+    * @return ObservableList databaseEntries
+    * @see DBConnection.java dbExecuteQuery()
+     */
     public static ObservableList<DatabaseEntry> getAll() throws SQLException, ClassNotFoundException {
         String getAll = "SELECT * FROM \"CERBYTES\".\"database_entries\"";
         ObservableList<DatabaseEntry> databaseEntries = FXCollections.observableArrayList();
-        DBConnection.dbExecuteQuery(getAll,databaseEntries);
+        dbExecuteQuery(getAll,databaseEntries);
         return databaseEntries;
     }
 
@@ -43,7 +45,7 @@ public class DatabaseEntryDao implements Dao{
                 "VALUES('"+entry.getUsername()+"','"+entry.getDescription()+"','"+entry.getUrl()+"','"+entry.getPassword()+"','"+entry.getCreationDate()+"', '"+entry.getLastUpdate()+"','"+entry.getNote()+"')";
 
         try {
-            DBConnection.dbExecuteUpdate(saveStmt);
+            dbExecuteUpdate(saveStmt);
         } catch (SQLException | ClassNotFoundException e) {
             System.out.print("Error occurred while insert Operation: " + e);
             throw e;
@@ -63,7 +65,7 @@ public class DatabaseEntryDao implements Dao{
                 "\"url_content\"='"+entry.getUrl()+"', \"password_text\"='"+entry.getPassword()+"', \"date_update\"='"+entry.getLastUpdate()+"'," +
                 "\"note\"='"+entry.getNote()+"' WHERE \"user_id\"="+Integer.parseInt(entry.getId())+" ";
         try {
-            DBConnection.dbExecuteUpdate(updateStmt);
+            dbExecuteUpdate(updateStmt);
         }catch (SQLException e) {
                 System.out.print("Error occurred while DELETE Operation: " + e);
                 throw e;
@@ -84,7 +86,7 @@ public class DatabaseEntryDao implements Dao{
         String deleteStmt = "DELETE FROM \"CERBYTES\".\"database_entries\"\n" +
                 "WHERE \"date_creation\"='"+entry.getCreationDate()+"'";
         try {
-            DBConnection.dbExecuteUpdate(deleteStmt);
+            dbExecuteUpdate(deleteStmt);
         }catch (SQLException e) {
             System.out.print("Error occurred while DELETE Operation: " + e);
             throw e;
@@ -93,11 +95,15 @@ public class DatabaseEntryDao implements Dao{
         return null;
     }
 
+    /*
+    * Methode to delete the account. it deletes all the entries from the database.
+    * @return null
+     */
     public Dao deleteAccount() throws SQLException, ClassNotFoundException {
         System.out.print("account will be deleted");
         String deleteAccountStmt = "DELETE FROM \"CERBYTES\".\"database_entries\"";
         try {
-            DBConnection.dbExecuteUpdate(deleteAccountStmt);
+            dbExecuteUpdate(deleteAccountStmt);
         }catch (SQLException | ClassNotFoundException e) {
             System.out.print("Error occurred while DELETE Operation: " + e);
             throw e;
@@ -105,7 +111,32 @@ public class DatabaseEntryDao implements Dao{
         return null;
     }
 
+    /*
+    * call the dbConnect methode from DBConenction.java
+     */
+    @Override
+    public void connect() throws SQLException {
+        DBConnection.dbConnect();
+    }
 
+    /*
+    * Setup a new password for the database user. it is not the bootPassword, which encrypt the database. it is only for queries with the db.
+     */
+    public void setup(String passwordDB, String bootPasswordHashed) throws SQLException, ClassNotFoundException {
+        String oldPassword = DBConnection.passwordDB;
+        DBConnection.passwordDB = passwordDB;
+        String url = "jdbc:derby:"+DBConnection.databaseName+";create=true;username="+DBConnection.userDB+";password="+oldPassword+"";
+        //first connection to the DB. create DB if not exist.
+        setupDBEncryption(url);
+        setupDatabase();
+
+
+    }
+
+    /*
+    * Methode to create a simple DatabaseEntry object
+    * @return a databaseEntry Object
+     */
     public DatabaseEntry createSimple(String username, String password, String description, String url) {
         return new DatabaseEntry(username, description, url, password);
     }

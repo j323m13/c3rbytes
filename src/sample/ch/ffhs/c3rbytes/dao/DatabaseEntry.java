@@ -321,4 +321,8 @@ public class DatabaseEntry {
         lastUpdate.set(time);
         return lastUpdate;
     }
+
+    public void setup() {
+
+    }
 }

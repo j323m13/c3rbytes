@@ -217,12 +217,16 @@ public class mainViewController implements Initializable {
 
     @FXML private Button addButton;
     public void addNewItemAction(ActionEvent event){
-        Parent addItem;
+
         try {
-            addItem = FXMLLoader.load(getClass().getResource("../gui/add_new_item_view.fxml"));
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation((getClass().getResource("../gui/add_new_item_view.fxml")));
+            Parent addItemParent = loader.load();
+            addNewItemController controller = loader.getController();
+            controller.createCombox();
             Stage stage = new Stage();
             stage.setTitle("Add new Item");
-            stage.setScene(new Scene(addItem, 600, 400));
+            stage.setScene(new Scene(addItemParent, 600, 400));
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

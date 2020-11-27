@@ -12,4 +12,8 @@ public interface Dao {
     Dao update(DatabaseEntry databaseEntry) throws SQLException, ClassNotFoundException;
     Dao delete(DatabaseEntry databaseEntry) throws SQLException, ClassNotFoundException;
     Dao deleteAccount() throws SQLException, ClassNotFoundException;
+
+    void setup(String passwordDB, String bootPassordHashed) throws SQLException, ClassNotFoundException;
+
+    void connect() throws SQLException;
 }
