@@ -81,8 +81,8 @@ public class mainViewController implements Initializable {
 
     public DatabaseEntry copyClickedEntry() {
         DatabaseEntry tmp = new DatabaseEntry(
-                profileTable.getSelectionModel().getSelectedItem().getDummyId(),
                 profileTable.getSelectionModel().getSelectedItem().getId(),
+                profileTable.getSelectionModel().getSelectedItem().getDummyId(),
                 profileTable.getSelectionModel().getSelectedItem().getUsername(),
                 profileTable.getSelectionModel().getSelectedItem().getDescription(),
                 profileTable.getSelectionModel().getSelectedItem().getUrl(),
@@ -90,8 +90,8 @@ public class mainViewController implements Initializable {
                 profileTable.getSelectionModel().getSelectedItem().getCreationDate(),
                 profileTable.getSelectionModel().getSelectedItem().getLastUpdate(),
                 profileTable.getSelectionModel().getSelectedItem().getNote());
-        System.out.println("id from profiletable :"+profileTable.getSelectionModel().getSelectedItem().getId());
-        System.out.print("the object: "+tmp.getUsername() + ", " + tmp.getPassword() + ", " + tmp.getUrl() + ", " + tmp.getHiddenPasswordTrick()
+        //System.out.println("id from profiletable :"+profileTable.getSelectionModel().getSelectedItem().getDummyId());
+        System.out.print("the object: "+tmp.getDummyId()+","+tmp.getId()+", "+tmp.getUsername() + ", " + tmp.getPassword() + ", " + tmp.getUrl() + ", " + tmp.getHiddenPasswordTrick()
         +", "+tmp.getNote()+", "+tmp.getCreationDate()+", "+tmp.getLastUpdate());
         return tmp;
     }

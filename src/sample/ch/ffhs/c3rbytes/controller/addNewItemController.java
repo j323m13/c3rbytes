@@ -87,6 +87,7 @@ public class addNewItemController {
         typeFieldLabelError.setVisible(false);
         try{
             id = dbentry.getId();
+            System.out.println("id form fillIn() :"+id);
             creation = dbentry.getCreationDate();
             userNameField.setText(dbentry.getUsername());
             passwordField.setText(dbentry.getPassword());
@@ -154,7 +155,7 @@ public class addNewItemController {
 
 
             //debugging
-            System.out.println(id);
+            System.out.println("id :"+id);
             System.out.println(username);
             System.out.println(password);
             //System.out.println(description);
