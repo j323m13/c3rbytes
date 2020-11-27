@@ -133,7 +133,7 @@ public class DatabaseEntryDao implements Dao{
 
 
     }
-
+    //TODO to implement correctly
     public void newStartup(boolean startup) throws SQLException, ClassNotFoundException {
         if(startup){
             setupUserDBWithPassword();
@@ -165,6 +165,22 @@ public class DatabaseEntryDao implements Dao{
         setupDBEncryption();
 
     }
+
+    public ObservableList<DatabaseEntry> searchElement(String searched, ObservableList databaseEntries){
+        String element = "SELECT \"user_id\",\"username\",\"description\",\"url_content\",\"password_text\",\"date_creation\",\"date_update\",\"note\"\n" +
+                "FROM \"CERBYTES\".\"database_entries\"\n" +
+                "WHERE \"username\" = '"+searched+"'\n" +
+                "OR \"description\"='"+searched+"'\n" +
+                "OR \"url_content\"='"+searched+"'";
+        System.out.println(element);
+        try {
+            dbExecuteQuery(element,databaseEntries);
+        }catch (SQLException | ClassNotFoundException e) {
+            System.out.print("Error occurred while search Operation: " + e);
+        }
+        return databaseEntries;
+    }
+
 
     /*
     * Methode to create a simple DatabaseEntry object

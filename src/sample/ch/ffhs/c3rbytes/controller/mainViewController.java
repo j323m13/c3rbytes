@@ -37,12 +37,8 @@ import static java.lang.String.valueOf;
 public class mainViewController implements Initializable {
     @FXML
      private Label foundLabel;
-
-    //TODO EntryDateCreationText and EntryLastUpdate
-
     @FXML
     private javafx.scene.control.TableView<DatabaseEntry> profileTable;
-
     @FXML
     private TableColumn<DatabaseEntry, String> idColumn;
     @FXML
@@ -237,11 +233,19 @@ public class mainViewController implements Initializable {
 
 
     @FXML private Button searchButton;
-    public void searchAction(ActionEvent event){
-
+    public void searchAction(ActionEvent event) throws SQLException, ClassNotFoundException {
+        //String searchElement = searchField.getText();
+        String searchElement="Mersid";
+        DatabaseEntryDao searchDao = new DatabaseEntryDao();
+        databaseEntries.clear();
+        ObservableList<DatabaseEntry> resultSearch = FXCollections.observableArrayList();
+        resultSearch = searchDao.searchElement(searchElement,databaseEntries);
+        populateTableView(resultSearch);
+        foundLabel.setText(valueOf(resultSearch.size()));
         System.out.println("Search Action");
         Scene scene = searchButton.getScene();
         scene.setCursor(Cursor.WAIT);
+
     }
 
     /*
