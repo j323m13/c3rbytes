@@ -33,7 +33,7 @@ import java.util.*;
 import static java.lang.String.valueOf;
 
 
-public class mainViewController implements Initializable, IController {
+public class mainViewController implements Initializable {
 
 
     private static boolean isNew;
@@ -68,7 +68,7 @@ public class mainViewController implements Initializable, IController {
     @FXML
     public ObservableList<DatabaseEntry> databaseEntries = FXCollections.observableArrayList();
 
-    public static final String FILENAME = ".c3r.c3r";
+    public static final String FILENAME = "c3r.c3r";
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
 
 
@@ -463,13 +463,5 @@ public class mainViewController implements Initializable, IController {
         System.out.print(dbEntry.getId());
     }
 
-    @Override
-    public void getView(Stage stage) throws IOException {
 
-    }
-
-    @Override
-    public Object getController() throws IOException {
-        return null;
-    }
 }

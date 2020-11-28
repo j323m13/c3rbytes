@@ -8,8 +8,12 @@ public interface Dao {
         return null;
     }
 
-    Dao getEntryById(int id) throws SQLException, ClassNotFoundException;
-    Dao save();
+    Dao save(DatabaseEntry databaseEntry) throws SQLException, ClassNotFoundException;
     Dao update(DatabaseEntry databaseEntry) throws SQLException, ClassNotFoundException;
     Dao delete(DatabaseEntry databaseEntry) throws SQLException, ClassNotFoundException;
+    Dao deleteAccount() throws SQLException, ClassNotFoundException;
+
+    void setup(String passwordDB, String bootPassordHashed) throws SQLException, ClassNotFoundException;
+
+    void connect() throws SQLException;
 }

@@ -8,55 +8,75 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 
-public class DatabaseEntry{
+public class DatabaseEntry {
 
-    private SimpleStringProperty  id;
+    private SimpleStringProperty id;
     private SimpleStringProperty username;
-    private SimpleStringProperty  description;
-    private SimpleStringProperty  url;
-    private SimpleStringProperty  password;
-    private SimpleStringProperty  creationDate;
+    private SimpleStringProperty description;
+    private SimpleStringProperty url;
+    private SimpleStringProperty password;
+    private SimpleStringProperty creationDate;
     private SimpleStringProperty lastUpdate;
     private String passwordTrick;
+    private SimpleStringProperty note;
+    private String dummyId;
 
+    public DatabaseEntry() {
+        this.id = new SimpleStringProperty();
+        this.username = new SimpleStringProperty();
+        this.description = new SimpleStringProperty();
+        this.url = new SimpleStringProperty();
+        this.password = new SimpleStringProperty();
+        this.creationDate = new SimpleStringProperty();
+        this.lastUpdate = new SimpleStringProperty();
+        this.note = new SimpleStringProperty();
+        passwordTrick = "* * * * *";
+        dummyId = null;
+    }
 
-    public DatabaseEntry(String id, String username, String description,
+    public DatabaseEntry(String id, String dummyId, String username, String description,
                          String url, String password, String creationDate,
-                         String lastUpdate){
+                         String lastUpdate, String note) {
         this.id = new SimpleStringProperty(id);
+        this.dummyId = dummyId;
         this.username = new SimpleStringProperty(username);
         this.description = new SimpleStringProperty(description);
         this.url = new SimpleStringProperty(url);
         this.password = new SimpleStringProperty(password);
         this.creationDate = new SimpleStringProperty(creationDate);
         this.lastUpdate = new SimpleStringProperty(lastUpdate);
+        this.note = new SimpleStringProperty(note);
         passwordTrick = "* * * * *";
     }
 
     public DatabaseEntry(String username, String description,
-                         String url, String password){
+                         String url, String password) {
         this.username = new SimpleStringProperty(username);
         this.description = new SimpleStringProperty(description);
         this.url = new SimpleStringProperty(url);
         this.password = new SimpleStringProperty(password);
-        this.creationDate = new SimpleStringProperty(DatabaseEntry.getDateTime());
+        this.creationDate = new SimpleStringProperty(getDateTime());
         this.lastUpdate = new SimpleStringProperty(getCreationDate());
         passwordTrick = "* * * * *";
     }
 
     public DatabaseEntry(String username, String description,
-                         String url, String password, String creation){
+                         String url, String password, String creation) {
         this.username = new SimpleStringProperty(username);
         this.description = new SimpleStringProperty(description);
         this.url = new SimpleStringProperty(url);
         this.password = new SimpleStringProperty(password);
         this.creationDate = new SimpleStringProperty(creation);
-        this.lastUpdate = new SimpleStringProperty(DatabaseEntry.getDateTime());
+        this.lastUpdate = new SimpleStringProperty(getDateTime());
         passwordTrick = "* * * * *";
     }
 
 
+
     public String getDescription() {
+        if(creationDate.get() == null){
+            creationDate.set(getDateTime());
+        }
         return description.get();
     }
 
@@ -72,20 +92,12 @@ public class DatabaseEntry{
         return url.get();
     }
 
-    public SimpleStringProperty urlProperty() {
-        return url;
-    }
-
     public void setUrl(String url) {
         this.url.set(url);
     }
 
     public String getPassword() {
         return password.get();
-    }
-
-    public SimpleStringProperty passwordProperty() {
-        return password;
     }
 
     public void setPassword(String password) {
@@ -96,20 +108,14 @@ public class DatabaseEntry{
         return creationDate.get();
     }
 
-    public SimpleStringProperty creationDateProperty() {
-        return creationDate;
-    }
 
     public void setCreationDate(String creationDate) {
         this.creationDate.set(creationDate);
     }
 
     public String getLastUpdate() {
-        return lastUpdate.get();
-    }
-
-    public SimpleStringProperty lastUpdateProperty() {
-        return lastUpdate;
+        String lastupdateString = lastUpdate.get();
+        return lastupdateString;
     }
 
     public void setLastUpdate(String lastUpdate) {
@@ -120,9 +126,6 @@ public class DatabaseEntry{
         return username.get();
     }
 
-    public SimpleStringProperty usernameProperty() {
-        return username;
-    }
 
     public void setUsername(String username) {
         this.username.set(username);
@@ -130,6 +133,14 @@ public class DatabaseEntry{
 
     public String getId() {
         return id.get();
+    }
+
+    public String getDummyId() {
+        return dummyId;
+    }
+
+    public String setDummytId(String id) {
+        return this.dummyId = id;
     }
 
     public SimpleStringProperty idProperty() {
@@ -140,9 +151,20 @@ public class DatabaseEntry{
         this.id.set(id);
     }
 
-    public DatabaseEntry getAll(){
+    public DatabaseEntry getAll() {
         return this;
     }
+
+    public String getNote() {
+        return note.get();
+    }
+
+    public void setNote(String note) {
+        this.note.set(note);
+    }
+
+
+
 
     /*
         public DatabaseEntry() {
@@ -298,5 +320,9 @@ public class DatabaseEntry{
         String time = getDateTime();
         lastUpdate.set(time);
         return lastUpdate;
+    }
+
+    public void setup() {
+
     }
 }

@@ -2,210 +2,190 @@ package sample.ch.ffhs.c3rbytes.dao;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.chart.PieChart;
 import org.apache.commons.dbutils.QueryRunner;
 
-import javax.xml.crypto.Data;
 import java.sql.*;
 
+import static sample.ch.ffhs.c3rbytes.dao.DBConnection.*;
+
 public class DatabaseEntryDao implements Dao{
-
-
-    private static final QueryRunner dbAccess = new QueryRunner();
+    private final ResultSet rs = null;
+    private DBConnection connection;
 
     private DatabaseEntry createSimple(String id, String username, String description,
                                  String url, String password){
         return new DatabaseEntry(username, description, url, password);
     }
 
-
-
-    public ObservableList<DatabaseEntry> getAll(ObservableList<DatabaseEntry> databaseEntries) throws SQLException, ClassNotFoundException {
-        Connection connection = DBConnection.getConnection();
-        PreparedStatement ps = null;
-
-        ps = connection.prepareStatement("SELECT * FROM CERBYTES.\"database_entries\"");
-        ResultSet rs = null;
-        rs = ps.executeQuery();
-
-        //TODO implement List as DataEntry Type
-
-
-
-
-        while(rs.next()) {
-            String tmpId = rs.getString(1);
-            String tmpUsername = rs.getString(2);
-            String tmpDescription = rs.getString(3);
-            String tmpUrl = rs.getString(4);
-            String tmpPassword = rs.getString(5);
-            String tmpCreationDate = rs.getString(6);
-            String tmpLastUpdate = rs.getString(7);
-            DatabaseEntry catchResults = new DatabaseEntry(
-                    tmpId,
-                    tmpUsername,
-                    tmpDescription,
-                    tmpUrl,
-                    tmpPassword,
-                    tmpCreationDate,
-                    tmpLastUpdate
-            );
-
-            //Print results in terminal for debugging
-            System.out.println(rs.getInt(1) + "," +
-                    rs.getString(2) + ", " + rs.getString(3) + ", " +
-                    rs.getString(4) + ", " + rs.getString(5) + ", " +
-                    rs.getString(6) + ", " +
-                    rs.getString(7)
-            );
-            databaseEntries.add(catchResults);
-
-        }
-        //contain all the entries from the database CERBYTES (user only)
-        //TODO implement join statement
-        connection.close();
+    /*
+    * Methode to retrieve all the entries from the Database.
+    * @return ObservableList databaseEntries
+    * @see DBConnection.java dbExecuteQuery()
+     */
+    public static ObservableList<DatabaseEntry> getAll() throws SQLException, ClassNotFoundException {
+        String getAll = "SELECT * FROM \"CERBYTES\".\"database_entries\"";
+        ObservableList<DatabaseEntry> databaseEntries = FXCollections.observableArrayList();
+        dbExecuteQuery(getAll,databaseEntries);
         return databaseEntries;
-
-
     }
 
+
+    /*
+    * this methode save a databaseEntry object to the database
+    * @param a databaseEntry object
+    * @see DBConnection.class
+     */
     @Override
-    public Dao getEntryById(int id) throws SQLException, ClassNotFoundException {
+    public Dao save(DatabaseEntry entry) throws SQLException, ClassNotFoundException {
+        System.out.println(entry.getUsername()+", "+entry.getDescription()+", "+
+        entry.getPassword()+", "+ entry.getCreationDate()+", "+entry.getLastUpdate()+", "+entry.getUrl());
+
+        String saveStmt = "INSERT INTO \"CERBYTES\".\"database_entries\"\n" +
+                "(\"username\", \"description\", \"url_content\", \"password_text\", \"date_creation\", \"date_update\", \"note\" )\n" +
+                "VALUES('"+entry.getUsername()+"','"+entry.getDescription()+"','"+entry.getUrl()+"','"+entry.getPassword()+"','"+entry.getCreationDate()+"', '"+entry.getLastUpdate()+"','"+entry.getNote()+"')";
+
+        try {
+            System.out.println("SAVE -> -> -> ");
+            dbExecuteUpdate(saveStmt);
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.print("Error occurred while insert Operation: " + e);
+            throw e;
+        }
         return null;
     }
 
-    @Override
-    public Dao save() {
-        return null;
-    }
-
+    /*
+     * this methode update a databaseEntry object to the database
+     * @param a databaseEntry object
+     * @see DBConnection.class
+     */
     @Override
     public Dao update(DatabaseEntry entry) throws SQLException, ClassNotFoundException {
-        if(entry !=null){
-            Connection connection = DBConnection.getConnection();
-            PreparedStatement update = null;
-            update = connection.prepareStatement(
-                    "UPDATE \"CERBYTES\".\"database_entries\" SET \"username\" = ?,"+
-                    "\"description\"=?,"+
-                    "\"url_content\"=?,"+
-                    "\"password_text\"=?,"+
-                    "\"date_creation\"=?,"+
-                    "\"date_update\"=? WHERE \"user_id\"=?"
-            );
-            // we give the date to update
-            update.setString(1,entry.getUsername());
-            update.setString(2,entry.getDescription());
-            update.setString(3,entry.getUrl());
-            update.setString(4,entry.getPassword());
-            update.setString(5,entry.getCreationDate());
-            update.setString(6,entry.getLastUpdate());
-            update.setString(7,entry.getId());
-            try {
-                update.executeUpdate();
-
-            System.out.println("entry was updated succesfully.");
-            }catch (SQLException e){
-                System.out.print(e);
+        String updateStmt = "UPDATE \"CERBYTES\".\"database_entries\"\n" +
+                "SET \"username\"='"+entry.getUsername()+"', \"description\"='"+entry.getDescription()+"'," +
+                "\"url_content\"='"+entry.getUrl()+"', \"password_text\"='"+entry.getPassword()+"', \"date_update\"='"+entry.getLastUpdate()+"'," +
+                "\"note\"='"+entry.getNote()+"' WHERE \"user_id\"="+Integer.parseInt(entry.getId())+" ";
+        try {
+            dbExecuteUpdate(updateStmt);
+        }catch (SQLException e) {
+                System.out.print("Error occurred while DELETE Operation: " + e);
+                throw e;
             }
-        }
         return null;
+
     }
 
 
 
-
-
+    /*
+    * Methode to delete an entry
+    * @para entry (DatabaseEntry)
+     */
 
     @Override
     public Dao delete(DatabaseEntry entry) throws SQLException, ClassNotFoundException {
-        if(entry !=null){
-            Connection connection = DBConnection.getConnection();
-            PreparedStatement delete = null;
-
-            delete = connection.prepareStatement("DELETE FROM \"CERBYTES\".\"database_entries\" WHERE \"user_id\"="+entry.getId()+"");
-            try {
-                delete.executeUpdate();
-            }catch (SQLException e){
-                System.out.print(e);
-            }
+        String deleteStmt = "DELETE FROM \"CERBYTES\".\"database_entries\"\n" +
+                "WHERE \"date_creation\"='"+entry.getCreationDate()+"'";
+        try {
+            dbExecuteUpdate(deleteStmt);
+        }catch (SQLException e) {
+            System.out.print("Error occurred while DELETE Operation: " + e);
+            throw e;
         }
 
         return null;
     }
-/*
-    @Override
-    public Dao getEntryById(int id) throws SQLException, ClassNotFoundException {
+
+    /*
+    * Methode to delete the account. it deletes all the entries from the database.
+    * @return null
+     */
+    public Dao deleteAccount() throws SQLException, ClassNotFoundException {
+        System.out.print("account will be deleted");
+        String deleteAccountStmt = "DELETE FROM \"CERBYTES\".\"database_entries\"";
+        try {
+            dbExecuteUpdate(deleteAccountStmt);
+        }catch (SQLException | ClassNotFoundException e) {
+            System.out.print("Error occurred while DELETE Operation: " + e);
+            throw e;
+        }
         return null;
     }
 
-
-
-       @Override
-       public Dao getEntryById(int id) throws SQLException, ClassNotFoundException {
-           Connection connection = DBConnection.getConnection();
-           ResultSet rs;
-           PreparedStatement stmt = null;
-           rs = stmt.executeQuery("SELECT * FROM user WHERE id=" + id + "");
-           while(rs.next()){
-               return (Dao) extractEntryFromResultSet(rs);
-           }
-           return null;
-       }
-
-     methode to extract the values of a row (or multiples rows) from a query and save the values in a DataEntry Object.
-     *@param rs take a Resultset object as paramenter and save the values inside a DatabaseEntry object
-     * @return entry a DatabaseEntry Object which is a row in the Dababase
-
-    private static DatabaseEntry extractEntryFromResultSet(ResultSet rs) throws SQLException{
-        DatabaseEntry entry = new DatabaseEntry();
-        //DatabaseEntry.setId(rs.getInt("id"));
-        DatabaseEntry.setUsername(rs.getString(1));
-        DatabaseEntry.setDescription(rs.getString(2));
-        DatabaseEntry.setUrl(rs.getString(3));
-        DatabaseEntry.setPassword(rs.getString(4));
-        DatabaseEntry.setCreationDate(rs.getString(5));
-        DatabaseEntry.setLastUpdate(rs.getString(6));
-        return entry;
-    }
-
-
+    /*
+    * call the dbConnect methode from DBConenction.java
+     */
     @Override
-    public Dao save() {
-        return null;
+    public void connect() throws SQLException {
+        DBConnection.dbConnect();
     }
 
-    @Override
-    public Dao update() {
-        return null;
+    /*
+    * Setup a new password for the database user. it is not the bootPassword, which encrypt the database. it is only for queries with the db.
+     */
+    public void setup(String passwordDB, String bootPasswordHashed) throws SQLException, ClassNotFoundException {
+        String oldPassword = DBConnection.passwordDB;
+        DBConnection.passwordDB = passwordDB;
+        String url = "jdbc:derby:"+DBConnection.databaseName+";create=true;username="+DBConnection.userDB+"";
+        //first connection to the DB. create DB if not exist.
+        //setupDBEncryption(url,passwordDB, bootPasswordHashed);
+        setupDatabase();
+
+
     }
-
-    @Override
-    public Dao delete() {
-        return null;
-    }
-
-
-     * Insert a DatabaseEntry Object into the Database
-     *
-    */
-    public void insertDatabaseEntry(DatabaseEntry databaseEntry) throws SQLException, ClassNotFoundException {
-        Connection connection = DBConnection.getConnection();
-        PreparedStatement ps = connection.prepareStatement("INSERT INTO CERBYTES.\"database_entries\" " +
-                "(\"username\", \"description\", \"url_content\", \"password_text\", \"date_creation\", \"date_update\")" +
-                " VALUES (?,?,?,?,?,?)");
-        ps.setString(1, databaseEntry.getUsername());
-        ps.setString(2, databaseEntry.getDescription());
-        ps.setString(3, databaseEntry.getUrl());
-        ps.setString(4, databaseEntry.getPassword());
-        ps.setString(5, databaseEntry.getCreationDate());
-        ps.setString(6, databaseEntry.setLastUpdate().toString());
-
-        int i = ps.executeUpdate();
-        connection.close();
+    //TODO to implement correctly
+    public void newStartup(boolean startup) throws SQLException, ClassNotFoundException {
+        if(startup){
+            setupUserDBWithPassword();
+            setupTable();
+            //setupEncryption()
+        }
 
     }
 
+    public void setupUserDBWithPassword() throws SQLException {
+        String urlx = "jdbc:derby:"+ databaseName+";create=true;user="+userDB+"";
+        String setupPasswordString = "CALL SYSCS_UTIL.SYSCS_CREATE_USER(?,?)";
+        setupUserDBWithPasswordConnection(urlx, "123456789", setupPasswordString);
+    }
 
+    public void resetUserDBPassword(String newUserDBPassword){
+        //TODO
+        String resetPassord = "CALL SYSCS_UTIL.SYSCS_RESET_PASSWORD(?,?)";
+        resetUserPwd(resetPassord, newUserDBPassword);
+
+    }
+
+    public void setupTable() throws SQLException, ClassNotFoundException {
+        setupDatabase();
+
+    }
+
+    public void setupEncryption() throws SQLException {
+        setupDBEncryption();
+
+    }
+
+    public ObservableList<DatabaseEntry> searchElement(String searched, ObservableList databaseEntries){
+        String element = "SELECT \"user_id\",\"username\",\"description\",\"url_content\",\"password_text\",\"date_creation\",\"date_update\",\"note\"\n" +
+                "FROM \"CERBYTES\".\"database_entries\"\n" +
+                "WHERE \"username\" = '"+searched+"'\n" +
+                "OR \"description\"='"+searched+"'\n" +
+                "OR \"url_content\"='"+searched+"'";
+        System.out.println(element);
+        try {
+            dbExecuteQuery(element,databaseEntries);
+        }catch (SQLException | ClassNotFoundException e) {
+            System.out.print("Error occurred while search Operation: " + e);
+        }
+        return databaseEntries;
+    }
+
+
+    /*
+    * Methode to create a simple DatabaseEntry object
+    * @return a databaseEntry Object
+     */
     public DatabaseEntry createSimple(String username, String password, String description, String url) {
         return new DatabaseEntry(username, description, url, password);
     }

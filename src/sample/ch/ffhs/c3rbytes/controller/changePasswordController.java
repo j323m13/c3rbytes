@@ -57,7 +57,7 @@ public class changePasswordController implements IController {
 
 
                 //DBConnection.changebootPasswordAndEncryptDBWithNewBootPassword(hashedOldMasterpassword, hashedNewMasterpassword);
-                DBConnection.changeBootPassword(oldMasterpassword, newMasterpassword);
+                //DBConnection.changeBootPassword(oldMasterpassword, newMasterpassword);
                 System.out.println(newMasterpassword);
                 discardPasswordAction(null);
             }catch (Exception e){

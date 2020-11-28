@@ -24,7 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 
 
-public class addNewItemController implements IController {
+public class addNewItemController {
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
     @FXML public TextField passwordField;
     @FXML public TextField userNameField;
@@ -85,7 +85,7 @@ public class addNewItemController implements IController {
         System.out.println(url);
         DatabaseEntryDao updateDao = new DatabaseEntryDao();
 
-        // get secretKey of the file .c3r.c3r
+        // get secretKey of the file c3r.c3r
         String passwordDecrypterPassword = loginViewMasterpassphraseController.passwordDecrypterPassword;
 
         // debugging
@@ -131,16 +131,6 @@ public class addNewItemController implements IController {
 
     private void reloadMainView() {
         //TODO create relaod methode in main view and call it here.
-    }
-
-    @Override
-    public void getView(Stage stage) throws IOException {
-
-    }
-
-    @Override
-    public Object getController() throws IOException {
-        return null;
     }
 }
 

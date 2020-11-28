@@ -10,10 +10,9 @@ import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntry;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 
-import java.io.IOException;
 import java.sql.SQLException;
 
-public class viewItemController implements IController {
+public class viewItemController {
 
 
         @FXML javafx.scene.control.TextField viewUserNameField;
@@ -78,13 +77,4 @@ public class viewItemController implements IController {
         stage.close();
     }
 
-    @Override
-    public void getView(Stage stage) throws IOException {
-
-    }
-
-    @Override
-    public Object getController() throws IOException {
-        return null;
-    }
 }
