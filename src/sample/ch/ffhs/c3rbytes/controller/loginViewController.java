@@ -52,7 +52,7 @@ public class loginViewController implements IController{
 
         try {
             DatabaseEntryDao login = new DatabaseEntryDao();
-            System.out.println(login.getUrl());
+            //System.out.println(login.getUrl());
             //setup the database on first launch. does not work.
             //login.setup("123456789","654321654321");
             //login.setupUserDBWithPassword();

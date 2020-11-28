@@ -16,6 +16,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.FileEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.crypto.PasswordEncrypterDecrypter;
+import sample.ch.ffhs.c3rbytes.dao.DBConnection;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntry;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.utils.ClipboardHandler;
@@ -28,6 +29,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -59,6 +61,7 @@ public class mainViewController implements Initializable {
     private boolean fromMainView = true;
     private boolean start = true;
     public static boolean reload = false;
+    DatabaseEntryDao mainViewDao = new DatabaseEntryDao();
 
     @FXML
     public ObservableList<DatabaseEntry> databaseEntries = FXCollections.observableArrayList();
@@ -190,7 +193,9 @@ public class mainViewController implements Initializable {
             databaseEntries.addAll(entries);
             populateTableView(databaseEntries);
             foundLabel.setText(valueOf(databaseEntries.size()));
-        } catch (SQLException | ClassNotFoundException throwables) {
+            mainViewDao.setupEncryption();
+
+        } catch (SQLException | ClassNotFoundException | InterruptedException throwables) {
 
         }
     }
@@ -225,7 +230,7 @@ public class mainViewController implements Initializable {
 
 
     @FXML private Button logoutButton;
-    public void logoutAction(ActionEvent event){
+    public void logoutAction(ActionEvent event) throws SQLException {
         System.out.println("Logout Action");
         //TODO: Add necessary methods to clear/reencrypt/delete before closing the app.
         Stage stage = (Stage) logoutButton.getScene().getWindow();

@@ -16,10 +16,10 @@ public class DatabaseEntryDao implements Dao{
     * @return ObservableList databaseEntries
     * @see DBConnection.java dbExecuteQuery()
      */
-    public static ObservableList<DatabaseEntry> getAll() throws SQLException, ClassNotFoundException {
+    public static ObservableList<DatabaseEntry> getAll() throws SQLException, ClassNotFoundException, InterruptedException {
         String getAll = "SELECT * FROM \"CERBYTES\".\"database_entries\"";
         ObservableList<DatabaseEntry> databaseEntries = FXCollections.observableArrayList();
-        dbExecuteQuery(getAll,databaseEntries);
+        dbExecuteQuery(getAll,databaseEntries,createURL());
         return databaseEntries;
     }
 
@@ -40,10 +40,10 @@ public class DatabaseEntryDao implements Dao{
 
         try {
             System.out.println("SAVE -> -> -> ");
-            dbExecuteUpdate(saveStmt);
-        } catch (SQLException | ClassNotFoundException e) {
+            dbExecuteUpdate(saveStmt,createURL());
+        } catch (SQLException | ClassNotFoundException | InterruptedException e) {
             System.out.print("Error occurred while insert Operation: " + e);
-            throw e;
+
         }
         return null;
     }
@@ -60,10 +60,10 @@ public class DatabaseEntryDao implements Dao{
                 "\"url_content\"='"+entry.getUrl()+"', \"password_text\"='"+entry.getPassword()+"', \"date_update\"='"+entry.getLastUpdate()+"'," +
                 "\"note\"='"+entry.getNote()+"' WHERE \"user_id\"="+Integer.parseInt(entry.getId())+" ";
         try {
-            dbExecuteUpdate(updateStmt);
-        }catch (SQLException e) {
+            dbExecuteUpdate(updateStmt,createURL());
+        }catch (SQLException | InterruptedException e) {
                 System.out.print("Error occurred while DELETE Operation: " + e);
-                throw e;
+
             }
         return null;
 
@@ -81,10 +81,10 @@ public class DatabaseEntryDao implements Dao{
         String deleteStmt = "DELETE FROM \"CERBYTES\".\"database_entries\"\n" +
                 "WHERE \"date_creation\"='"+entry.getCreationDate()+"'";
         try {
-            dbExecuteUpdate(deleteStmt);
-        }catch (SQLException e) {
+            dbExecuteUpdate(deleteStmt,createURL());
+        }catch (SQLException | InterruptedException e) {
             System.out.print("Error occurred while DELETE Operation: " + e);
-            throw e;
+
         }
 
         return null;
@@ -98,10 +98,10 @@ public class DatabaseEntryDao implements Dao{
         System.out.print("account will be deleted");
         String deleteAccountStmt = "DELETE FROM \"CERBYTES\".\"database_entries\"";
         try {
-            dbExecuteUpdate(deleteAccountStmt);
-        }catch (SQLException | ClassNotFoundException e) {
+            dbExecuteUpdate(deleteAccountStmt,createURL());
+        }catch (SQLException | ClassNotFoundException | InterruptedException e) {
             System.out.print("Error occurred while DELETE Operation: " + e);
-            throw e;
+
         }
         return null;
     }
@@ -111,7 +111,7 @@ public class DatabaseEntryDao implements Dao{
      */
     @Override
     public void connect() throws SQLException {
-        DBConnection.dbConnect();
+        DBConnection.dbConnect(createURL());
     }
 
     /*
@@ -130,17 +130,20 @@ public class DatabaseEntryDao implements Dao{
     //TODO to implement correctly
     public void onNewStartup(boolean startup) throws SQLException, ClassNotFoundException {
         if(startup){
-            setupUserDBWithPassword();
-            setupTable();
+            //setupUserDBWithPassword();
+            //setupTable();
             //setupEncryption()
         }
 
     }
 
-    public void setupUserDBWithPassword() throws SQLException {
-        String urlx = "jdbc:derby:"+ databaseName+";create=true;user="+userDB+"";
+    public void setupUserDBWithPassword() throws SQLException, InterruptedException, ClassNotFoundException {
+        //TODO get a string 10CHARS from bootpassword as passwordDB
+        //on first call, database will be create if it does not exist: (create=true).
+        String url = JDBC_URL+databaseName+";create=true;user="+userDB+"";
+        // set userDB's password
         String setupPasswordString = "CALL SYSCS_UTIL.SYSCS_CREATE_USER(?,?)";
-        setupUserDBWithPasswordConnection(urlx, "123456789", setupPasswordString);
+        setupUserDBWithPasswordConnection(url, "123456789", setupPasswordString);
     }
 
     public void resetUserDBPassword(String newUserDBPassword){
@@ -150,8 +153,24 @@ public class DatabaseEntryDao implements Dao{
 
     }
 
-    public void setupTable() throws SQLException, ClassNotFoundException {
-        setupDatabase();
+    public void setupTable() throws SQLException, ClassNotFoundException, InterruptedException {
+        String urlForSetupSchemaAndTable = JDBC_URL+DBConnection.databaseName+";user="+userDB+";password="+passwordDB;
+        String slqCreateSchema = "CREATE SCHEMA \"CERBYTES\"";
+        String sqlCreateTable = "CREATE TABLE \"CERBYTES\".\"database_entries\" (\n" +
+                "                        \"user_id\" INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY(Start with 1, Increment by 1),\n" +
+                "                        \"username\" VARCHAR(255) DEFAULT NULL,\n" +
+                "                        \"description\" VARCHAR(255) DEFAULT NULL,\n" +
+                "                        \"url_content\" VARCHAR(500) DEFAULT NULL,\n" +
+                "                        \"password_text\" VARCHAR(500) DEFAULT NULL,\n" +
+                "                        \"date_creation\" VARCHAR(50) DEFAULT NULL,\n" +
+                "                        \"date_update\" VARCHAR(50) DEFAULT NULL,\n" +
+                "                       \"note\" CLOB(2K) DEFAULT NULL)";
+
+        //setupDatabase();
+
+        dbExecuteUpdate(slqCreateSchema,urlForSetupSchemaAndTable);
+        dbExecuteUpdate(sqlCreateTable,urlForSetupSchemaAndTable);
+
     }
 
     public void setupEncryption() throws SQLException {
@@ -167,8 +186,8 @@ public class DatabaseEntryDao implements Dao{
                 "OR \"url_content\"='"+searched+"'";
         System.out.println(element);
         try {
-            dbExecuteQuery(element,databaseEntries);
-        }catch (SQLException | ClassNotFoundException e) {
+            dbExecuteQuery(element,databaseEntries,createURL());
+        }catch (SQLException | ClassNotFoundException | InterruptedException e) {
             System.out.print("Error occurred while search Operation: " + e);
         }
         return databaseEntries;
@@ -185,6 +204,10 @@ public class DatabaseEntryDao implements Dao{
 
     public String getUrl() {
         return DBConnection.createURL();
+    }
+
+    public void disconnect(String url) throws SQLException {
+        DBConnection.dbDisconnect(url);
     }
 }
 

@@ -4,12 +4,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
+import java.util.concurrent.TimeUnit;
 
 public class DBConnection {
     public static boolean firstBoot = true;
     public static String userDB = "cerbytes";
-    public static String passwordDB = "tH94mLBaKr";
-    //public static String passwordDB = "123456789";
+    //public static String passwordDB = "tH94mLBaKr";
+    public static String passwordDB = "123456789";
     //public static String passwordDB;
     private String oldBootPassword;
     //public static String oldBootPassword = "f235c129089233ce3c9c85f1";
@@ -18,11 +19,11 @@ public class DBConnection {
     public boolean newBootPasswordEnabled = false;
     private static int encryptionKeyLength = 256;
     private static String encryptionAlgorithm = "AES/CBC/NoPadding";
-    public static String databaseName = "cerbytesdb";
+    public static String databaseName = "111111111111111111111";
     private static Boolean databaseEncryption = true;
     //public static String JDBC_URL = "jdbc:derby:cerbytesdb;create=true;username=cerbytes;password=tH94mLBaKr;"+
     //       "dataEncryption=true;encryptionKeyLength=192;encryptionAlgorithm=AES/CBC/NoPadding";
-    public static String JDBC_URL;
+    public static String JDBC_URL="jdbc:derby:";
     public static Connection connection = null;
     private boolean connectionOpen;
     private boolean connectionClose;
@@ -32,12 +33,14 @@ public class DBConnection {
 
 
 
-    public static void dbConnect() throws SQLException {
+    public static void dbConnect(String JDBC_URL) throws SQLException {
         try {
             System.out.println("Connecting to db ... ");
             //System.out.println("url inside dbconnect(): " + createURL());
-            connection = DriverManager.getConnection(createURL());
+            connection = DriverManager.getConnection(JDBC_URL);
             System.out.println("connection successful");
+            getConnectionInstance();
+
         } catch (SQLException e) {
             System.out.println("Connection Failed! Check output console" + e);
             e.printStackTrace();
@@ -46,20 +49,24 @@ public class DBConnection {
 
     }
 
+
     //Close Connection
-    public static void dbDisconnect() throws SQLException {
+    public static void dbDisconnect(String JDBC_URL) throws SQLException {
         try {
             if (connection != null && !connection.isClosed()) {
                 //System.out.println("url inside dbDisconnect(): " + createURL());
-                System.out.println("shutdown? " + createURL() + ";shutdown=true");
-                connection = DriverManager.getConnection(createURL() + ";shutdown=true");
-                System.out.println("disconnect() successful");
+                System.out.println("shutdown? " + JDBC_URL+ ";shutdown=true");
                 connection.close();
+                System.out.println("disconnect() successful");
+                //connection.close();
+                getConnectionInstance();
             }
         } catch (Exception e) {
             throw e;
         }
     }
+
+
 
     /*
      * this methode holds all the entries from the database and return them to an ObservableList. For insertion, use dbExecuteUpdate()
@@ -67,9 +74,9 @@ public class DBConnection {
      * @param databaseEntries (ObservableList)
      * @see dbExecuteUpdate()
      */
-    public static ObservableList<DatabaseEntry> dbExecuteQuery(String getAll, ObservableList<DatabaseEntry> databaseEntries) throws SQLException, ClassNotFoundException {
+    public static ObservableList<DatabaseEntry> dbExecuteQuery(String getAll, ObservableList<DatabaseEntry> databaseEntries, String JDBC_URL) throws SQLException, ClassNotFoundException, InterruptedException {
         //Declare statement, resultSet and CachedResultSet as null
-        dbConnect();
+        dbConnect(JDBC_URL);
         //databaseEntries = getEntries(rs);
         try (PreparedStatement ps = connection.prepareStatement(getAll); ResultSet rs = ps.executeQuery()) {
             int i = 1;
@@ -94,24 +101,29 @@ public class DBConnection {
                         rs.getString(7) + ", " + rs.getString(8)
                 );
             }
+            if(rs != null){
+                rs.close();
+            }
+            if(ps != null){
+                ps.close();
+            }
 
         } catch (SQLException e) {
             System.out.println("Table is empty? " + e);
-        } finally {
-            //dbDisconnect();
         }
+        TimeUnit.SECONDS.sleep(1);
+        dbDisconnect(JDBC_URL);
 
         return databaseEntries;
     }
 
-
     //DB Execute Update (For Update/Insert/Delete) Operation
-    public static void dbExecuteUpdate(String sqlStmt) throws SQLException, ClassNotFoundException {
+    public static void dbExecuteUpdate(String sqlStmt, String JDBC_URL) throws SQLException, ClassNotFoundException, InterruptedException {
         //Declare statement as null
         Statement stmt = null;
         System.out.println("query " + sqlStmt);
+        dbConnect(JDBC_URL);
         try {
-            dbConnect();
             stmt = connection.createStatement();
             stmt.executeUpdate(sqlStmt);
         } catch (SQLException e) {
@@ -122,42 +134,48 @@ public class DBConnection {
                 //Close statement
                 stmt.close();
             }
-            //Close connection
-            //dbDisconnect();
-            connection.close();
+
         }
+        //Close connection
+        TimeUnit.SECONDS.sleep(1);
+        dbDisconnect(JDBC_URL);
     }
 
 
-    //NOT WORKING YET -> DO NOT TOUCH
-    public static void setupUserDBWithPasswordConnection(String urlx, String passwordDB, String setupPasswordString) throws SQLException {
+    /*
+    * Set a password value to the userDB for security and queries.
+    * @param url to connect to the database
+    * @param passwordDB: the password to be set
+    * @param setupPasswordString: a sql statement to be executed.
+     */
+    public static void setupUserDBWithPasswordConnection(String JDBC_URL, String passwordDB, String setupPasswordString) throws SQLException {
 
-        System.out.println(urlx);
-        Connection con = DriverManager.getConnection(urlx);
-        System.out.println("Connect success -> " + urlx);
+        System.out.println("entering setup");
+        System.out.println(JDBC_URL);
+        dbConnect(JDBC_URL);
+        System.out.println("Connect success -> " + JDBC_URL);
         DBConnection.passwordDB = passwordDB;
         System.out.println("DBConnection.password: " + DBConnection.passwordDB);
 
-        CallableStatement cs = con.prepareCall(setupPasswordString);
-        cs.setString(1, DBConnection.userDB);
-        cs.setString(2, DBConnection.passwordDB);
-        cs.execute();
+        CallableStatement cs = connection.prepareCall(setupPasswordString);
+        try{
+            cs.setString(1, DBConnection.userDB);
+            cs.setString(2, DBConnection.passwordDB);
+            cs.execute();
+            System.out.println("Success: passwordDB has been set. "+userDB+";"+DBConnection.passwordDB);
+    }catch (SQLException e){
+            System.out.println("PasswordDB has not been set. "+e);
+        }
         cs.close();
-        try {
-            System.out.println("Connect -> " + urlx + ";password=" + passwordDB + "");
-            con = DriverManager.getConnection(urlx + ";password=" + passwordDB + "");
-            System.out.println("success with password");
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-        try {
-            System.out.println("disconnect");
-            con.close();
-            //con = DriverManager.getConnection(urlx+";password="+ passwordDB+";shutdown=true");
-            System.out.println("success disconnect with password");
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
+        System.out.println("JDBC_URL = "+JDBC_URL);
+        dbDisconnect(JDBC_URL+";password=" + DBConnection.passwordDB);
+
+        System.out.println("Connect -> " + JDBC_URL + ";password=" + DBConnection.passwordDB + "");
+        dbConnect(JDBC_URL + ";password=" + DBConnection.passwordDB +"" );
+        System.out.println("success with password");
+
+        dbDisconnect(JDBC_URL + ";password=" + DBConnection.passwordDB);
+        System.out.println("disconnection successful");
     }
 
     public static void resetUserPwd(String reset, String newUserDBPassword) {
@@ -174,26 +192,27 @@ public class DBConnection {
         }
     }
 
-    public static void setupDBEncryption() {
+    public static void setupDBEncryption() throws SQLException {
+        //TODO: to try
+        /*
+        CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY(
+    'bootPasword', 'oldbpw , newbpw');
+         */
         Connection connection = null;
-        try {
-            dbConnect();
-            System.out.println("Database is almost encrypted");
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        dbConnect(createURL());
+        System.out.println("Database is almost encrypted");
+        dbDisconnect(createURL());
+        /*
+        try{
+            System.out.println("DB shutdown -> jdbc:derby:;user="+userDB+";password="+passwordDB+";bootPassword="+bootPassword+";shutdown=true");
+            DriverManager.getConnection("jdbc:derby:;user="+userDB+";password="+passwordDB+";bootPassword="+bootPassword+";shutdown=true");
+        }catch (SQLException e){
+            System.out.println("nope, failed");
         }
-        try {
-            //connection = DriverManager.getConnection(createURL()+";shutdown=true");
-            if (connection != null) {
-                connection.close();
-            }
-            System.out.println("DB ist encrypted with: ");
-            System.out.println("bootPassword:  " + DBConnection.bootPassword);
-            System.out.println("passwordDB: " + DBConnection.passwordDB);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+         */
+        System.out.println("DB ist encrypted with: ");
+        System.out.println("bootPassword:  " + DBConnection.bootPassword);
+        System.out.println("passwordDB: " + DBConnection.passwordDB);
     }
 
 
@@ -249,8 +268,8 @@ public class DBConnection {
     }
 
 
-    protected static String createURL() {
-        JDBC_URL = "jdbc:derby:" + databaseName + ";user=" + userDB + ";password=" + passwordDB + ";databaseEncryption=" + databaseEncryption + "" +
+    public static String createURL() {
+        JDBC_URL = "jdbc:derby:" + databaseName + ";user=" + userDB + ";password=" + passwordDB + ";dataEncryption=" + databaseEncryption + "" +
                 ";encryptionKeyLength=" + encryptionKeyLength + ";encryptionAlgorithm=" + encryptionAlgorithm + ";bootPassword=" + bootPassword + "";
         System.out.println("createURL() -> " + JDBC_URL);
         return JDBC_URL;
@@ -259,8 +278,16 @@ public class DBConnection {
 
     private static String createURLSimple() {
         JDBC_URL = "jdbc:derby:" + databaseName + ";create=true;user=cerbytes;password=" + passwordDB + "";
-        System.out.println("createURL() -> " + JDBC_URL);
+        System.out.println("createURLSimple() -> " + JDBC_URL);
         return JDBC_URL;
+    }
+
+    public static void getConnectionInstance() throws SQLException {
+        if (connection != null && !connection.isClosed()) {
+            System.out.println("connection is open");
+        }else {
+            System.out.println("connection is closed");
+        }
     }
 
 
