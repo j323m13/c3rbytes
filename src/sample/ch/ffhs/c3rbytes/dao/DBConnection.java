@@ -94,7 +94,6 @@ public class DBConnection {
                         rs.getString(7) + ", " + rs.getString(8)
                 );
             }
-            ps.close();
 
         } catch (SQLException e) {
             System.out.println("Table is empty? " + e);
@@ -222,8 +221,8 @@ public class DBConnection {
                 "                        \"user_id\" INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY(Start with 1, Increment by 1),\n" +
                 "                        \"username\" VARCHAR(255) DEFAULT NULL,\n" +
                 "                        \"description\" VARCHAR(255) DEFAULT NULL,\n" +
-                "                        \"url_content\" VARCHAR(255) DEFAULT NULL,\n" +
-                "                        \"password_text\" VARCHAR(255) DEFAULT NULL,\n" +
+                "                        \"url_content\" VARCHAR(500) DEFAULT NULL,\n" +
+                "                        \"password_text\" VARCHAR(500) DEFAULT NULL,\n" +
                 "                        \"date_creation\" VARCHAR(50) DEFAULT NULL,\n" +
                 "                        \"date_update\" VARCHAR(50) DEFAULT NULL,\n" +
                 "                       \"note\" CLOB(2K) DEFAULT NULL)";
@@ -241,7 +240,7 @@ public class DBConnection {
                 //Close statement
                 stmt2.close();
             }
-            System.out.println("Table was created");
+
 
             //disconnect to encrypt the database (without reboot, change will be overturned.
             connection.close();
@@ -250,7 +249,7 @@ public class DBConnection {
     }
 
 
-    private static String createURL() {
+    protected static String createURL() {
         JDBC_URL = "jdbc:derby:" + databaseName + ";user=" + userDB + ";password=" + passwordDB + ";databaseEncryption=" + databaseEncryption + "" +
                 ";encryptionKeyLength=" + encryptionKeyLength + ";encryptionAlgorithm=" + encryptionAlgorithm + ";bootPassword=" + bootPassword + "";
         System.out.println("createURL() -> " + JDBC_URL);

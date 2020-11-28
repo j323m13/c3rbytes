@@ -9,13 +9,7 @@ import java.sql.*;
 import static sample.ch.ffhs.c3rbytes.dao.DBConnection.*;
 
 public class DatabaseEntryDao implements Dao{
-    private final ResultSet rs = null;
-    private DBConnection connection;
 
-    private DatabaseEntry createSimple(String id, String username, String description,
-                                 String url, String password){
-        return new DatabaseEntry(username, description, url, password);
-    }
 
     /*
     * Methode to retrieve all the entries from the Database.
@@ -134,7 +128,7 @@ public class DatabaseEntryDao implements Dao{
 
     }
     //TODO to implement correctly
-    public void newStartup(boolean startup) throws SQLException, ClassNotFoundException {
+    public void onNewStartup(boolean startup) throws SQLException, ClassNotFoundException {
         if(startup){
             setupUserDBWithPassword();
             setupTable();
@@ -158,7 +152,6 @@ public class DatabaseEntryDao implements Dao{
 
     public void setupTable() throws SQLException, ClassNotFoundException {
         setupDatabase();
-
     }
 
     public void setupEncryption() throws SQLException {
@@ -188,6 +181,10 @@ public class DatabaseEntryDao implements Dao{
      */
     public DatabaseEntry createSimple(String username, String password, String description, String url) {
         return new DatabaseEntry(username, description, url, password);
+    }
+
+    public String getUrl() {
+        return DBConnection.createURL();
     }
 }
 

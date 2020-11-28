@@ -10,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
@@ -34,24 +35,10 @@ import static java.lang.String.valueOf;
 
 
 public class mainViewController implements Initializable {
-
-
-    private static boolean isNew;
     @FXML
-    private TextField entryIdText;
-    @FXML
-    private TextField entryCategoryText;
-    @FXML
-    private TextField entryUserNameText;
-    @FXML
-    private TextField entryPasswordText;
-    @FXML
-    private TextField entryUrlText;
-    //TODO EntryDateCreationText and EntryLastUpdate
-
+    private Label foundLabel;
     @FXML
     private javafx.scene.control.TableView<DatabaseEntry> profileTable;
-
     @FXML
     private TableColumn<DatabaseEntry, String> idColumn;
     @FXML
@@ -62,8 +49,16 @@ public class mainViewController implements Initializable {
     private TableColumn<DatabaseEntry, String> passwordColumn;
     @FXML
     private TableColumn<DatabaseEntry, String> urlColumn;
+    @FXML
+    private TableColumn<DatabaseEntry, String> updateColumn;
+    @FXML
+    private TableColumn<DatabaseEntry, String> noteColumn;
+    @FXML
+    public Button reloaddata;
 
     private boolean fromMainView = true;
+    private boolean start = true;
+    public static boolean reload = false;
 
     @FXML
     public ObservableList<DatabaseEntry> databaseEntries = FXCollections.observableArrayList();
@@ -72,22 +67,25 @@ public class mainViewController implements Initializable {
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
 
 
-    public DatabaseEntry copyClickedEntry(){
+    public DatabaseEntry copyClickedEntry() {
         DatabaseEntry tmp = new DatabaseEntry(
                 profileTable.getSelectionModel().getSelectedItem().getId(),
+                profileTable.getSelectionModel().getSelectedItem().getDummyId(),
                 profileTable.getSelectionModel().getSelectedItem().getUsername(),
                 profileTable.getSelectionModel().getSelectedItem().getDescription(),
                 profileTable.getSelectionModel().getSelectedItem().getUrl(),
                 profileTable.getSelectionModel().getSelectedItem().getPassword(),
                 profileTable.getSelectionModel().getSelectedItem().getCreationDate(),
-                profileTable.getSelectionModel().getSelectedItem().getLastUpdate());
-        System.out.println(profileTable.getSelectionModel().getSelectedItem().getId());
-        System.out.print(tmp.getUsername()+", "+tmp.getPassword()+", "+tmp.getUrl()+", "+tmp.getHiddenPasswordTrick());
+                profileTable.getSelectionModel().getSelectedItem().getLastUpdate(),
+                profileTable.getSelectionModel().getSelectedItem().getNote());
+        //System.out.println("id from profiletable :"+profileTable.getSelectionModel().getSelectedItem().getDummyId());
+        System.out.print("the object: "+tmp.getDummyId()+","+tmp.getId()+", "+tmp.getUsername() + ", " + tmp.getPassword() + ", " + tmp.getUrl() + ", " + tmp.getHiddenPasswordTrick()
+                +", "+tmp.getNote()+", "+tmp.getCreationDate()+", "+tmp.getLastUpdate());
         return tmp;
     }
-    
 
-    public void startMouseClicks(){
+
+    public void startMouseClicks() {
         //Methode to listen to mouse clicks
         profileTable.setOnMousePressed(new EventHandler<javafx.scene.input.MouseEvent>() {
             @Override
@@ -105,7 +103,7 @@ public class mainViewController implements Initializable {
         });
     }
 
-    public void startContextMenu(){
+    public void startContextMenu() {
         ContextMenu contextMenu = new ContextMenu();
         MenuItem copyUrlOption = new MenuItem("Copy url");
         MenuItem copyPasswordOption = new MenuItem("copy password");
@@ -130,11 +128,11 @@ public class mainViewController implements Initializable {
 
         deleteItemOption.setOnAction((event) -> {
             //copyClickedEntry();
-            copyClickedEntry();
+            deleteButton.fire();
+            reload = true;
             //TODO call delete Mehtode;
             //TODO print alert when deleting entries
         });
-
 
 
         contextMenu.getItems().addAll(copyUrlOption, copyPasswordOption, deleteItemOption);
@@ -151,12 +149,8 @@ public class mainViewController implements Initializable {
         ObservableList<DatabaseEntry> databaseEntries = FXCollections.observableArrayList();
 
 
-
-
-
-
         idColumn.setCellValueFactory(
-                new PropertyValueFactory<>("id")
+                new PropertyValueFactory<>("dummyId")
         );
 
         categoryColumn.setCellValueFactory(
@@ -174,83 +168,55 @@ public class mainViewController implements Initializable {
         urlColumn.setCellValueFactory(
                 new PropertyValueFactory<>("url")
         );
+        updateColumn.setCellValueFactory(
+                new PropertyValueFactory<>("creationDate")
+        );
+        noteColumn.setCellValueFactory(
+                new PropertyValueFactory<>("note")
+        );
 
+        loadDatabaseEntries(databaseEntries);
+    }
 
+    @FXML
+    void reloadMainView(){
+        loadDatabaseEntries(databaseEntries);
+    }
 
-
-
-        /*
+    private void loadDatabaseEntries(ObservableList<DatabaseEntry> databaseEntries) {
         try {
-            Connection connection = connectionFactory.getConnection();
-            DatabaseEntryDao newDao = new DatabaseEntryDao();
-            DatabaseEntryDao.getAll();
-
+            ObservableList<DatabaseEntry> entries = DatabaseEntryDao.getAll();
+            databaseEntries.clear();
+            databaseEntries.addAll(entries);
+            populateTableView(databaseEntries);
+            foundLabel.setText(valueOf(databaseEntries.size()));
         } catch (SQLException | ClassNotFoundException throwables) {
-            throwables.printStackTrace();
-        }
-    */
-
-        try {
-            profileTable.setItems(populateTableViews(databaseEntries));
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-
-
-
-
-    }
-
-    private static ObservableList populateTableViews(ObservableList entries) throws SQLException, ClassNotFoundException {
-        entries.clear();
-        DatabaseEntryDao newDao = new DatabaseEntryDao();
-        newDao.getAll(entries);
-        return entries;
-    }
-
-
-    /*
-    @FXML
-    private void populateTableView(DatabaseEntryDao entry) throws ClassNotFoundException, SQLException {
-        ObservableList<DatabaseEntryDao> entriesData = (ObservableList<DatabaseEntryDao>) DatabaseEntryDao.getAll();
-        entriesData.add(entry);
-        //populate TableView profileTable
-        profileTable.setItems(entriesData);
-    }
-     */
-
-    @FXML
-    private void populateTableView(DatabaseEntry result) throws SQLException, ClassNotFoundException {
-
-        /*
-        ObservableList<DatabaseEntry> entriesData = FXCollections.observableArrayList();
-        entriesData.add(result);
-        //populate TableView profileTable
-        profileTable.setItems(entriesData);
-         */
-
-    }
-
-    @FXML
-    private void populateTableViewAndDisplay(DatabaseEntry result) throws ClassNotFoundException, SQLException {
-        if(result != null){
-            populateTableView(result);
 
         }
+    }
+
+
+
+    @FXML
+    private void populateTableView(ObservableList<DatabaseEntry> entries) throws SQLException, ClassNotFoundException {
+        profileTable.setItems(entries);
+
 
     }
+
 
     @FXML private Button addButton;
     public void addNewItemAction(ActionEvent event){
-        Parent addItem;
+
         try {
-            addItem = FXMLLoader.load(getClass().getResource("../gui/add_new_item_view.fxml"));
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation((getClass().getResource("../gui/add_new_item_view.fxml")));
+            Parent addItemParent = loader.load();
+            addNewItemController controller = loader.getController();
+            controller.createCombox();
             Stage stage = new Stage();
             stage.setTitle("Add new Item");
-            stage.setScene(new Scene(addItem, 600, 400));
+            stage.setScene(new Scene(addItemParent, 600, 400));
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -267,41 +233,25 @@ public class mainViewController implements Initializable {
         System.exit(0);
     }
 
-    /*
-    public void modifyProfileAction(ActionEvent event) throws IOException {
-        System.out.println("Modify Profile Action");
-
-        try {
-            DatabaseEntry dbEntry = profileTable.getSelectionModel().getSelectedItem();
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/add_new_item_view.fxml"));
-            Parent root = loader.load();
-
-            addNewItemController vieICont = loader.getController();
-            vieICont.fillIn(dbEntry);
-
-            Stage stage = new Stage();
-            stage.setTitle("Modify entry");
-            stage.setScene(new Scene(root, 545, 420));
-            stage.show();
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-
-    }
-     */
 
     @FXML private Button searchButton;
-    public void searchAction(ActionEvent event){
-        //TODO: Search entries based on parameter.
-        //TODO: Define how search works.
+    public void searchAction(ActionEvent event) throws SQLException, ClassNotFoundException {
+        //String searchElement = searchField.getText();
+        String searchElement="Mersid";
+        DatabaseEntryDao searchDao = new DatabaseEntryDao();
+        databaseEntries.clear();
+        ObservableList<DatabaseEntry> resultSearch = FXCollections.observableArrayList();
+        resultSearch = searchDao.searchElement(searchElement,databaseEntries);
+        populateTableView(resultSearch);
+        foundLabel.setText(valueOf(resultSearch.size()));
         System.out.println("Search Action");
         Scene scene = searchButton.getScene();
         scene.setCursor(Cursor.WAIT);
+
     }
 
     /*
-    * copy password in computer memory.
+     * copy password in computer memory.
      */
     public void copyPassword(DatabaseEntry dbEntry) throws Exception {
         String passwordDecrypterPassword = loginViewMasterpassphraseController.passwordDecrypterPassword;
@@ -339,6 +289,7 @@ public class mainViewController implements Initializable {
             System.out.println("delete not working");
             throw e;
         }
+        reload = true;
 
         /*
         TODO Implement alert windows: https://www.geeksforgeeks.org/javafx-alert-with-examples/
@@ -371,12 +322,13 @@ public class mainViewController implements Initializable {
                     }
                 };
     }
-    public void deleteAccountAction(ActionEvent actionEvent) {
+    public void deleteAccountAction(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
         //TODO: Define deleting account
         System.out.println("Delete Account Action");
+        DatabaseEntryDao deleteDao = new DatabaseEntryDao();
+        deleteDao.deleteAccount();
     }
-    //TODO: to delete?
-    private TableView tableView;
+
     public void startOpenSelectedItemsToView(DatabaseEntry dbentry) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("../gui/add_new_item_view.fxml"));
@@ -387,7 +339,6 @@ public class mainViewController implements Initializable {
         stage.setTitle("View item");
         stage.setScene(new Scene(viewItemControllerParent, 600,400));
         stage.show();
-
     }
 
 
@@ -464,4 +415,12 @@ public class mainViewController implements Initializable {
     }
 
 
+    public void reload(ActionEvent actionEvent) {
+        reloadMainView();
+
+    }
+
+    public void onModifyProfile(ActionEvent actionEvent) throws IOException {
+        startOpenSelectedItemsToView(copyClickedEntry());
+    }
 }
