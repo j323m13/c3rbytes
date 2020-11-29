@@ -14,6 +14,8 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class loginViewMasterpassphraseController implements IController {
     @FXML private javafx.scene.control.PasswordField masterPassPhraseField;
@@ -24,7 +26,9 @@ public class loginViewMasterpassphraseController implements IController {
     private final String filename = ".c3r.c3r";
     public static String passwordDecrypterPassword;
     private int loginCounter = 0;
+    private ArrayList<String> holder = new ArrayList<>();
     FXMLLoader loader = null;
+    DatabaseEntryDao mainViewDao = new DatabaseEntryDao();
 
     public void loginActionMPP() throws Exception {
 
@@ -67,8 +71,13 @@ public class loginViewMasterpassphraseController implements IController {
         System.out.println("System exited");
         System.exit(0);
     }
+    public ArrayList<String> hold(String passwordDB, String bootPassword){
+        holder.add(passwordDB);
+        holder.add(bootPassword);
+        return holder;
+    }
 
-    public void startMainView() throws IOException {
+    public void startMainView() throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         FXMLLoader loader = new FXMLLoader(loginViewMasterpassphraseController.class.getResource("../gui/main_view_2.fxml"));
         Parent root = loader.load();
         Stage stage = new Stage();
@@ -77,7 +86,7 @@ public class loginViewMasterpassphraseController implements IController {
         stage.show();
     }
 
-    public void getLoginViewMasterpassphrase(javafx.event.ActionEvent actionEvent) throws IOException {
+    public void getLoginViewMasterpassphrase(javafx.event.ActionEvent actionEvent) throws IOException, SQLException, ClassNotFoundException {
         loader = new FXMLLoader(getClass().getResource("../gui/login_view_masterpassphrase.fxml"));
         Parent parent = loader.load();
         Scene loginView = new Scene(parent);

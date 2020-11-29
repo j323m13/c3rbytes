@@ -6,6 +6,7 @@ import sample.ch.ffhs.c3rbytes.controller.loginViewController;
 import sample.ch.ffhs.c3rbytes.controller.mainViewController;
 import sample.ch.ffhs.c3rbytes.controller.setMasterPPViewController;
 import sample.ch.ffhs.c3rbytes.controller.setMasterPWViewController;
+import sample.ch.ffhs.c3rbytes.dao.DBConnection;
 import sample.ch.ffhs.c3rbytes.utils.FileHandler;
 
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.sql.SQLException;
 
 public class Main extends Application {
     private final String file = ".c3r.c3r";
+    private final String dbFile = DBConnection.databaseName;
 
 
     /*
@@ -53,8 +55,10 @@ public class Main extends Application {
         FileHandler fileHandler = new FileHandler();
 
         //fileHandler.setReadWriteAttributes(file,"allow");
+        System.out.println(DBConnection.databaseName);
         if (fileHandler.readFromFile(file).equals("File does not exist")){
             System.out.println("Enter Masterpassword Dialog");
+
 
             setMasterPWViewController mpwvc = new setMasterPWViewController();
             mpwvc.getView(stage);
@@ -67,7 +71,13 @@ public class Main extends Application {
 
              */
 
+        }/*
+        //TODO to implement correctly. not working.
+        else if(fileHandler.readFromFile(dbFile).equals("file does not exist")){
+            DBConnection.onNewStartup = true;
+
         }
+        */
         else{ // or just logging in
             //start login_view
 

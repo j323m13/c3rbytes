@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import org.apache.commons.dbutils.QueryRunner;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 import static sample.ch.ffhs.c3rbytes.dao.DBConnection.*;
 
@@ -107,11 +108,11 @@ public class DatabaseEntryDao implements Dao{
     }
 
     /*
-    * call the dbConnect methode from DBConenction.java
+    * call the dbConnect methode from DBConnenction.java
      */
     @Override
     public void connect() throws SQLException {
-        DBConnection.dbConnect(createURL());
+        dbConnect(createURL());
     }
 
     /*
@@ -128,22 +129,20 @@ public class DatabaseEntryDao implements Dao{
 
     }
     //TODO to implement correctly
-    public void onNewStartup(boolean startup) throws SQLException, ClassNotFoundException {
-        if(startup){
-            //setupUserDBWithPassword();
-            //setupTable();
-            //setupEncryption()
-        }
+    public void onNewStartup() throws SQLException, ClassNotFoundException, InterruptedException {
+        setupEncryption(bootPassword);
+        setupUserDBWithPassword(passwordDB);
+        setupTable();
 
     }
 
-    public void setupUserDBWithPassword() throws SQLException, InterruptedException, ClassNotFoundException {
+    public void setupUserDBWithPassword(String newPasswordDB) throws SQLException, InterruptedException, ClassNotFoundException {
         //TODO get a string 10CHARS from bootpassword as passwordDB
         //on first call, database will be create if it does not exist: (create=true).
         String url = JDBC_URL+databaseName+";create=true;user="+userDB+"";
         // set userDB's password
         String setupPasswordString = "CALL SYSCS_UTIL.SYSCS_CREATE_USER(?,?)";
-        setupUserDBWithPasswordConnection(url, "123456789", setupPasswordString);
+        setupUserDBWithPasswordConnection(url, newPasswordDB, setupPasswordString);
     }
 
     public void resetUserDBPassword(String newUserDBPassword){
@@ -173,8 +172,13 @@ public class DatabaseEntryDao implements Dao{
 
     }
 
-    public void setupEncryption() throws SQLException {
-        setupDBEncryption();
+    public void setupEncryption(String encryptionKey) throws SQLException, InterruptedException, ClassNotFoundException {
+        bootPassword = encryptionKey;
+        String encryptString = "CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY('bootPasword', '"+ bootPassword+","+bootPassword+"')";
+        //setupDBEncryption(encryptionKey);
+        //dbExecuteUpdate(encryptString,createURL());
+        dbConnect(createURLSimple()+";bootPassword="+bootPassword+"");
+        System.out.println("DB ist encrypted with: "+bootPassword);
 
     }
 
@@ -206,9 +210,6 @@ public class DatabaseEntryDao implements Dao{
         return DBConnection.createURL();
     }
 
-    public void disconnect(String url) throws SQLException {
-        DBConnection.dbDisconnect(url);
-    }
 }
 
 

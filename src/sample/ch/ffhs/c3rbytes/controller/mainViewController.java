@@ -147,6 +147,20 @@ public class mainViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        //debugging set onNewStartup = true for setup process and after the 1st launch as false
+        // change databaseName or delete cerbytesdb file on your computer
+        DBConnection.onNewStartup = false;
+        if(DBConnection.onNewStartup){
+            try{
+                mainViewDao.onNewStartup();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
         startMouseClicks();
         startContextMenu();
         ObservableList<DatabaseEntry> databaseEntries = FXCollections.observableArrayList();
@@ -193,7 +207,7 @@ public class mainViewController implements Initializable {
             databaseEntries.addAll(entries);
             populateTableView(databaseEntries);
             foundLabel.setText(valueOf(databaseEntries.size()));
-            mainViewDao.setupEncryption();
+
 
         } catch (SQLException | ClassNotFoundException | InterruptedException throwables) {
 

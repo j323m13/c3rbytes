@@ -39,8 +39,11 @@ public class loginViewController implements IController{
         //TODO:hash masterpw and pass it to bootPassword
         DBConnection.bootPassword = mpTextField;
         StringHasher stringHasher = new StringHasher();
-        //String hashedPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM,DBConnection.bootPassword).substring(0,24);
+        String hashedBootPassword = stringHasher.encryptSHA3(HASHALGORITHM,DBConnection.bootPassword).substring(0,32);
+        String newPasswordDB = hashedBootPassword.substring(0,10);
         //String hashedPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM,DBConnection.bootPassword);
+        DBConnection.bootPassword = hashedBootPassword;
+        DBConnection.passwordDB = newPasswordDB;
 
         //DBConnection.bootPassword = hashedPasswordDB;
 
@@ -51,17 +54,10 @@ public class loginViewController implements IController{
 
 
         try {
-            DatabaseEntryDao login = new DatabaseEntryDao();
-            //System.out.println(login.getUrl());
-            //setup the database on first launch. does not work.
-            //login.setup("123456789","654321654321");
-            //login.setupUserDBWithPassword();
-            //login.setupTable();
-
-            login.connect();
 
             loginViewMasterpassphraseController loginViewMasterpassphraseController = new loginViewMasterpassphraseController();
             loginViewMasterpassphraseController.getLoginViewMasterpassphrase(actionEvent);
+
 
             /*
             System.out.println("Access to DB granted");
@@ -109,8 +105,6 @@ public class loginViewController implements IController{
         stage.setTitle("C3rBytes Login Masterpassword");
         stage.setScene(new Scene(loginViewMP, 552, 371));
     }
-
-
 
     @Override
     public Object getController() throws IOException {
