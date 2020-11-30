@@ -236,7 +236,8 @@ public class mainViewController implements Initializable {
             Stage stage = new Stage();
             stage.setTitle("Add new Item");
             stage.setScene(new Scene(addItemParent, 600, 400));
-            stage.show();
+            stage.showAndWait();
+            reloadMainView();
         } catch (IOException e) {
             e.printStackTrace();
         }
