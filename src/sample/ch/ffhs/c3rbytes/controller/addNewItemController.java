@@ -29,6 +29,7 @@ import java.util.Objects;
 public class addNewItemController {
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
     @FXML public PasswordField passwordField;
+    private boolean isHidingPassword = true;
     @FXML public TextField userNameField;
     @FXML private Label viewLastUpdateLabelText;
     @FXML private TextField notesField;
@@ -40,6 +41,7 @@ public class addNewItemController {
     @FXML private Label typeFieldLabelError;
     @FXML ChoiceBox<String> typeField;
     @FXML TextField urlField;
+    @FXML private TextField showPasswordTextField;
     private String id;
     private String creation;
     private boolean emptyField;
@@ -76,9 +78,20 @@ public class addNewItemController {
         createCombox();
     }
 
-    //@olaf delete?
+    //show or hide passwordField
     public void showPassword(ActionEvent event){
-        passwordField.setVisible(true);
+        if (isHidingPassword) {
+            String password = passwordField.getText();
+            showPasswordTextField.setText(password);
+            passwordField.setVisible(false);
+            showPasswordTextField.setVisible(true);
+            isHidingPassword = false;
+        } else{
+            showPasswordTextField.setVisible(false);
+            passwordField.setVisible(true);
+            isHidingPassword = true;
+        }
+
     }
 
     /*

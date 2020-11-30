@@ -1,9 +1,12 @@
 package sample.ch.ffhs.c3rbytes.controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.StringHasher;
 import sample.ch.ffhs.c3rbytes.dao.DBConnection;
@@ -109,6 +112,15 @@ public class loginViewController implements IController{
     @Override
     public Object getController() throws IOException {
         return loader.getController();
+    }
+
+    public void manageKeyInput(KeyEvent keyEvent) throws SQLException, IOException, ClassNotFoundException {
+        System.out.println("Key released");
+        if (keyEvent.getCode().equals(KeyCode.ENTER)){
+            System.out.println("Enter");
+            ActionEvent ae = new ActionEvent(keyEvent.getSource(), keyEvent.getTarget());
+            loginAction(ae);
+        }
     }
 
 

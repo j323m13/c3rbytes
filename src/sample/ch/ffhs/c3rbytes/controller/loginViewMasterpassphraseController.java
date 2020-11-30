@@ -1,16 +1,18 @@
 package sample.ch.ffhs.c3rbytes.controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.FileEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.main.Main;
 
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -133,4 +135,14 @@ public class loginViewMasterpassphraseController implements IController {
     public Object getController() throws IOException {
         return loader.getController();
     }
+
+    public void manageKeyInput(KeyEvent keyEvent) throws Exception {
+        System.out.println("Key released");
+        if (keyEvent.getCode().equals(KeyCode.ENTER)){
+            System.out.println("Enter");
+            loginActionMPP();
+        }
+    }
+
+
 }

@@ -12,7 +12,7 @@
 
 <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="371.0" prefWidth="552.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.ch.ffhs.c3rbytes.controller.loginViewController">
    <children>
-      <PasswordField fx:id="loginViewPasswordField" layoutX="195.0" layoutY="240.0" prefHeight="25.0" prefWidth="164.0" />
+      <PasswordField fx:id="loginViewPasswordField" layoutX="195.0" layoutY="240.0" onKeyReleased="#manageKeyInput" prefHeight="25.0" prefWidth="164.0" />
       <Button fx:id="loginButton" layoutX="196.0" layoutY="289.0" mnemonicParsing="false" onAction="#loginAction" prefHeight="25.0" prefWidth="73.0" text="Login" />
       <Button fx:id="logoutButton" layoutX="286.0" layoutY="289.0" mnemonicParsing="false" onAction="#logoutAction" prefHeight="25.0" prefWidth="73.0" text="Logout" />
       <Polygon fill="RED" layoutX="277.0" layoutY="102.0" points="0.0, 39.5, 0.0, 39.5, 36.0, -17.0, 36.0, -51.0, 0.0, -60.0, -37.0, -51.0, -37.0, -17.0" stroke="BLACK" strokeType="INSIDE" />
