@@ -40,15 +40,18 @@ public class loginViewController implements IController{
         System.out.println("masterpassword: " + mpTextField);
 
         try {
-        //TODO:hash masterpw and pass it to bootPassword
-        DBConnection.bootPassword = mpTextField;
-        StringHasher stringHasher = new StringHasher();
-        String hashedBootPassword = stringHasher.encryptSHA3(HASHALGORITHM,DBConnection.bootPassword).substring(0,32);
-        String newPasswordDB = hashedBootPassword.substring(0,10);
-        //String hashedPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM,DBConnection.bootPassword);
-        DBConnection.bootPassword = hashedBootPassword;
-        DBConnection.passwordDB = newPasswordDB;
+            //TODO:hash masterpw and pass it to bootPassword
+            DBConnection.bootPassword = mpTextField;
+            StringHasher stringHasher = new StringHasher();
+            String hashedBootPassword = stringHasher.encryptSHA3(HASHALGORITHM,DBConnection.bootPassword).substring(0,32);
+            String newPasswordDB = hashedBootPassword.substring(0,10);
+            //String hashedPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM,DBConnection.bootPassword);
+            DBConnection.bootPassword = hashedBootPassword;
+            DBConnection.passwordDB = newPasswordDB;
 
+
+            String url = DBConnection.createURL();
+            DBConnection.dbConnect(url);
         //DBConnection.bootPassword = hashedPasswordDB;
 
 
