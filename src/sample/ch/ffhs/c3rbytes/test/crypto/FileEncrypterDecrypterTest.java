@@ -17,7 +17,7 @@ public class FileEncrypterDecrypterTest {
 
         String originalContent = "Das ist ein Test";
         //String originalContent = "";
-        String file = ".c3r.c3r";
+        String file = ".test.txt";
         String password = "password123";
 
         // encrypt file
@@ -43,7 +43,7 @@ public class FileEncrypterDecrypterTest {
         FileEncrypterDecrypter fileEncrypterDecrypter = new FileEncrypterDecrypter();
 
         String originalContent = "Das ist ein Test";
-        String file = ".c3r.c3r";
+        String file = ".test.txt";
         String password = "password123";
 
         // encrypt file

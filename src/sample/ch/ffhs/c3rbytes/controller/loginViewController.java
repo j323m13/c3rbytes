@@ -39,6 +39,7 @@ public class loginViewController implements IController{
         String mpTextField = loginViewPasswordField.getText();
         System.out.println("masterpassword: " + mpTextField);
 
+        try {
         //TODO:hash masterpw and pass it to bootPassword
         DBConnection.bootPassword = mpTextField;
         StringHasher stringHasher = new StringHasher();
@@ -56,7 +57,7 @@ public class loginViewController implements IController{
         //debugging for the url
 
 
-        try {
+
 
             loginViewMasterpassphraseController loginViewMasterpassphraseController = new loginViewMasterpassphraseController();
             loginViewMasterpassphraseController.getLoginViewMasterpassphrase(actionEvent);

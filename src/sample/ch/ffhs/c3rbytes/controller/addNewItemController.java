@@ -17,6 +17,7 @@ import sample.ch.ffhs.c3rbytes.crypto.FileEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.crypto.PasswordEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntry;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
+import sample.ch.ffhs.c3rbytes.utils.ClipboardHandler;
 
 
 import javax.xml.crypto.Data;
@@ -266,6 +267,19 @@ public class addNewItemController {
      */
     private void reloadMainView(boolean reload) throws IOException {
         mainViewController.reload = reload;
+    }
+
+
+    public void copyPassword(ActionEvent actionEvent) {
+        // get password from passwordField
+        String accountPassword = passwordField.getText();
+
+        System.out.println("decryptedAccountPassword: " + accountPassword);
+
+        // send plain text password to clipboard
+        ClipboardHandler clipboardHandler = new ClipboardHandler();
+        clipboardHandler.copyPasswordToClipboard(accountPassword);
+
     }
 }
 

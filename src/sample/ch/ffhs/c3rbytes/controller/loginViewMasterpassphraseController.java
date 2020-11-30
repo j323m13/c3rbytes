@@ -49,24 +49,28 @@ public class loginViewMasterpassphraseController implements IController {
             System.out.println("passwordDecrypterPassword generated from pwgeneretaor" + passwordDecrypterPassword);
             System.out.println("Access granted");
 
+            // start mainView()
             startMainView();
+
+            // close stage
+            Stage stage =  (Stage) loginButtonMPP.getScene().getWindow();
+            stage.close();
         }catch(javax.crypto.AEADBadTagException e){
             //TODO: Here should come a notification to the user --> login failed
-            System.out.println("Access denied");
+            System.out.println("Access denied due passphrase error");
             loginCounter++;
+            System.out.println(loginCounter);
             int leftLogins = 3 - loginCounter;
             masterPassPhraseField.setText("");
             masterPassPhraseField.requestFocus();
             wrongLogin.setText("Login failed. " + leftLogins + " attempts left");
             if (loginCounter == 3){
+                System.out.println("logoutAciton");
                 logoutActionMPP();
             }
         }catch (IOException e) {
         e.printStackTrace();
-    }
-
-        Stage stage =  (Stage) loginButtonMPP.getScene().getWindow();
-        stage.close();
+        }
     }
 
     public void logoutActionMPP(){

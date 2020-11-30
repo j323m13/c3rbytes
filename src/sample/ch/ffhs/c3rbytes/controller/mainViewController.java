@@ -384,15 +384,17 @@ public class mainViewController implements Initializable {
     public void changeMasterPPAction(ActionEvent actionEvent){
 
         //TODO: here we have to open login_view_masterpassphrase.fxml and aks for the passphrase or something similar
-        String oldPassPhrase = "leer";
+        //String oldPassPhrase = "password123";
 
         Parent changePassphrase;
 
         try {
+            /*
             FileEncrypterDecrypter fileEncrypterDecrypter = new FileEncrypterDecrypter();
             byte[] decryptedText = fileEncrypterDecrypter.decryptFile(FILENAME, oldPassPhrase);
             String originalContent = new String(decryptedText, UTF_8);
 
+             */
 
             //TODO: then here we have to call the set_master_mpp_view.fxml and ask for the new passphrase
             changePassphrase = FXMLLoader.load(getClass().getResource("../gui/change_passphrase_view.fxml"));
@@ -401,12 +403,15 @@ public class mainViewController implements Initializable {
             stage.setScene(new Scene(changePassphrase,600, 400));
             stage.show();
 
+            /*
             String newPassPhrase = "password123";
             fileEncrypterDecrypter.encryptFile(originalContent, FILENAME, newPassPhrase);
 
 
         } catch(AEADBadTagException e){
             System.out.println("PassPhrase change denied");
+            */
+
         } catch (Exception e) {
             e.printStackTrace();
         }
