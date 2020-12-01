@@ -149,7 +149,7 @@ public class mainViewController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //debugging set onNewStartup = true for setup process and after the 1st launch as false
         // change databaseName or delete cerbytesdb file on your computer
-        DBConnection.onNewStartup = false;
+        DBConnection.onNewStartup = true;
         if(DBConnection.onNewStartup){
             try{
                 mainViewDao.onNewStartup();
