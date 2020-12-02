@@ -1,21 +1,15 @@
 package sample.ch.ffhs.c3rbytes.controller;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
-import sample.ch.ffhs.c3rbytes.dao.DatabaseEntry;
-import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
+import sample.ch.ffhs.c3rbytes.DatabaseEntry.DatabaseEntry;
 
-import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.util.Optional;
 
 public class alertViewController implements IController {
     @FXML
@@ -31,7 +25,7 @@ public class alertViewController implements IController {
     public static boolean confirmation = false;
 
 
-    public void startAlertWindows(String alertText, Alert.AlertType TYPE, String confirmation){
+    public Optional<ButtonType> startAlertWindows(String alertText, Alert.AlertType TYPE, String confirmation){
         Alert alert = new Alert(TYPE);
         alert.setWidth(300);
         alert.setHeight(250);
@@ -46,7 +40,9 @@ public class alertViewController implements IController {
         tilePaneAlert.getChildren().add(textAlert);
         scroll.setContent(tilePaneAlert);
         alert.getDialogPane().setContent(tilePaneAlert);
-        alert.showAndWait();
+
+        Optional<ButtonType> option = alert.showAndWait();
+        return option;
 
         //alertField.setText("be careful");
         //Text textAlert = new Text();

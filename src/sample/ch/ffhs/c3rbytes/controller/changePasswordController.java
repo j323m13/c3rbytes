@@ -4,14 +4,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.StringHasher;
-import sample.ch.ffhs.c3rbytes.dao.DBConnection;
-import sample.ch.ffhs.c3rbytes.dao.DatabaseEntry;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 
 import java.io.IOException;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class changePasswordController implements IController {
@@ -55,7 +50,7 @@ public class changePasswordController implements IController {
             try {
                 StringHasher stringHasher = new StringHasher();
                 String hashedOldMasterpassword = stringHasher.encryptSHA3(HASHALGORITHM, oldMasterpassword);
-                String hashedNewMasterpassword = stringHasher.encryptSHA3(HASHALGORITHM, newMasterpassword).substring(0,32);
+                String hashedNewMasterpassword = stringHasher.encryptSHA3(HASHALGORITHM, newMasterpassword);
                 String hashedNewPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM, hashedNewMasterpassword).substring(0,32);
                 DatabaseEntryDao setup = new DatabaseEntryDao();
                 setup.changeBootPassword(hashedNewMasterpassword,hashedNewPasswordDB);

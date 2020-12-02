@@ -3,11 +3,8 @@ package sample.ch.ffhs.c3rbytes.main;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.controller.loginViewController;
-import sample.ch.ffhs.c3rbytes.controller.mainViewController;
-import sample.ch.ffhs.c3rbytes.controller.setMasterPPViewController;
 import sample.ch.ffhs.c3rbytes.controller.setMasterPWViewController;
-import sample.ch.ffhs.c3rbytes.dao.DBConnection;
-import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
+import sample.ch.ffhs.c3rbytes.connection.DBConnection;
 import sample.ch.ffhs.c3rbytes.utils.FileHandler;
 
 import java.io.IOException;

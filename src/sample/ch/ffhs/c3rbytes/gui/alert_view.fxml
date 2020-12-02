@@ -28,10 +28,10 @@
                               </children>
                           </TextFlow>
                           <Button id="confirm" accessibleText="confirm" defaultButton="true" layoutX="15.0"
-                                  layoutY="145.0" mnemonicParsing="false" onAction="#onConfirmDelete" prefHeight="27.0"
+                                  layoutY="145.0" mnemonicParsing="false" onAction="#onConfirm" prefHeight="27.0"
                                   prefWidth="61.0" text="confirm"/>
                           <Button id="discard" cancelButton="true" layoutX="127.0" layoutY="145.0"
-                                  mnemonicParsing="false" onAction="#onDiscardDelete" text="discard"/>
+                                  mnemonicParsing="false" onAction="#onDiscard" text="discard"/>
                       </children>
                   </Pane>
               </children>

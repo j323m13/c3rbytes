@@ -7,9 +7,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.StringHasher;
-import sample.ch.ffhs.c3rbytes.dao.DBConnection;
+import sample.ch.ffhs.c3rbytes.connection.DBConnection;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
-import sample.ch.ffhs.c3rbytes.utils.FileHandler;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -21,13 +20,14 @@ public class setMasterPWViewController implements IController {
 
     // password to encrypt DB
     public void saveMPAction(ActionEvent actionEvent) {
-        String plainDBpassword = setMPViewPasswordField.getText();
-        System.out.println(plainDBpassword);
+        String plainBootPassword = setMPViewPasswordField.getText();
+        System.out.println(plainBootPassword);
 
         // Hashing masterpassword
         StringHasher sha = new StringHasher();
         String HASHALGORITHM = "SHA3-512";
-        String hashedBootPassword = sha.encryptSHA3(HASHALGORITHM, plainDBpassword);
+        String hashedBootPassword = sha.encryptSHA3(HASHALGORITHM, plainBootPassword);
+        String hashedPasswordDB = sha.encryptSHA3(HASHALGORITHM,hashedBootPassword).substring(0,32);
         //DBConnection.bootPassword = hashedDBPassword;
 
         try {
@@ -35,9 +35,12 @@ public class setMasterPWViewController implements IController {
             setMasterPPViewController mppvc = new setMasterPPViewController();
             mppvc.getView();
 
-            DatabaseEntryDao newStartUp = new DatabaseEntryDao();
-            newStartUp.setupEncryption(hashedBootPassword);
+            //String hashedPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM,DBConnection.bootPassword);
             DBConnection.bootPassword = hashedBootPassword;
+            DBConnection.passwordDB = hashedPasswordDB;
+            DatabaseEntryDao login = new DatabaseEntryDao();
+            //decryptDB or createdB on first boot
+            login.setupEncryption(hashedBootPassword);
 
             /*
             FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/set_master_mpp_view.fxml"));

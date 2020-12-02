@@ -8,23 +8,19 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
-import sample.ch.ffhs.c3rbytes.crypto.FileEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.crypto.PasswordEncrypterDecrypter;
-import sample.ch.ffhs.c3rbytes.dao.DatabaseEntry;
+import sample.ch.ffhs.c3rbytes.DatabaseEntry.DatabaseEntry;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.utils.ClipboardHandler;
 
 
-import javax.xml.crypto.Data;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
-import java.util.Objects;
 
 
 public class addNewItemController {
@@ -98,7 +94,7 @@ public class addNewItemController {
     /*
     methode to populate the field of for add new Item
      */
-    public void fillIn(DatabaseEntry dbentry, boolean fromMainView){
+    public void fillIn(DatabaseEntry dbentry){
         usernameFieldLabelError.setVisible(false);
         passwordFieldLabelError.setVisible(false);
         typeFieldLabelError.setVisible(false);
@@ -228,13 +224,10 @@ public class addNewItemController {
             }
 
             // save to DB
-            boolean reload;
             if(id!=null){
                 try {
                     System.out.println("update() -->");
                     newDao.update(tmp);
-                    reload =true;
-                    reloadMainView(reload);
                 }catch (SQLException | ClassNotFoundException e){
                     System.out.println(e);
                 }
@@ -243,8 +236,6 @@ public class addNewItemController {
                 try {
                     System.out.println("save() -->");
                     newDao.save(tmp);
-                    reload =true;
-                    reloadMainView(reload);
                 }catch (SQLException | ClassNotFoundException e){
                     System.out.print(e);
                 }
@@ -254,21 +245,9 @@ public class addNewItemController {
             Stage stage = (Stage) saveButton.getScene().getWindow();
             stage.close();
 
-
-
-
-
         }
 
     }
-    /*
-     * Methode to allow a reload from the MainView after updating, adding an item
-     * @param reload which is boolean. default is false.
-     */
-    private void reloadMainView(boolean reload) throws IOException {
-        mainViewController.reload = reload;
-    }
-
 
     public void copyPassword(ActionEvent actionEvent) {
         // get password from passwordField

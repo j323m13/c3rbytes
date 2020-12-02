@@ -10,26 +10,20 @@ import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import sample.ch.ffhs.c3rbytes.crypto.FileEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.crypto.PasswordEncrypterDecrypter;
-import sample.ch.ffhs.c3rbytes.dao.DBConnection;
-import sample.ch.ffhs.c3rbytes.dao.DatabaseEntry;
+import sample.ch.ffhs.c3rbytes.DatabaseEntry.DatabaseEntry;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.utils.ClipboardHandler;
 import sample.ch.ffhs.c3rbytes.utils.UrlOpener;
 
-import javax.crypto.AEADBadTagException;
-import javax.swing.text.TableView;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -37,6 +31,7 @@ import static java.lang.String.valueOf;
 
 
 public class mainViewController implements Initializable {
+    @FXML private TextField searchField;
     @FXML
     private Label foundLabel;
     @FXML
@@ -56,24 +51,22 @@ public class mainViewController implements Initializable {
     @FXML
     private TableColumn<DatabaseEntry, String> noteColumn;
     @FXML
-    public Button reloaddata;
-
-
-    private boolean fromMainView = true;
-    private boolean start = true;
-    public static boolean reload = false;
-    DatabaseEntryDao mainViewDao = new DatabaseEntryDao();
-
-    @FXML
-    public ObservableList<DatabaseEntry> databaseEntries = FXCollections.observableArrayList();
+    private Button reloaddata;
+    @FXML private Button searchButton;
+    @FXML private Button deleteButton;
+    @FXML private ObservableList<DatabaseEntry> databaseEntries = FXCollections.observableArrayList();
+    @FXML private Button addButton;
 
     public static final String FILENAME = "c3r.c3r";
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
     @FXML
     private Button deleteAccountButton;
+    @FXML private javafx.scene.control.Button changeMasterButton;
+
+    DatabaseEntryDao mainViewDao = new DatabaseEntryDao();
 
 
-    public DatabaseEntry copyClickedEntry() {
+    private DatabaseEntry copyClickedEntry() {
         DatabaseEntry tmp = new DatabaseEntry(
                 profileTable.getSelectionModel().getSelectedItem().getId(),
                 profileTable.getSelectionModel().getSelectedItem().getDummyId(),
@@ -91,7 +84,7 @@ public class mainViewController implements Initializable {
     }
 
 
-    public void startMouseClicks() {
+    private void startMouseClicks() {
         //Methode to listen to mouse clicks
         profileTable.setOnMousePressed(new EventHandler<javafx.scene.input.MouseEvent>() {
             @Override
@@ -109,11 +102,25 @@ public class mainViewController implements Initializable {
         });
     }
 
-    public void startContextMenu() {
+    private void startContextMenu() {
         ContextMenu contextMenu = new ContextMenu();
+        MenuItem addItemOption = new MenuItem("Add item");
+        MenuItem modifyItemOption = new MenuItem("Modify item");
         MenuItem copyUrlOption = new MenuItem("Copy url");
         MenuItem copyPasswordOption = new MenuItem("copy password");
         MenuItem deleteItemOption = new MenuItem("Delete item");
+
+        addItemOption.setOnAction((actionEvent -> {
+            addButton.fire();
+        }));
+
+        modifyItemOption.setOnAction(actionEvent -> {
+            try {
+                startOpenSelectedItemsToView(profileTable.getSelectionModel().getSelectedItem());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
         copyUrlOption.setOnAction((event) -> {
             //copyClickedEntry();
@@ -135,13 +142,10 @@ public class mainViewController implements Initializable {
         deleteItemOption.setOnAction((event) -> {
             //copyClickedEntry();
             deleteButton.fire();
-            reload = true;
-            //TODO call delete Mehtode;
-            //TODO print alert when deleting entries
         });
 
 
-        contextMenu.getItems().addAll(copyUrlOption, copyPasswordOption, deleteItemOption);
+        contextMenu.getItems().addAll(addItemOption, modifyItemOption, copyUrlOption, copyPasswordOption, deleteItemOption);
         profileTable.setContextMenu(contextMenu);
 
 
@@ -154,12 +158,8 @@ public class mainViewController implements Initializable {
         // change databaseName or delete cerbytesdb file on your computer
         try {
             mainViewDao.setup();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        } catch (SQLException | ClassNotFoundException | InterruptedException e){
+            System.out.println("everything is already set.");
         }
         startMouseClicks();
         startContextMenu();
@@ -196,7 +196,7 @@ public class mainViewController implements Initializable {
     }
 
     @FXML
-    void reloadMainView(){
+    private void reloadMainView(){
         loadDatabaseEntries(databaseEntries);
     }
 
@@ -214,8 +214,6 @@ public class mainViewController implements Initializable {
         }
     }
 
-
-
     @FXML
     private void populateTableView(ObservableList<DatabaseEntry> entries) throws SQLException, ClassNotFoundException {
         profileTable.setItems(entries);
@@ -224,9 +222,7 @@ public class mainViewController implements Initializable {
     }
 
 
-    @FXML private Button addButton;
     public void addNewItemAction(ActionEvent event){
-
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation((getClass().getResource("../gui/add_new_item_view.fxml")));
@@ -253,17 +249,25 @@ public class mainViewController implements Initializable {
         System.exit(0);
     }
 
+    /*
+    * Given a string, it search a element corresponding in the entries.
+    * if nothing is to be found, it throws an information.
+     */
 
-    @FXML private Button searchButton;
-    public void searchAction(ActionEvent event) throws SQLException, ClassNotFoundException {
-        //String searchElement = searchField.getText();
-        String searchElement="Mersid";
+    public void searchAction(ActionEvent event) throws SQLException, ClassNotFoundException, IOException {
+        String searchElement = searchField.getText();
         DatabaseEntryDao searchDao = new DatabaseEntryDao();
         databaseEntries.clear();
         ObservableList<DatabaseEntry> resultSearch = FXCollections.observableArrayList();
         resultSearch = searchDao.searchElement(searchElement,databaseEntries);
-        populateTableView(resultSearch);
-        foundLabel.setText(valueOf(resultSearch.size()));
+        if(resultSearch.size() == 0){
+            String alertMessage = "no luck. \n Our algorithm (Jérémie) did not find a result for you.";
+            startAlert(alertMessage, Alert.AlertType.INFORMATION, "Information");
+        }else{
+            populateTableView(resultSearch);
+            foundLabel.setText(valueOf(resultSearch.size()));
+        }
+
         System.out.println("Search Action");
         Scene scene = searchButton.getScene();
         scene.setCursor(Cursor.WAIT);
@@ -273,7 +277,7 @@ public class mainViewController implements Initializable {
     /*
      * copy password in computer memory.
      */
-    public void copyPassword(DatabaseEntry dbEntry) throws Exception {
+    private void copyPassword(DatabaseEntry dbEntry) throws Exception {
         String passwordDecrypterPassword = loginViewMasterpassphraseController.passwordDecrypterPassword;
 
         // get password of the selected row
@@ -298,30 +302,21 @@ public class mainViewController implements Initializable {
 
     }
 
-    @FXML private Button deleteButton;
+
     public void deleteProfileAction(ActionEvent event) throws IOException, SQLException, ClassNotFoundException {
         DatabaseEntryDao deleter = new DatabaseEntryDao();
-        try {
-            deleter.delete(copyClickedEntry());
-            System.out.println("entry has been deleted");
-        } catch (SQLException | ClassNotFoundException e) {
-            System.out.println("delete not working");
-            throw e;
+        String alertMessage = "The entry will be deleted. \nAre you sure ?";
+        Optional<ButtonType> confirm = startAlert(alertMessage, Alert.AlertType.CONFIRMATION, "Confirmation" );
+        if(confirm.get() == ButtonType.OK){
+            try {
+                deleter.delete(copyClickedEntry());
+                System.out.println("entry has been deleted");
+            } catch (SQLException | ClassNotFoundException e) {
+                System.out.println("delete not working");
+                throw e;
+            }
         }
         reloadMainView();
-
-        /*
-        TODO Implement alert windows: https://www.geeksforgeeks.org/javafx-alert-with-examples/
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("../gui/alert_view.fxml"));
-        Parent alertViewControllerParent = loader.load();
-        alertViewController controller = loader.getController();
-        controller.passTheData(copyClickedEntry());
-        Stage stage = new Stage();
-        stage.setTitle("Alert");
-        stage.setScene(new Scene(alertViewControllerParent, 400,400));
-        stage.show();
-         */
 
     }
 
@@ -329,18 +324,22 @@ public class mainViewController implements Initializable {
         //TODO: Define deleting account
         System.out.println("Delete Account Action");
         String alertText = "Are you sure you want to delete your account? There is no way back to that.";
-        startAlert(alertText, Alert.AlertType.CONFIRMATION, "Confirmation");
-        DatabaseEntryDao deleteDao = new DatabaseEntryDao();
-        deleteDao.deleteAccount();
-        logoutButton.fire();
+        Optional<ButtonType> confirm = startAlert(alertText, Alert.AlertType.CONFIRMATION, "Confirmation");
+        if(confirm.get() == ButtonType.OK){
+            DatabaseEntryDao deleteDao = new DatabaseEntryDao();
+            deleteDao.deleteAccount();
+            logoutButton.fire();
+        }else {
+            System.out.println("discard.");
+        }
     }
 
-    public void startOpenSelectedItemsToView(DatabaseEntry dbentry) throws IOException {
+    private void startOpenSelectedItemsToView(DatabaseEntry dbentry) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("../gui/add_new_item_view.fxml"));
         Parent viewItemControllerParent = loader.load();
         addNewItemController controller = loader.getController();
-        controller.fillIn(copyClickedEntry(),fromMainView);
+        controller.fillIn(copyClickedEntry());
         Stage stage = new Stage();
         stage.setTitle("View item");
         stage.setScene(new Scene(viewItemControllerParent, 600,400));
@@ -348,7 +347,7 @@ public class mainViewController implements Initializable {
     }
 
 
-    @FXML private javafx.scene.control.Button changeMasterButton;
+
     public void changeMasterAction(ActionEvent actionEvent) {
         //TODO: Change password action
         System.out.println("Change Master Password Action");
@@ -389,14 +388,6 @@ public class mainViewController implements Initializable {
             stage.setScene(new Scene(changePassphrase,600, 400));
             stage.show();
 
-            /*
-            String newPassPhrase = "password123";
-            fileEncrypterDecrypter.encryptFile(originalContent, FILENAME, newPassPhrase);
-
-
-        } catch(AEADBadTagException e){
-            System.out.println("PassPhrase change denied");
-            */
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -404,7 +395,7 @@ public class mainViewController implements Initializable {
 
 
     }
-    public void openUrl(String url){
+    private void openUrl(String url){
         // open the url
         UrlOpener urlOpener = new UrlOpener();
         urlOpener.openURL(url);
@@ -419,13 +410,6 @@ public class mainViewController implements Initializable {
 
     }
 
-
-    public void getRow(MouseEvent actionEvent) {
-        DatabaseEntry dbEntry = profileTable.getSelectionModel().getSelectedItem();
-        System.out.print(dbEntry.getId());
-    }
-
-
     public void reload(ActionEvent actionEvent) {
         reloadMainView();
 
@@ -435,15 +419,13 @@ public class mainViewController implements Initializable {
         startOpenSelectedItemsToView(copyClickedEntry());
     }
 
-    public void startAlert(String alertText, Alert.AlertType TYPE, String confirmation) throws IOException {
+    private Optional<ButtonType> startAlert(String alertText, Alert.AlertType TYPE, String confirmation) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("../gui/alertView.fxml"));
         Parent alertViewParent = loader.load();
         alertViewController controller = loader.getController();
-        controller.startAlertWindows(alertText, TYPE, confirmation);
-        //Stage stage = new Stage();
-        //stage.setScene(new Scene(alertViewParent, 0,0));
-        //stage.showAndWait();
+        Optional<ButtonType> resultConfirm = controller.startAlertWindows(alertText, TYPE, confirmation);
+        return resultConfirm;
     }
 
 }

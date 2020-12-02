@@ -2,6 +2,8 @@ package sample.ch.ffhs.c3rbytes.dao;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import sample.ch.ffhs.c3rbytes.DatabaseEntry.DatabaseEntry;
+import sample.ch.ffhs.c3rbytes.connection.DBConnection;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -9,7 +11,7 @@ import java.nio.file.Paths;
 import java.sql.*;
 import java.util.concurrent.TimeUnit;
 
-import static sample.ch.ffhs.c3rbytes.dao.DBConnection.*;
+import static sample.ch.ffhs.c3rbytes.connection.DBConnection.*;
 
 public class DatabaseEntryDao implements Dao{
 
@@ -239,15 +241,6 @@ public class DatabaseEntryDao implements Dao{
 
     public void shutdown() throws SQLException {
         shutdownDB();
-    }
-
-
-    /*
-    * Methode to create a simple DatabaseEntry object
-    * @return a databaseEntry Object
-     */
-    public DatabaseEntry createSimple(String username, String password, String description, String url) {
-        return new DatabaseEntry(username, description, url, password);
     }
 
     public String getUrl() {

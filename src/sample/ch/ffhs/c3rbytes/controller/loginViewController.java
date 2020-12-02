@@ -9,7 +9,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.StringHasher;
-import sample.ch.ffhs.c3rbytes.dao.DBConnection;
+import sample.ch.ffhs.c3rbytes.connection.DBConnection;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 
 import java.io.IOException;
@@ -40,10 +40,10 @@ public class loginViewController implements IController{
         System.out.println("masterpassword: " + mpTextField);
 
         try {
-            //TODO:hash masterpw and pass it to bootPassword
+
             DBConnection.bootPassword = mpTextField;
             StringHasher stringHasher = new StringHasher();
-            String hashedBootPassword = stringHasher.encryptSHA3(HASHALGORITHM,DBConnection.bootPassword).substring(0,32);
+            String hashedBootPassword = stringHasher.encryptSHA3(HASHALGORITHM,DBConnection.bootPassword);
             String hashedPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM,hashedBootPassword).substring(0,32);
 
             //String hashedPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM,DBConnection.bootPassword);
