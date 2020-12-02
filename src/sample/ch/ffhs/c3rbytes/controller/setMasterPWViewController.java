@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.StringHasher;
 import sample.ch.ffhs.c3rbytes.dao.DBConnection;
+import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.utils.FileHandler;
 
 import java.io.IOException;
@@ -26,13 +27,17 @@ public class setMasterPWViewController implements IController {
         // Hashing masterpassword
         StringHasher sha = new StringHasher();
         String HASHALGORITHM = "SHA3-512";
-        String hashedDBPassword = sha.encryptSHA3(HASHALGORITHM, plainDBpassword);
+        String hashedBootPassword = sha.encryptSHA3(HASHALGORITHM, plainDBpassword);
         //DBConnection.bootPassword = hashedDBPassword;
 
         try {
 
             setMasterPPViewController mppvc = new setMasterPPViewController();
             mppvc.getView();
+
+            DatabaseEntryDao newStartUp = new DatabaseEntryDao();
+            newStartUp.setupEncryption(hashedBootPassword);
+            DBConnection.bootPassword = hashedBootPassword;
 
             /*
             FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/set_master_mpp_view.fxml"));
@@ -45,6 +50,12 @@ public class setMasterPWViewController implements IController {
              */
 
         }catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
 

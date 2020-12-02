@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.FileEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.crypto.PasswordGenerator;
+import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.utils.FileHandler;
 
 import java.io.IOException;
@@ -41,6 +42,8 @@ public class setMasterPPViewController implements IController {
         try {
             FileEncrypterDecrypter fileEncrypterDecrypter = new FileEncrypterDecrypter();
             fileEncrypterDecrypter.encryptFile(passwordDecrypterPassword, filename, masterPassPhrase);
+            DatabaseEntryDao newStartUp = new DatabaseEntryDao();
+            newStartUp.setup();
 
 
 
