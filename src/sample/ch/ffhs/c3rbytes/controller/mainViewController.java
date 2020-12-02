@@ -1,5 +1,6 @@
 package sample.ch.ffhs.c3rbytes.controller;
 
+import com.sun.javafx.menu.MenuItemBase;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -58,6 +59,7 @@ public class mainViewController implements Initializable {
     @FXML
     public Button reloaddata;
 
+
     private boolean fromMainView = true;
     private boolean start = true;
     public static boolean reload = false;
@@ -68,6 +70,8 @@ public class mainViewController implements Initializable {
 
     public static final String FILENAME = "c3r.c3r";
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
+    @FXML
+    private Button deleteAccountButton;
 
 
     public DatabaseEntry copyClickedEntry() {
@@ -322,9 +326,11 @@ public class mainViewController implements Initializable {
 
     }
 
-    public void deleteAccountAction(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
+    public void deleteAccountAction(ActionEvent actionEvent) throws SQLException, ClassNotFoundException, IOException {
         //TODO: Define deleting account
         System.out.println("Delete Account Action");
+        String alertText = "Are you sure you want to delete your account? There is no way back to that.";
+        startAlert(alertText, Alert.AlertType.CONFIRMATION, "Confirmation");
         DatabaseEntryDao deleteDao = new DatabaseEntryDao();
         deleteDao.deleteAccount();
         logoutButton.fire();
@@ -429,4 +435,16 @@ public class mainViewController implements Initializable {
     public void onModifyProfile(ActionEvent actionEvent) throws IOException {
         startOpenSelectedItemsToView(copyClickedEntry());
     }
+
+    public void startAlert(String alertText, Alert.AlertType TYPE, String confirmation) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("../gui/alertView.fxml"));
+        Parent alertViewParent = loader.load();
+        alertViewController controller = loader.getController();
+        controller.startAlertWindows(alertText, TYPE, confirmation);
+        //Stage stage = new Stage();
+        //stage.setScene(new Scene(alertViewParent, 0,0));
+        //stage.showAndWait();
+    }
+
 }
