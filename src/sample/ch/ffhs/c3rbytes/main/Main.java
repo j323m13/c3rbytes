@@ -7,6 +7,7 @@ import sample.ch.ffhs.c3rbytes.controller.mainViewController;
 import sample.ch.ffhs.c3rbytes.controller.setMasterPPViewController;
 import sample.ch.ffhs.c3rbytes.controller.setMasterPWViewController;
 import sample.ch.ffhs.c3rbytes.dao.DBConnection;
+import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.utils.FileHandler;
 
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.sql.SQLException;
 public class Main extends Application {
     private final String file = ".c3r.c3r";
     private final String dbFile = DBConnection.databaseName;
+
 
 
     /*
@@ -54,8 +56,9 @@ public class Main extends Application {
         // First Init
         FileHandler fileHandler = new FileHandler();
 
+
         //fileHandler.setReadWriteAttributes(file,"allow");
-        System.out.println(DBConnection.databaseName);
+
         if (fileHandler.readFromFile(file).equals("File does not exist")){
             System.out.println("Enter Masterpassword Dialog");
 

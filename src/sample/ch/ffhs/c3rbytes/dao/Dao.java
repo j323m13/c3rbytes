@@ -13,7 +13,7 @@ public interface Dao {
     Dao delete(DatabaseEntry databaseEntry) throws SQLException, ClassNotFoundException;
     Dao deleteAccount() throws SQLException, ClassNotFoundException;
 
-    void setup(String passwordDB, String bootPassordHashed) throws SQLException, ClassNotFoundException;
+    void setup() throws SQLException, ClassNotFoundException, InterruptedException;
 
     void connect() throws SQLException;
 }

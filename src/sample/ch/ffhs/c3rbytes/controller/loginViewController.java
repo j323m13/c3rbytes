@@ -44,15 +44,17 @@ public class loginViewController implements IController{
             DBConnection.bootPassword = mpTextField;
             StringHasher stringHasher = new StringHasher();
             String hashedBootPassword = stringHasher.encryptSHA3(HASHALGORITHM,DBConnection.bootPassword).substring(0,32);
-            String newPasswordDB = hashedBootPassword.substring(0,10);
+            String hashedPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM,hashedBootPassword).substring(0,32);
+
             //String hashedPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM,DBConnection.bootPassword);
             DBConnection.bootPassword = hashedBootPassword;
-            DBConnection.passwordDB = newPasswordDB;
+            DBConnection.passwordDB = hashedPasswordDB;
+            DatabaseEntryDao login = new DatabaseEntryDao();
+            //decryptDB or createdB on first boot
+            login.setupEncryption(hashedBootPassword);
 
 
-            String url = DBConnection.createURL();
-            DBConnection.dbConnect(url);
-        //DBConnection.bootPassword = hashedPasswordDB;
+            //DBConnection.bootPassword = hashedPasswordDB;
 
 
         //System.out.println("DBConnPW: " + DBConnection.passwordDB);
@@ -79,7 +81,7 @@ public class loginViewController implements IController{
             */
 
 
-        }catch ( SQLException e){
+        }catch (SQLException | InterruptedException e){
             loginCounter++;
             int leftLogins = 3 - loginCounter;
             loginViewPasswordField.setText("");

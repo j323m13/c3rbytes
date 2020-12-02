@@ -149,17 +149,14 @@ public class mainViewController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //debugging set onNewStartup = true for setup process and after the 1st launch as false
         // change databaseName or delete cerbytesdb file on your computer
-        DBConnection.onNewStartup = true;
-        if(DBConnection.onNewStartup){
-            try{
-                mainViewDao.onNewStartup();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
+        try {
+            mainViewDao.setup();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
         startMouseClicks();
         startContextMenu();
@@ -300,7 +297,6 @@ public class mainViewController implements Initializable {
 
     @FXML private Button deleteButton;
     public void deleteProfileAction(ActionEvent event) throws IOException, SQLException, ClassNotFoundException {
-        showAlert();
         DatabaseEntryDao deleter = new DatabaseEntryDao();
         try {
             deleter.delete(copyClickedEntry());
@@ -309,7 +305,7 @@ public class mainViewController implements Initializable {
             System.out.println("delete not working");
             throw e;
         }
-        reload = true;
+        reloadMainView();
 
         /*
         TODO Implement alert windows: https://www.geeksforgeeks.org/javafx-alert-with-examples/
@@ -326,27 +322,12 @@ public class mainViewController implements Initializable {
 
     }
 
-    public void showAlert(){
-        Button b = new Button("Confirmation alert");
-        Alert a = new Alert(Alert.AlertType.NONE);
-        // action event
-        EventHandler<ActionEvent> event = new
-                EventHandler<ActionEvent>() {
-                    public void handle(ActionEvent e)
-                    {
-                        // set alert type
-                        a.setAlertType(Alert.AlertType.CONFIRMATION);
-
-                        // show the dialog
-                        a.show();
-                    }
-                };
-    }
     public void deleteAccountAction(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
         //TODO: Define deleting account
         System.out.println("Delete Account Action");
         DatabaseEntryDao deleteDao = new DatabaseEntryDao();
         deleteDao.deleteAccount();
+        logoutButton.fire();
     }
 
     public void startOpenSelectedItemsToView(DatabaseEntry dbentry) throws IOException {

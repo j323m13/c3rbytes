@@ -19,12 +19,12 @@ public class DBConnection {
     public boolean newBootPasswordEnabled = false;
     private static int encryptionKeyLength = 256;
     private static String encryptionAlgorithm = "AES/CBC/NoPadding";
-    public static String databaseName = "cerbytes";
+    public static String databaseName = "db/cerbytes";
     private static Boolean databaseEncryption = true;
     private static boolean createDB = true;
     //public static String JDBC_URL = "jdbc:derby:cerbytesdb;create=true;username=cerbytes;password=tH94mLBaKr;"+
     //       "dataEncryption=true;encryptionKeyLength=192;encryptionAlgorithm=AES/CBC/NoPadding";
-    public static String JDBC_URL="jdbc:derby:";
+    public static String JDBC_URL;
     public static Connection connection = null;
     private boolean connectionOpen;
     private boolean connectionClose;
@@ -168,20 +168,20 @@ public class DBConnection {
             System.out.println("PasswordDB has not been set. "+e);
         }
         cs.close();
-        System.out.println("JDBC_URL = "+JDBC_URL);
+        System.out.println("JDBC_URL = "+createURLSimple());
         dbDisconnect();
 
-        System.out.println("Connect -> " + JDBC_URL + ";password=" + DBConnection.passwordDB + "");
-        dbConnect(JDBC_URL + ";password=" + DBConnection.passwordDB +"" );
+        System.out.println("Connect -> " + createURLSimple() + ";password=" + DBConnection.passwordDB + "");
+        dbConnect(createURL() + ";password=" + DBConnection.passwordDB +"" );
         System.out.println("success with password");
 
         dbDisconnect();
-        System.out.println("disconnection successful");
+
     }
 
     public static void resetUserPwd(String reset, String newUserDBPassword) {
         try {
-            connection = DriverManager.getConnection(createURL());
+            dbConnect(createURL());
             System.out.println("Connect success -> " + createURL());
             CallableStatement cs = connection.prepareCall(reset);
             cs.setString(1, DBConnection.userDB);
@@ -217,7 +217,43 @@ public class DBConnection {
     }
 
 
-    public static void setupDatabase() throws SQLException, ClassNotFoundException {
+
+    public static String createURL() {
+        JDBC_URL = "jdbc:derby:" + databaseName + ";create="+createDB+";user=" + userDB + ";password=" + passwordDB + ";dataEncryption=" + databaseEncryption + "" +
+                ";encryptionKeyLength=" + encryptionKeyLength + ";encryptionAlgorithm=" + encryptionAlgorithm + ";bootPassword=" + bootPassword + "";
+        System.out.println("createURL() -> " + JDBC_URL);
+        return JDBC_URL;
+    }
+
+
+    public static String createURLSimple() {
+        JDBC_URL = "jdbc:derby:" + databaseName + ";create=true;user="+userDB+";password="+passwordDB+"";
+        System.out.println("createURLSimple() -> " + JDBC_URL);
+        return JDBC_URL;
+    }
+
+    public static void getConnectionInstance() throws SQLException {
+        if (connection != null && !connection.isClosed()) {
+            System.out.println("connection is open");
+        }else {
+            System.out.println("connection is closed");
+        }
+    }
+
+
+    public static void shutdownDB() throws SQLException {
+        try{
+            getConnectionInstance();
+           DriverManager.getConnection(createURL()+";shutdown=true");
+            getConnectionInstance();
+        }catch (SQLException e){
+            System.out.println("db shutdown: "+e);
+        }
+    }
+}
+
+/*
+public static void setupDatabase() throws SQLException, ClassNotFoundException {
         //encrypt Database with bootPassword
         connection = DriverManager.getConnection(createURLSimple() + ";password=" + passwordDB + "");
         //set schema
@@ -267,37 +303,4 @@ public class DBConnection {
 
         }
     }
-
-
-    public static String createURL() {
-        JDBC_URL = "jdbc:derby:" + databaseName + ";create="+createDB+";user=" + userDB + ";password=" + passwordDB + ";dataEncryption=" + databaseEncryption + "" +
-                ";encryptionKeyLength=" + encryptionKeyLength + ";encryptionAlgorithm=" + encryptionAlgorithm + ";bootPassword=" + bootPassword + "";
-        System.out.println("createURL() -> " + JDBC_URL);
-        return JDBC_URL;
-    }
-
-
-    public static String createURLSimple() {
-        JDBC_URL = "jdbc:derby:" + databaseName + ";create=true;user="+userDB;
-        System.out.println("createURLSimple() -> " + JDBC_URL);
-        return JDBC_URL;
-    }
-
-    public static void getConnectionInstance() throws SQLException {
-        if (connection != null && !connection.isClosed()) {
-            System.out.println("connection is open");
-        }else {
-            System.out.println("connection is closed");
-        }
-    }
-
-
-    public static void shutdownDB() throws SQLException {
-        try{
-            getConnectionInstance();
-            Connection shutdown = DriverManager.getConnection(createURL()+";shutdown=true");
-        }catch (SQLException e){
-            System.out.println("db shutdown: "+e);
-        }
-    }
-}
+ */

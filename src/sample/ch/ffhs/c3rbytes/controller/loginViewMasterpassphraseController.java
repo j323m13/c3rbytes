@@ -24,6 +24,7 @@ public class loginViewMasterpassphraseController implements IController {
     @FXML private javafx.scene.control.Button loginButtonMPP;
     @FXML private javafx.scene.control.Button logoutButtonMPP;
     @FXML private javafx.scene.control.Label wrongLogin;
+    @FXML private javafx.scene.control.Label information;
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
     private final String filename = ".c3r.c3r";
     public static String passwordDecrypterPassword;
@@ -50,6 +51,9 @@ public class loginViewMasterpassphraseController implements IController {
             System.out.println("Access granted");
 
             // start mainView()
+
+            information.setVisible(true);
+            information.setText("We are getting the system ready for. one moment.");
             startMainView();
 
             // close stage
