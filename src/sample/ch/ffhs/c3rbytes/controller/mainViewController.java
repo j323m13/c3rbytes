@@ -1,6 +1,5 @@
 package sample.ch.ffhs.c3rbytes.controller;
 
-import com.sun.javafx.menu.MenuItemBase;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
