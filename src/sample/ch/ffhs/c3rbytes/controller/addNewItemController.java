@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -26,9 +27,9 @@ import java.sql.SQLException;
 public class addNewItemController {
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
     @FXML public PasswordField passwordField;
+    @FXML private Label viewCreationDateLabel;
     private boolean isHidingPassword = true;
     @FXML public TextField userNameField;
-    @FXML private Label viewLastUpdateLabelText;
     @FXML private TextField notesField;
     @FXML private javafx.scene.control.Label viewLastUpdateLabel;
     @FXML private javafx.scene.control.Button saveButton;
@@ -115,7 +116,7 @@ public class addNewItemController {
             //set option index from the option which was saved last time. return an index(int)
             typeField.setValue(options.get(options.indexOf(dbentry.getDescription())));
             notesField.setText(dbentry.getNote());
-            viewLastUpdateLabelText.setText("created on: "+dbentry.getCreationDate());
+            viewCreationDateLabel.setText("created on: "+dbentry.getCreationDate());
             viewLastUpdateLabel.setText("Last update: "+dbentry.getLastUpdate().toString());
         }catch (Exception e){
             System.out.println("a field is null.");

@@ -33,7 +33,8 @@
                 <Button fx:id="passwordCopyButton" layoutX="466.0" layoutY="90.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="28.0" text="📋" />
                 <Button fx:id="saveButton" layoutX="351.0" layoutY="286.0" mnemonicParsing="false" onAction="#onSaveButton" prefHeight="25.0" prefWidth="56.0" text="Save" />
                 <Button fx:id="discardButton" layoutX="437.0" layoutY="286.0" mnemonicParsing="false" onAction="#onDiscardButton" text="Discard" />
-                <Label fx:id="viewLastUpdateLabel" layoutX="116.0" layoutY="313.0" prefHeight="17.0" prefWidth="123.0" />
+                <Label fx:id="viewCreationDateLabel" layoutX="57.0" layoutY="313.0" prefHeight="17.0" prefWidth="250.0" />
+                <Label fx:id="viewLastUpdateLabel" layoutX="57.0" layoutY="340.0" prefHeight="17.0" prefWidth="250.0" />
                 <TextField fx:id="showPasswordTextField" layoutX="160.0" layoutY="90.0" prefHeight="25.0" prefWidth="220.0" visible="false" />
             </children>
         </AnchorPane>
