@@ -61,7 +61,7 @@ public class mainViewController implements Initializable {
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
     @FXML
     private Button deleteAccountButton;
-    @FXML private javafx.scene.control.Button changeMasterButton;
+    @FXML private javafx.scene.control.Button changeMasterPPButton;
 
     DatabaseEntryDao mainViewDao = new DatabaseEntryDao();
 
@@ -106,9 +106,11 @@ public class mainViewController implements Initializable {
         ContextMenu contextMenu = new ContextMenu();
         MenuItem addItemOption = new MenuItem("Add item");
         MenuItem modifyItemOption = new MenuItem("Modify item");
-        MenuItem copyUrlOption = new MenuItem("Copy url");
+        MenuItem openURLOption = new MenuItem("Open url");
+        MenuItem copyURLOption = new MenuItem("Copy url");
         MenuItem copyPasswordOption = new MenuItem("copy password");
         MenuItem deleteItemOption = new MenuItem("Delete item");
+
 
         addItemOption.setOnAction((actionEvent -> {
             addButton.fire();
@@ -122,10 +124,18 @@ public class mainViewController implements Initializable {
             }
         });
 
-        copyUrlOption.setOnAction((event) -> {
+        openURLOption.setOnAction((event) -> {
             //copyClickedEntry();
             String url = profileTable.getSelectionModel().getSelectedItem().getUrl();
             openUrl(url);
+        });
+
+        copyURLOption.setOnAction((event) -> {
+            //copyClickedEntry();
+            String url = profileTable.getSelectionModel().getSelectedItem().getUrl();
+            // send plain text password to clipboard
+            ClipboardHandler clipboardHandler = new ClipboardHandler();
+            clipboardHandler.copyPasswordToClipboard(url);
         });
 
         copyPasswordOption.setOnAction((event) -> {
@@ -145,7 +155,7 @@ public class mainViewController implements Initializable {
         });
 
 
-        contextMenu.getItems().addAll(addItemOption, modifyItemOption, copyUrlOption, copyPasswordOption, deleteItemOption);
+        contextMenu.getItems().addAll(addItemOption, modifyItemOption,openURLOption, copyURLOption, copyPasswordOption, deleteItemOption);
         profileTable.setContextMenu(contextMenu);
 
 
@@ -365,7 +375,7 @@ public class mainViewController implements Initializable {
     }
 
 
-    @FXML private javafx.scene.control.Button changeMasterPPButton;
+
     public void changeMasterPPAction(ActionEvent actionEvent){
 
         //TODO: here we have to open login_view_masterpassphrase.fxml and aks for the passphrase or something similar
