@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.PasswordField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
@@ -22,8 +23,10 @@ public class loginViewController implements IController{
     @FXML private javafx.scene.control.Button loginButton;
     @FXML private javafx.scene.control.Button logoutButton;
     @FXML private javafx.scene.control.Label wrongLoginLabel;
+    @FXML private javafx.scene.control.TextField loginViewPasswordTextField;
     private final String HASHALGORITHM = "SHA3-512";
     private int loginCounter = 0;
+    private boolean isHidingPassword = true;
     FXMLLoader loader = null;
 
     public void loginAction(javafx.event.ActionEvent actionEvent) throws IOException, SQLException, ClassNotFoundException {
@@ -126,6 +129,22 @@ public class loginViewController implements IController{
             System.out.println("Enter");
             ActionEvent ae = new ActionEvent(keyEvent.getSource(), keyEvent.getTarget());
             loginAction(ae);
+        }
+    }
+
+    public void showPassword(ActionEvent actionEvent) {
+        if (isHidingPassword) {
+            String password = loginViewPasswordField.getText();
+            loginViewPasswordTextField.setText(password);
+            loginViewPasswordField.setVisible(false);
+            loginViewPasswordTextField.setVisible(true);
+            isHidingPassword = false;
+        } else{
+            String password = loginViewPasswordTextField.getText();
+            loginViewPasswordField.setText(password);
+            loginViewPasswordTextField.setVisible(false);
+            loginViewPasswordField.setVisible(true);
+            isHidingPassword = true;
         }
     }
 
