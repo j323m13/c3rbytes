@@ -333,7 +333,8 @@ public class mainViewController implements Initializable {
     public void deleteAccountAction(ActionEvent actionEvent) throws SQLException, ClassNotFoundException, IOException {
         //TODO: Define deleting account
         System.out.println("Delete Account Action");
-        String alertText = "Are you sure you want to delete your account? There is no way back to that.";
+        String alertText = "Are you sure you want to delete your account? \n" +
+                "There is no way back to that.";
         Optional<ButtonType> confirm = startAlert(alertText, Alert.AlertType.CONFIRMATION, "Confirmation");
         if(confirm.get() == ButtonType.OK){
             DatabaseEntryDao deleteDao = new DatabaseEntryDao();
@@ -431,7 +432,7 @@ public class mainViewController implements Initializable {
 
     private Optional<ButtonType> startAlert(String alertText, Alert.AlertType TYPE, String confirmation) throws IOException {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("../gui/alertView.fxml"));
+        loader.setLocation(getClass().getResource("../gui/alert_view.fxml"));
         Parent alertViewParent = loader.load();
         alertViewController controller = loader.getController();
         Optional<ButtonType> resultConfirm = controller.startAlertWindows(alertText, TYPE, confirmation);
