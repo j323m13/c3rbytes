@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 public class loginViewMasterpassphraseController implements IController {
     @FXML private javafx.scene.control.PasswordField masterPassPhraseField;
+    @FXML private javafx.scene.control.TextField loginMPPTextField;
     @FXML private javafx.scene.control.Button loginButtonMPP;
     @FXML private javafx.scene.control.Button logoutButtonMPP;
     @FXML private javafx.scene.control.Label wrongLogin;
@@ -31,6 +32,7 @@ public class loginViewMasterpassphraseController implements IController {
     private int loginCounter = 0;
     private ArrayList<String> holder = new ArrayList<>();
     FXMLLoader loader = null;
+    private boolean isHidingPassword = true;
     DatabaseEntryDao mainViewDao = new DatabaseEntryDao();
 
     public void loginActionMPP() throws Exception {
@@ -119,6 +121,23 @@ public class loginViewMasterpassphraseController implements IController {
 
 
 
+    }
+
+
+    public void showPassword(ActionEvent actionEvent) {
+        if (isHidingPassword) {
+            String password = masterPassPhraseField.getText();
+            loginMPPTextField.setText(password);
+            masterPassPhraseField.setVisible(false);
+            loginMPPTextField.setVisible(true);
+            isHidingPassword = false;
+        } else{
+            String password = loginMPPTextField.getText();
+            masterPassPhraseField.setText(password);
+            loginMPPTextField.setVisible(false);
+            masterPassPhraseField.setVisible(true);
+            isHidingPassword = true;
+        }
     }
 
 
