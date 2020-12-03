@@ -85,6 +85,8 @@ public class addNewItemController {
             showPasswordTextField.setVisible(true);
             isHidingPassword = false;
         } else{
+            String password = showPasswordTextField.getText();
+            passwordField.setText(password);
             showPasswordTextField.setVisible(false);
             passwordField.setVisible(true);
             isHidingPassword = true;
