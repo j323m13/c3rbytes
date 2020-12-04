@@ -24,7 +24,7 @@ gradlew.bat
 bin/
 gen/
 out/
-db/
+db/*
 testDB/
 
 # Gradle files

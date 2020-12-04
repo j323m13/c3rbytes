@@ -104,10 +104,20 @@ public class DatabaseEntryDao implements Dao{
         System.out.print("account will be deleted");
         String deleteAccountStmt = "DELETE FROM \"CERBYTES\".\"database_entries\"";
         try {
+            //delete db file
             dbExecuteUpdate(deleteAccountStmt,createURLSimple());
-            Path path = Paths.get(databaseName);
-            File file = new File(path.toAbsolutePath().toString());
-            deleteDatabaseFolder(file);
+            Path dbFile = Paths.get(databaseName);
+            File db = new File(dbFile.toAbsolutePath().toString());
+            deleteDatabaseFolder(db);
+            //delete db log file
+            Path logFile = Paths.get("derby.log");
+            File log = new File(logFile.toAbsolutePath().toString());
+            log.delete();
+            //delete c3r.c3r file
+            dbExecuteUpdate(deleteAccountStmt,createURLSimple());
+            Path c3rFile = Paths.get(".c3r.c3r");
+            File c3r = new File(c3rFile.toAbsolutePath().toString());
+            c3r.delete();
         }catch (SQLException | ClassNotFoundException | InterruptedException e) {
             System.out.print("Error occurred while DELETE Operation: " + e);
 
@@ -116,7 +126,7 @@ public class DatabaseEntryDao implements Dao{
         return null;
     }
 
-    public void deleteDatabaseFolder(File file){
+    private void deleteDatabaseFolder(File file){
             for (File subFile : file.listFiles()) {
                 if(subFile.isDirectory()) {
                     deleteDatabaseFolder(subFile);
@@ -126,6 +136,7 @@ public class DatabaseEntryDao implements Dao{
             }
             file.delete();
     }
+
 
     /*
     * call the dbConnect methode from DBConnenction.java
