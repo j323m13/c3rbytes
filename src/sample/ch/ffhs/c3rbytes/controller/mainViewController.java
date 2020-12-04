@@ -267,6 +267,8 @@ public class mainViewController implements Initializable, IController {
      */
 
     public void searchAction(ActionEvent event) throws SQLException, ClassNotFoundException, IOException {
+        Scene scene = searchButton.getScene();
+        scene.setCursor(Cursor.WAIT);
         String searchElement = searchField.getText();
         DatabaseEntryDao searchDao = new DatabaseEntryDao();
         databaseEntries.clear();
@@ -281,8 +283,8 @@ public class mainViewController implements Initializable, IController {
         }
 
         System.out.println("Search Action");
-        Scene scene = searchButton.getScene();
-        scene.setCursor(Cursor.WAIT);
+        scene.setCursor(Cursor.DEFAULT);
+
 
     }
 
