@@ -16,7 +16,7 @@ import java.util.Scanner;
 import static org.junit.jupiter.api.Assertions.*;
 import static sample.ch.ffhs.c3rbytes.connection.DBConnection.*;
 
-class BruteForceBootPassword {
+class BruteForceBootPasswordTest {
     String passwordDB = "123456789";
     String bootPassword = "IamSuperman";
     String databaseName = "testDB/bruteForcedDB";

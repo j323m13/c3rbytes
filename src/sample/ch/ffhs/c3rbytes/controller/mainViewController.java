@@ -257,6 +257,7 @@ public class mainViewController implements Initializable, IController {
         System.out.println("Logout Action");
         //TODO: Add necessary methods to clear/reencrypt/delete before closing the app.
         Stage stage = (Stage) logoutButton.getScene().getWindow();
+        mainViewDao.shutdown();
         stage.close();
         System.exit(0);
     }

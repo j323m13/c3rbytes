@@ -24,7 +24,13 @@ public class DatabaseEntryDao implements Dao{
     public static ObservableList<DatabaseEntry> getAll() throws SQLException, ClassNotFoundException, InterruptedException {
         String getAll = "SELECT * FROM \"CERBYTES\".\"database_entries\"";
         ObservableList<DatabaseEntry> databaseEntries = FXCollections.observableArrayList();
-        dbExecuteQuery(getAll,databaseEntries,createURLSimple());
+        try{
+            dbExecuteQuery(getAll,databaseEntries,createURLSimple());
+        }catch (SQLException ex){
+            if(ex.getSQLState().equals("X0Y32")){
+                System.out.println("Table is empty");
+            }
+        }
         return databaseEntries;
     }
 
@@ -175,15 +181,8 @@ public class DatabaseEntryDao implements Dao{
         resetUserPwd(setupPasswordString, newPasswordDB);
     }
 
-    public void changeBootPassword(String newBootPassword, String newPasswordDB) {
-        try {
-            //the only way to make it work
-            //TODO test with createURLSimple()
-            DriverManager.getConnection(createURL()+";shutdown=true");
-        } catch (SQLException e) {
-            if(e.getSQLState().equals("08006")){
-                System.out.println("Database "+databaseName+" has shutdown successfully.");
-            }
+    public void changeBootPassword(String newBootPassword, String newPasswordDB) throws SQLException {
+        shutdownDB();
             try {
                 System.out.println("sleeping 1");
                 TimeUnit.SECONDS.sleep(1);
@@ -199,7 +198,7 @@ public class DatabaseEntryDao implements Dao{
                 interruptedException.printStackTrace();
             }
         }
-    }
+
 
 
     public void setupTable() throws SQLException, ClassNotFoundException, InterruptedException {

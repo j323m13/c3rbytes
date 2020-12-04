@@ -54,7 +54,6 @@ public class DBConnection {
     }
 
 
-
     /*
      * this methode holds all the entries from the database and return them to an ObservableList. For insertion, use dbExecuteUpdate()
      * @param getAll (String)
@@ -88,10 +87,10 @@ public class DBConnection {
                         rs.getString(7) + ", " + rs.getString(8)
                 );
             }
-            if(rs != null){
+            if (rs != null) {
                 rs.close();
             }
-            if(ps != null){
+            if (ps != null) {
                 ps.close();
             }
 
@@ -113,8 +112,10 @@ public class DBConnection {
         try {
             stmt = connection.createStatement();
             stmt.executeUpdate(sqlStmt);
-        } catch (SQLException e) {
-            System.out.println("Problem occurred at executeUpdate operation : " + e);
+        } catch (SQLException ex){
+            if(ex.getSQLState().equals("X0Y32")){
+                System.out.println("Table is empty");
+            }
             return false;
 
         } finally {
@@ -131,10 +132,10 @@ public class DBConnection {
 
 
     /*
-    * Set a password value to the userDB for security and queries.
-    * @param url to connect to the database
-    * @param passwordDB: the password to be set
-    * @param setupPasswordString: a sql statement to be executed.
+     * Set a password value to the userDB for security and queries.
+     * @param url to connect to the database
+     * @param passwordDB: the password to be set
+     * @param setupPasswordString: a sql statement to be executed.
      */
     public static void setupUserDBWithPasswordConnection(String JDBC_URL, String passwordDB, String setupPasswordString) throws SQLException {
 
@@ -146,21 +147,21 @@ public class DBConnection {
         System.out.println("DBConnection.password: " + DBConnection.passwordDB);
 
         CallableStatement cs = connection.prepareCall(setupPasswordString);
-        try{
+        try {
             cs.setString(1, DBConnection.userDB);
             cs.setString(2, passwordDB);
             cs.execute();
-            System.out.println("Success: passwordDB has been set. "+userDB+";"+DBConnection.passwordDB);
+            System.out.println("Success: passwordDB has been set. " + userDB + ";" + DBConnection.passwordDB);
             DBConnection.passwordDB = passwordDB;
-        }catch (SQLException e){
-            System.out.println("PasswordDB has not been set. "+e);
+        } catch (SQLException e) {
+            System.out.println("PasswordDB has not been set. " + e);
         }
         cs.close();
-        System.out.println("JDBC_URL = "+createURLSimple());
+        System.out.println("JDBC_URL = " + createURLSimple());
         dbDisconnect();
 
         System.out.println("Connect -> " + createURLSimple() + ";password=" + DBConnection.passwordDB + "");
-        dbConnect(createURL() + ";password=" + DBConnection.passwordDB +"" );
+        dbConnect(createURL() + ";password=" + DBConnection.passwordDB + "");
         System.out.println("success with password");
 
         dbDisconnect();
@@ -177,7 +178,7 @@ public class DBConnection {
             cs.execute();
             cs.close();
             DBConnection.passwordDB = newUserDBPassword;
-            System.out.println("new password: "+passwordDB);
+            System.out.println("new password: " + passwordDB);
             System.out.println(createURLSimple());
         } catch (SQLException e) {
             System.out.println(e);
@@ -186,7 +187,7 @@ public class DBConnection {
 
 
     public static String createURL() {
-        JDBC_URL = "jdbc:derby:" + databaseName + ";create="+createDB+";user=" + userDB + ";password=" + passwordDB + ";dataEncryption=" + databaseEncryption + "" +
+        JDBC_URL = "jdbc:derby:" + databaseName + ";create=" + createDB + ";user=" + userDB + ";password=" + passwordDB + ";dataEncryption=" + databaseEncryption + "" +
                 ";encryptionKeyLength=" + encryptionKeyLength + ";encryptionAlgorithm=" + encryptionAlgorithm + ";bootPassword=" + bootPassword + "";
         System.out.println("createURL() -> " + JDBC_URL);
         return JDBC_URL;
@@ -194,7 +195,7 @@ public class DBConnection {
 
 
     public static String createURLSimple() {
-        JDBC_URL = "jdbc:derby:" + databaseName + ";create=true;user="+userDB+";password="+passwordDB+"";
+        JDBC_URL = "jdbc:derby:" + databaseName + ";create=true;user=" + userDB + ";password=" + passwordDB + "";
         System.out.println("createURLSimple() -> " + JDBC_URL);
         return JDBC_URL;
     }
@@ -202,19 +203,21 @@ public class DBConnection {
     public static void getConnectionInstance() throws SQLException {
         if (connection != null && !connection.isClosed()) {
             System.out.println("connection is open");
-        }else {
+        } else {
             System.out.println("connection is closed");
         }
     }
 
 
     public static void shutdownDB() throws SQLException {
-        try{
+        try {
             getConnectionInstance();
-           DriverManager.getConnection(createURL()+";shutdown=true");
+            connection = DriverManager.getConnection(createURLSimple() + ";shutdown=true");
             getConnectionInstance();
-        }catch (SQLException e){
-            System.out.println("db shutdown: "+e);
+        } catch (SQLException e) {
+            if (e.getSQLState().equals("08006")) {
+                System.out.println("DB " + databaseName + "has shutdown");
+            }
         }
     }
 }
