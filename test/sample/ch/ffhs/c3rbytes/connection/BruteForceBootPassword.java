@@ -18,7 +18,7 @@ import static sample.ch.ffhs.c3rbytes.connection.DBConnection.*;
 
 class BruteForceBootPassword {
     String passwordDB = "123456789";
-    String bootPassword = "password123";
+    String bootPassword = "IamSuperman";
     String databaseName = "testDB/bruteForcedDB";
     String HASHALGORITHM = "SHA3-512";
     Connection connectionTest = null;

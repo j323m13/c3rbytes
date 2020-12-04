@@ -48,7 +48,7 @@ public class loginViewController implements IController{
             DBConnection.bootPassword = mpTextField;
             StringHasher stringHasher = new StringHasher();
             String hashedBootPassword = stringHasher.encryptSHA3(HASHALGORITHM,DBConnection.bootPassword);
-            String hashedPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM,hashedBootPassword).substring(0,32);
+            String hashedPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM,hashedBootPassword).substring(32,64);
 
             //String hashedPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM,DBConnection.bootPassword);
             DBConnection.bootPassword = hashedBootPassword;

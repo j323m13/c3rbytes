@@ -62,7 +62,7 @@ public class changePasswordController implements IController {
                 StringHasher stringHasher = new StringHasher();
                 String hashedOldMasterpassword = stringHasher.encryptSHA3(HASHALGORITHM, oldMasterpassword);
                 String hashedNewMasterpassword = stringHasher.encryptSHA3(HASHALGORITHM, newMasterpassword);
-                String hashedNewPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM, hashedNewMasterpassword).substring(0,32);
+                String hashedNewPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM, hashedNewMasterpassword).substring(32,64);
                 DatabaseEntryDao setup = new DatabaseEntryDao();
                 setup.changeBootPassword(hashedNewMasterpassword,hashedNewPasswordDB);
 
