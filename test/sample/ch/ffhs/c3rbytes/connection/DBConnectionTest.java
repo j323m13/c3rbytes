@@ -2,16 +2,13 @@ package sample.ch.ffhs.c3rbytes.connection;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 import sample.ch.ffhs.c3rbytes.DatabaseEntry.DatabaseEntry;
-import sample.ch.ffhs.c3rbytes.controller.mainViewController;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -241,7 +238,32 @@ class DBConnectionTest {
         }catch (SQLException exception){
             assertNotEquals(exception.getSQLState(),"Username not found in SYS.SYSUSERS");
         }
+        Path dbFile = Paths.get("testDB/");
+        File db = new File(dbFile.toAbsolutePath().toString());
+        deleteDatabaseFolderTest(db);
+
 
     }
+
+
+    @AfterAll
+    static void clean(){
+        Path dbFile = Paths.get("testDB/");
+        File db = new File(dbFile.toAbsolutePath().toString());
+        deleteDatabaseFolderTest(db);
+    }
+
+
+private static void deleteDatabaseFolderTest(File file){
+
+        for (File subFile : file.listFiles()) {
+        if(subFile.isDirectory()) {
+        deleteDatabaseFolderTest(subFile);
+        } else {
+        subFile.delete();
+        }
+        }
+        file.delete();
+        }
 
 }

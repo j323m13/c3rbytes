@@ -28,7 +28,7 @@ public class setMasterPWViewController implements IController {
         String HASHALGORITHM = "SHA3-512";
         String hashedBootPassword = sha.encryptSHA3(HASHALGORITHM, plainBootPassword);
         String hashedPasswordDB = sha.encryptSHA3(HASHALGORITHM,hashedBootPassword).substring(0,32);
-        //DBConnection.bootPassword = hashedDBPassword;
+
 
         try {
 

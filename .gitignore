@@ -41,3 +41,7 @@ proguard/
 # Log Files
 *.log
 cerbytesdb/log/
+
+#crypto file
+.c3r.c3r
+c3r.c3r
