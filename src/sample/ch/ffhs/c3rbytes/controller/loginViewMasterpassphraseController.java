@@ -90,12 +90,16 @@ public class loginViewMasterpassphraseController implements IController {
         return holder;
     }
 
-    public void startMainView() throws IOException, SQLException, ClassNotFoundException, InterruptedException {
-        FXMLLoader loader = new FXMLLoader(loginViewMasterpassphraseController.class.getResource("../gui/main_view_2.fxml"));
+    public void startMainView() throws IOException{
+        Stage stage = new Stage();
+        mainViewController mainViewController = new mainViewController();
+        mainViewController.getView(stage);
+
+        /*FXMLLoader loader = new FXMLLoader(loginViewMasterpassphraseController.class.getResource("../gui/main_view_2.fxml"));
         Parent root = loader.load();
         Stage stage = new Stage();
         stage.setTitle("C3rBytes Main");
-        stage.setScene(new Scene(root, 1200, 600));
+        stage.setScene(new Scene(root, 1200, 600));*/
         stage.show();
     }
 
@@ -131,7 +135,7 @@ public class loginViewMasterpassphraseController implements IController {
     }
 
 
-    public void getView(javafx.event.ActionEvent actionEvent) throws IOException {
+    /*public void getView(javafx.event.ActionEvent actionEvent) throws IOException {
         loader = new FXMLLoader(getClass().getResource("../gui/login_view_masterpassphrase.fxml"));
         Parent parent = loader.load();
         Scene loginView = new Scene(parent);
@@ -141,17 +145,22 @@ public class loginViewMasterpassphraseController implements IController {
         window.setScene(loginView);
         window.show();
 
-    }
+    }*/
 
     @Override
     public void getView(Stage stage) throws IOException {
-
+        loader = new FXMLLoader(getClass().getResource("../gui/login_view_masterpassphrase.fxml"));
+        Parent loginViewMPP = loader.load();
+        //stage stage = new Stage();
+        stage.setTitle("C3rBytes Login Master Passphrase");
+        stage.setScene(new Scene(loginViewMPP, 552, 371));
     }
 
     @Override
     public Object getController() throws IOException {
         return loader.getController();
     }
+
 
     public void manageKeyInput(KeyEvent keyEvent) throws Exception {
         System.out.println("Key released");

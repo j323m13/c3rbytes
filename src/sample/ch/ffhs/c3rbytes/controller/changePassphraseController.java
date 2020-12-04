@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.FileEncrypterDecrypter;
+import sample.ch.ffhs.c3rbytes.utils.PasswordRevealer;
 
 import javax.crypto.AEADBadTagException;
 import java.io.IOException;
@@ -18,18 +19,26 @@ public class changePassphraseController implements IController{
     public static final String FILENAME = ".c3r.c3r";
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
 
-    @FXML javafx.scene.control.TextField oldMasterPassphraseField;
-    @FXML javafx.scene.control.TextField newPassphraseField;
-    @FXML javafx.scene.control.TextField newPassphraseConfirmField;
+    @FXML javafx.scene.control.TextField oldMasterPassphraseText;
+    @FXML javafx.scene.control.TextField newPassphraseText;
+    @FXML javafx.scene.control.TextField newPassphraseConfirmText;
+    @FXML javafx.scene.control.PasswordField oldMasterPassphraseField;
+    @FXML javafx.scene.control.PasswordField newPassphraseField;
+    @FXML javafx.scene.control.PasswordField newPassphraseConfirmField;
     @FXML javafx.scene.control.Label oldPassphraseErrorLabel;
     @FXML javafx.scene.control.Label passphraseMatchErrorLabel;
-
     @FXML javafx.scene.control.Button savePassPhraseButton;
+    private boolean isHidingOld = true;
+    private boolean isHidingNew = true;
+    private boolean isHidingConfirm = true;
+    FXMLLoader loader = null;
+
+
     public void changePassphraseAction(ActionEvent actionEvent) {
         //String oldPassPhrase = "password123";
-        String oldMasterpassphrase = oldMasterPassphraseField.getText();
-        String newMasterpassphrase = newPassphraseField.getText();
-        String newMasterpassphraseConfirmed = newPassphraseConfirmField.getText();
+        String oldMasterpassphrase = oldMasterPassphraseText.getText();
+        String newMasterpassphrase = newPassphraseText.getText();
+        String newMasterpassphraseConfirmed = newPassphraseConfirmText.getText();
         boolean isFilledOut = true;
 
         oldPassphraseErrorLabel.setText("");
@@ -89,11 +98,29 @@ public class changePassphraseController implements IController{
 
     @Override
     public void getView(Stage stage) throws IOException {
-
+        loader = new FXMLLoader(getClass().getResource("../gui/change_passphrase_view.fxml"));
+        Parent changePassPhrase = loader.load();
+        stage.setTitle("Change Passphrase");
+        stage.setScene(new Scene(changePassPhrase, 493, 313));
     }
 
     @Override
     public Object getController() throws IOException {
-        return null;
+        return loader.getController();
+    }
+
+    public void showPasswordOld(ActionEvent actionEvent) {
+        new PasswordRevealer().passwordReveal(oldMasterPassphraseField, oldMasterPassphraseText, isHidingOld);
+        isHidingOld =! isHidingOld;
+    }
+
+    public void showPasswordNew(ActionEvent actionEvent) {
+        new PasswordRevealer().passwordReveal(newPassphraseField, newPassphraseText, isHidingNew);
+        isHidingNew =! isHidingNew;
+    }
+
+    public void showPasswordConfirm(ActionEvent actionEvent) {
+        new PasswordRevealer().passwordReveal(newPassphraseConfirmField, newPassphraseConfirmText, isHidingConfirm);
+        isHidingConfirm =! isHidingConfirm;
     }
 }

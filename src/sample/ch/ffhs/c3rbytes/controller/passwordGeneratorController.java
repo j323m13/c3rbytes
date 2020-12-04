@@ -2,6 +2,9 @@ package sample.ch.ffhs.c3rbytes.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -22,6 +25,7 @@ public class passwordGeneratorController implements IController {
     int useSymbols;
     int minDigits = 0;
     int minSymbols = 0;
+    FXMLLoader loader = null;
 
     @FXML private CheckBox digitCheck;
     public void onDigitsAction(ActionEvent actionEvent) {
@@ -164,12 +168,22 @@ public class passwordGeneratorController implements IController {
 
     @Override
     public void getView(Stage stage) throws IOException {
-
+        loader = new FXMLLoader(getClass().getResource("../gui/password_generator_view.fxml"));
+        Parent passwordGenerator = loader.load();
+        //stage stage = new Stage();
+        stage.setTitle("Password Generator");
+        stage.setScene(new Scene(passwordGenerator, 552, 420));
     }
 
     @Override
     public Object getController() throws IOException {
-        return null;
+        return loader.getController();
+    }
+
+
+
+    public void lengthSliderMouseRelease(MouseEvent mouseEvent) {
+        lengthTextField.setText(Integer.toString(lengthSlider.valueProperty().intValue()));
     }
 }
 

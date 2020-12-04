@@ -65,11 +65,14 @@ public class loginViewController implements IController{
 
         //debugging for the url
 
+            Stage stage = new Stage();
+            loginViewMasterpassphraseController loginPassphrase = new loginViewMasterpassphraseController();
+            loginPassphrase.getView(stage);
+            stage.show();
 
 
-
-            loginViewMasterpassphraseController loginViewMasterpassphraseController = new loginViewMasterpassphraseController();
-            loginViewMasterpassphraseController.getLoginViewMasterpassphrase(actionEvent);
+            /*loginViewMasterpassphraseController loginViewMasterpassphraseController = new loginViewMasterpassphraseController();
+            loginViewMasterpassphraseController.getLoginViewMasterpassphrase(actionEvent);*/
 
 
             /*
@@ -100,8 +103,8 @@ public class loginViewController implements IController{
             e.printStackTrace();
         }
 
-        //Stage stage =  (Stage) loginButton.getScene().getWindow();
-        //stage.close();
+        Stage stage =  (Stage) loginButton.getScene().getWindow();
+        stage.close();
 
     }
 

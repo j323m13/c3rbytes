@@ -17,6 +17,7 @@ import sample.ch.ffhs.c3rbytes.crypto.PasswordEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.DatabaseEntry.DatabaseEntry;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.utils.ClipboardHandler;
+import sample.ch.ffhs.c3rbytes.utils.PasswordRevealer;
 
 
 import java.nio.charset.Charset;
@@ -24,7 +25,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 
 
-public class addNewItemController {
+public class addNewItemController implements IController {
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
     @FXML public PasswordField passwordField;
     @FXML private Label viewCreationDateLabel;
@@ -44,7 +45,7 @@ public class addNewItemController {
     private String creation;
     private boolean emptyField;
     @FXML javafx.scene.control.Button discardButton;
-
+    FXMLLoader loader = null;
 
 
     public ObservableList<String> options = FXCollections.observableArrayList(
@@ -57,8 +58,14 @@ public class addNewItemController {
     }
 
     //@FXML private javafx.scene.control.Button generatePasswordButton;
-    public void generatePassword(ActionEvent event){
-        //TODO: for all views: find a better approach to handle stage changes
+    public void generatePassword(ActionEvent event) throws IOException{
+        Stage stage = new Stage();
+
+        passwordGeneratorController passwordGenerator = new passwordGeneratorController();
+        passwordGenerator.getView(stage);
+        stage.show();
+
+        /*//TODO: for all views: find a better approach to handle stage changes
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/password_generator_view.fxml"));
             Parent root = loader.load();
@@ -73,25 +80,13 @@ public class addNewItemController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        createCombox();
+        createCombox();*/
     }
 
     //show or hide passwordField
     public void showPassword(ActionEvent event){
-        if (isHidingPassword) {
-            String password = passwordField.getText();
-            showPasswordTextField.setText(password);
-            passwordField.setVisible(false);
-            showPasswordTextField.setVisible(true);
-            isHidingPassword = false;
-        } else{
-            String password = showPasswordTextField.getText();
-            passwordField.setText(password);
-            showPasswordTextField.setVisible(false);
-            passwordField.setVisible(true);
-            isHidingPassword = true;
-        }
-
+        new PasswordRevealer().passwordReveal(passwordField, showPasswordTextField, isHidingPassword);
+        isHidingPassword =! isHidingPassword;
     }
 
     /*
@@ -263,5 +258,20 @@ public class addNewItemController {
         clipboardHandler.copyPasswordToClipboard(accountPassword);
 
     }
+
+    @Override
+    public void getView(Stage stage) throws IOException {
+        loader = new FXMLLoader(getClass().getResource("../gui/add_new_item_view.fxml"));
+        Parent addNewItemView = loader.load();
+        stage.setTitle("Add new item");
+        stage.setScene(new Scene(addNewItemView, 586, 342));
+    }
+
+    @Override
+    public Object getController() throws IOException {
+        return loader.getController();
+    }
+
+
 }
 

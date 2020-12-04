@@ -2,6 +2,9 @@ package sample.ch.ffhs.c3rbytes.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.StringHasher;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
@@ -23,6 +26,7 @@ public class changePasswordController implements IController {
     private boolean isHidingOld = true;
     private boolean isHidingNew = true;
     private boolean isHidingConfirm = true;
+    FXMLLoader loader = null;
 
     private final String HASHALGORITHM = "SHA3-512";
 
@@ -87,13 +91,17 @@ public class changePasswordController implements IController {
 
     @Override
     public void getView(Stage stage) throws IOException {
-
+        loader = new FXMLLoader(getClass().getResource("../gui/change_password_view.fxml"));
+        Parent addNewItemView = loader.load();
+        stage.setTitle("Change Password");
+        stage.setScene(new Scene(addNewItemView, 497, 313));
     }
 
     @Override
     public Object getController() throws IOException {
-        return null;
+        return loader.getController();
     }
+
 
     public void showPasswordOld(ActionEvent actionEvent) {
         new PasswordRevealer().passwordReveal(oldMasterPasswordField, oldMasterPasswordText, isHidingOld);
