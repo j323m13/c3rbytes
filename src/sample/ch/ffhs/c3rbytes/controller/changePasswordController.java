@@ -5,24 +5,31 @@ import javafx.fxml.FXML;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.StringHasher;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
+import sample.ch.ffhs.c3rbytes.utils.PasswordRevealer;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
 public class changePasswordController implements IController {
 
-    @FXML javafx.scene.control.TextField oldMasterPasswordField;
-    @FXML javafx.scene.control.TextField newPasswordField;
-    @FXML javafx.scene.control.TextField newPasswordConfirmField;
+    @FXML javafx.scene.control.TextField oldMasterPasswordText;
+    @FXML javafx.scene.control.TextField newPasswordText;
+    @FXML javafx.scene.control.TextField newPasswordConfirmText;
     @FXML javafx.scene.control.Label oldPasswordErrorLabel;
     @FXML javafx.scene.control.Label passwordMatchErrorLabel;
+    @FXML javafx.scene.control.PasswordField oldMasterPasswordField;
+    @FXML javafx.scene.control.PasswordField newPasswordField;
+    @FXML javafx.scene.control.PasswordField newPasswordConfirmField;
+    private boolean isHidingOld = true;
+    private boolean isHidingNew = true;
+    private boolean isHidingConfirm = true;
 
     private final String HASHALGORITHM = "SHA3-512";
 
     public void changePasswordAction(ActionEvent actionEvent) throws SQLException {
-        String oldMasterpassword = oldMasterPasswordField.getText();
-        String newMasterpassword = newPasswordField.getText();
-        String newMasterpasswordConfirmed = newPasswordConfirmField.getText();
+        String oldMasterpassword = oldMasterPasswordText.getText();
+        String newMasterpassword = newPasswordText.getText();
+        String newMasterpasswordConfirmed = newPasswordConfirmText.getText();
         boolean isFilledOut = true;
 
         oldPasswordErrorLabel.setText("");
@@ -86,5 +93,20 @@ public class changePasswordController implements IController {
     @Override
     public Object getController() throws IOException {
         return null;
+    }
+
+    public void showPasswordOld(ActionEvent actionEvent) {
+        new PasswordRevealer().passwordReveal(oldMasterPasswordField, oldMasterPasswordText, isHidingOld);
+        isHidingOld =! isHidingOld;
+    }
+
+    public void showPasswordNew(ActionEvent actionEvent) {
+        new PasswordRevealer().passwordReveal(newPasswordField, newPasswordText, isHidingNew);
+        isHidingNew =! isHidingNew;
+    }
+
+    public void showPasswordConfirm(ActionEvent actionEvent) {
+        new PasswordRevealer().passwordReveal(newPasswordConfirmField, newPasswordConfirmText, isHidingConfirm);
+        isHidingConfirm =! isHidingConfirm;
     }
 }
