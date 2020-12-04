@@ -229,7 +229,9 @@ public class DatabaseEntryDao implements Dao{
         dbConnect(createURLSimple()+";bootPassword="+bootPassword+"");
         System.out.println("DB ist encrypted with: "+bootPassword);
          */
+
         dbConnect(createURL());
+
 
     }
 

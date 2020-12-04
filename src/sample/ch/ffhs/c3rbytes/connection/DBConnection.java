@@ -37,7 +37,6 @@ public class DBConnection {
 
         } catch (SQLException e) {
             System.out.println("Connection Failed! Check output console" + e);
-            e.printStackTrace();
             throw e;
         }*/
 
@@ -57,6 +56,7 @@ public class DBConnection {
             }
         } catch (Exception e) {
             throw e;
+
         }
     }
 

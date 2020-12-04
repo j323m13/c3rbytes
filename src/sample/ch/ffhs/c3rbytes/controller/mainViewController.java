@@ -31,6 +31,9 @@ import static java.lang.String.valueOf;
 
 
 public class mainViewController implements Initializable, IController {
+    @FXML private  Button openUrlButton;
+    @FXML private  Button copyButton;
+    @FXML private  Button modifyButton;
     @FXML private TextField searchField;
     @FXML
     private Label foundLabel;
@@ -119,17 +122,12 @@ public class mainViewController implements Initializable, IController {
         }));
 
         modifyItemOption.setOnAction(actionEvent -> {
-            try {
-                startOpenSelectedItemsToView(profileTable.getSelectionModel().getSelectedItem());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            modifyButton.fire();
         });
 
         openURLOption.setOnAction((event) -> {
             //copyClickedEntry();
-            String url = profileTable.getSelectionModel().getSelectedItem().getUrl();
-            openUrl(url);
+            openUrlButton.fire();
         });
 
         copyURLOption.setOnAction((event) -> {
@@ -137,18 +135,18 @@ public class mainViewController implements Initializable, IController {
             String url = profileTable.getSelectionModel().getSelectedItem().getUrl();
             // send plain text password to clipboard
             ClipboardHandler clipboardHandler = new ClipboardHandler();
-            clipboardHandler.copyPasswordToClipboard(url);
+            try {
+                if(url!=null){
+                    clipboardHandler.copyPasswordToClipboard(url);
+                }
+            }catch (Exception e){
+
+            }
+
         });
 
         copyPasswordOption.setOnAction((event) -> {
-            DatabaseEntry entry = profileTable.getSelectionModel().getSelectedItem();
-            System.out.println(entry.getPassword());
-            //copyClickedEntry();
-            try {
-                copyPassword(entry);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            copyButton.fire();
         });
 
         deleteItemOption.setOnAction((event) -> {
@@ -257,6 +255,7 @@ public class mainViewController implements Initializable, IController {
         System.out.println("Logout Action");
         //TODO: Add necessary methods to clear/reencrypt/delete before closing the app.
         Stage stage = (Stage) logoutButton.getScene().getWindow();
+        //shutdown the db before closing. db will be encrypted again.
         mainViewDao.shutdown();
         stage.close();
         System.exit(0);
@@ -290,44 +289,62 @@ public class mainViewController implements Initializable, IController {
     /*
      * copy password in computer memory.
      */
-    private void copyPassword(DatabaseEntry dbEntry) throws Exception {
-        String passwordDecrypterPassword = loginViewMasterpassphraseController.passwordDecrypterPassword;
+    private void copyPassword(DatabaseEntry dbEntry) {
+        try{
+            String passwordDecrypterPassword = loginViewMasterpassphraseController.passwordDecrypterPassword;
 
-        // get password of the selected row
-        String encryptedAccountPassword = dbEntry.getPassword();
+            // get password of the selected row
+            String encryptedAccountPassword = dbEntry.getPassword();
 
-        // decrypt account password
-        PasswordEncrypterDecrypter passwordEncrypterDecrypter = new PasswordEncrypterDecrypter();
-        String decryptedAccountPassword = passwordEncrypterDecrypter.decrypt(encryptedAccountPassword,
-                passwordDecrypterPassword);
+            // decrypt account password
+            PasswordEncrypterDecrypter passwordEncrypterDecrypter = new PasswordEncrypterDecrypter();
+            String decryptedAccountPassword = passwordEncrypterDecrypter.decrypt(encryptedAccountPassword,
+                    passwordDecrypterPassword);
 
-        System.out.println("decryptedAccountPassword: " + decryptedAccountPassword);
+            System.out.println("decryptedAccountPassword: " + decryptedAccountPassword);
 
-        // send plain text password to clipboard
-        ClipboardHandler clipboardHandler = new ClipboardHandler();
-        clipboardHandler.copyPasswordToClipboard(decryptedAccountPassword);
+            // send plain text password to clipboard
+            ClipboardHandler clipboardHandler = new ClipboardHandler();
+            clipboardHandler.copyPasswordToClipboard(decryptedAccountPassword);
+        }catch (Exception ignored){
+
+        }
     }
     public void copyPasswordAction(ActionEvent event) throws Exception {
         //TODO: Copy password -> get password text field content
         System.out.println("Copy Password Action");
-        DatabaseEntry dbEntry = profileTable.getSelectionModel().getSelectedItem();
-        copyPassword(dbEntry);
+        try{
+            DatabaseEntry dbEntry = profileTable.getSelectionModel().getSelectedItem();
+            if(dbEntry != null){
+                copyPassword(dbEntry);
+            }
+        }catch (Exception e){
+            System.out.println("password is null "+e);
+        }
 
     }
 
 
     public void deleteProfileAction(ActionEvent event) throws IOException, SQLException, ClassNotFoundException {
         DatabaseEntryDao deleter = new DatabaseEntryDao();
-        String alertMessage = "The entry will be deleted. \nAre you sure ?";
-        Optional<ButtonType> confirm = startAlert(alertMessage, Alert.AlertType.CONFIRMATION, "Confirmation" );
-        if(confirm.get() == ButtonType.OK){
-            try {
-                deleter.delete(copyClickedEntry());
-                System.out.println("entry has been deleted");
-            } catch (SQLException | ClassNotFoundException e) {
-                System.out.println("delete not working");
-                throw e;
+        Optional<ButtonType> confirm = null;
+        try{
+            if(copyClickedEntry() != null){
+                String alertMessage = "The entry will be deleted. \nAre you sure ?";
+                confirm = startAlert(alertMessage, Alert.AlertType.CONFIRMATION, "Confirmation" );
             }
+            if(confirm.get() == ButtonType.OK) {
+                try {
+                    deleter.delete(copyClickedEntry());
+                    System.out.println("entry has been deleted");
+                } catch (SQLException | ClassNotFoundException e) {
+                    System.out.println("delete not working");
+                }
+            }
+        }catch (Exception e){
+            String alertMessage = "there is no entry in the Tableview. \n" +
+                    "Nothing to delete!";
+            confirm = startAlert(alertMessage, Alert.AlertType.INFORMATION, "Information" );
         }
         reloadMainView();
 
@@ -358,7 +375,8 @@ public class mainViewController implements Initializable, IController {
         Stage stage = new Stage();
         stage.setTitle("View item");
         stage.setScene(new Scene(viewItemControllerParent, 600,400));
-        stage.show();
+        stage.showAndWait();
+        reloadMainView();
     }
 
 
@@ -423,18 +441,23 @@ public class mainViewController implements Initializable, IController {
 
 
     }
-    private void openUrl(String url){
+    private void openUrl(String url) {
         // open the url
-        UrlOpener urlOpener = new UrlOpener();
-        urlOpener.openURL(url);
+            UrlOpener urlOpener = new UrlOpener();
+            urlOpener.openURL(url);
     }
 
     public void onOpenUrl(ActionEvent actionEvent) {
         // first get url form selected row
-        DatabaseEntry dbEntry = profileTable.getSelectionModel().getSelectedItem();
-        String url = dbEntry.getUrl();
-        openUrl(url);
-
+        try{
+            DatabaseEntry dbEntry = profileTable.getSelectionModel().getSelectedItem();
+            String url = dbEntry.getUrl();
+            if(url != null){
+                openUrl(url);
+            }
+        }catch (Exception copy){
+            System.out.println("url is null "+copy);
+        }
 
     }
 
@@ -444,7 +467,12 @@ public class mainViewController implements Initializable, IController {
     }
 
     public void onModifyProfile(ActionEvent actionEvent) throws IOException {
-        startOpenSelectedItemsToView(copyClickedEntry());
+        try {
+            startOpenSelectedItemsToView(copyClickedEntry());
+        }catch (Exception ignored){
+            System.out.println("Entry is null "+ignored);
+
+        }
     }
 
     private Optional<ButtonType> startAlert(String alertText, Alert.AlertType TYPE, String confirmation) throws IOException {
