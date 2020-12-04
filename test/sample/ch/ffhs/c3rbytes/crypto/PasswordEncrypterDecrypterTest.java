@@ -1,4 +1,4 @@
-package sample.ch.ffhs.c3rbytes.test.crypto;
+package sample.ch.ffhs.c3rbytes.crypto;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

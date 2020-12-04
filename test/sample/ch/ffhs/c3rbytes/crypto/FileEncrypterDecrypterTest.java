@@ -1,4 +1,4 @@
-package sample.ch.ffhs.c3rbytes.test.crypto;
+package sample.ch.ffhs.c3rbytes.crypto;
 import static org.junit.jupiter.api.Assertions.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;

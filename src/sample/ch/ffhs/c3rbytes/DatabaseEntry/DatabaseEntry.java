@@ -2,7 +2,6 @@ package sample.ch.ffhs.c3rbytes.DatabaseEntry;
 
 
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -118,8 +117,8 @@ public class DatabaseEntry {
         return dummyId;
     }
 
-    public String setDummytId(String id) {
-        return this.dummyId = id;
+    public void setDummytId(String id) {
+        this.dummyId = id;
     }
 
     public SimpleStringProperty idProperty() {

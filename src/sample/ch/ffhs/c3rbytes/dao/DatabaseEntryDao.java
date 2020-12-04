@@ -170,7 +170,9 @@ public class DatabaseEntryDao implements Dao{
             //TODO test with createURLSimple()
             DriverManager.getConnection(createURL()+";shutdown=true");
         } catch (SQLException e) {
-            System.out.println("shutdown failed ? -> " + e);
+            if(e.getSQLState().equals("08006")){
+                System.out.println("Database "+databaseName+" has shutdown successfully.");
+            }
             try {
                 System.out.println("sleeping 1");
                 TimeUnit.SECONDS.sleep(1);
@@ -179,14 +181,11 @@ public class DatabaseEntryDao implements Dao{
                 bootPassword = newBootPassword;
                 System.out.println("applying new database password.");
                 resetUserDBWithPassword(newPasswordDB);
-                passwordDB = newPasswordDB;
                 System.out.println("success.");
             } catch (SQLException error) {
                 System.out.println("failed. -> "+error);
-            } catch (InterruptedException interruptedException) {
+            } catch (InterruptedException | ClassNotFoundException interruptedException) {
                 interruptedException.printStackTrace();
-            } catch (ClassNotFoundException classNotFoundException) {
-                classNotFoundException.printStackTrace();
             }
         }
     }

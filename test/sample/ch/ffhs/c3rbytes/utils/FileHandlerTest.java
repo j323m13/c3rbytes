@@ -1,4 +1,4 @@
-package sample.ch.ffhs.c3rbytes.test.utils;
+package sample.ch.ffhs.c3rbytes.utils;
 
 import org.junit.Test;
 import sample.ch.ffhs.c3rbytes.utils.FileHandler;
