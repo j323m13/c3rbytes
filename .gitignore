@@ -25,6 +25,7 @@ bin/
 gen/
 out/
 db/
+testDB/
 
 # Gradle files
 .gradle/
