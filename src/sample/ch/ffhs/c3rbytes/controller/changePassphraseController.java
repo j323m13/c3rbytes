@@ -23,8 +23,10 @@ public class changePassphraseController implements IController{
     @FXML javafx.scene.control.TextField newPassphraseConfirmField;
     @FXML javafx.scene.control.Label oldPassphraseErrorLabel;
     @FXML javafx.scene.control.Label passphraseMatchErrorLabel;
-
     @FXML javafx.scene.control.Button savePassPhraseButton;
+    FXMLLoader loader = null;
+
+
     public void changePassphraseAction(ActionEvent actionEvent) {
         //String oldPassPhrase = "password123";
         String oldMasterpassphrase = oldMasterPassphraseField.getText();
@@ -89,11 +91,15 @@ public class changePassphraseController implements IController{
 
     @Override
     public void getView(Stage stage) throws IOException {
-
+        loader = new FXMLLoader(getClass().getResource("../gui/change_passphrase_view.fxml"));
+        Parent changePassPhrase = loader.load();
+        stage.setTitle("Change Passphrase");
+        stage.setScene(new Scene(changePassPhrase, 438, 313));
     }
 
     @Override
     public Object getController() throws IOException {
-        return null;
+        return loader.getController();
     }
+
 }

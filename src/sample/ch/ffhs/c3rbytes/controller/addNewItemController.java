@@ -24,7 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 
 
-public class addNewItemController {
+public class addNewItemController implements IController {
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
     @FXML public PasswordField passwordField;
     @FXML private Label viewCreationDateLabel;
@@ -44,7 +44,7 @@ public class addNewItemController {
     private String creation;
     private boolean emptyField;
     @FXML javafx.scene.control.Button discardButton;
-
+    FXMLLoader loader = null;
 
 
     public ObservableList<String> options = FXCollections.observableArrayList(
@@ -263,5 +263,20 @@ public class addNewItemController {
         clipboardHandler.copyPasswordToClipboard(accountPassword);
 
     }
+
+    @Override
+    public void getView(Stage stage) throws IOException {
+        loader = new FXMLLoader(getClass().getResource("../gui/add_new_item_view.fxml"));
+        Parent addNewItemView = loader.load();
+        stage.setTitle("Add new item");
+        stage.setScene(new Scene(addNewItemView, 586, 342));
+    }
+
+    @Override
+    public Object getController() throws IOException {
+        return loader.getController();
+    }
+
+
 }
 

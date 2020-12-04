@@ -30,7 +30,7 @@ import java.util.*;
 import static java.lang.String.valueOf;
 
 
-public class mainViewController implements Initializable {
+public class mainViewController implements Initializable, IController {
     @FXML private TextField searchField;
     @FXML
     private Label foundLabel;
@@ -62,6 +62,8 @@ public class mainViewController implements Initializable {
     @FXML
     private Button deleteAccountButton;
     @FXML private javafx.scene.control.Button changeMasterPPButton;
+
+    FXMLLoader loader = null;
 
     DatabaseEntryDao mainViewDao = new DatabaseEntryDao();
 
@@ -346,6 +348,7 @@ public class mainViewController implements Initializable {
     }
 
     private void startOpenSelectedItemsToView(DatabaseEntry dbentry) throws IOException {
+
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("../gui/add_new_item_view.fxml"));
         Parent viewItemControllerParent = loader.load();
@@ -359,9 +362,16 @@ public class mainViewController implements Initializable {
 
 
 
-    public void changeMasterAction(ActionEvent actionEvent) {
-        //TODO: Change password action
+    public void changeMasterAction(ActionEvent actionEvent) throws IOException{
+
         System.out.println("Change Master Password Action");
+            Stage stage = new Stage();
+            changePasswordController changePassword = new changePasswordController();
+            changePassword.getView(stage);
+            stage.show();
+
+
+        /*//TODO: Change password action
         Parent changePassword;
         try {
             changePassword = FXMLLoader.load(getClass().getResource("../gui/change_password_view.fxml"));
@@ -372,7 +382,7 @@ public class mainViewController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("Change Master Password Action");
+        System.out.println("Change Master Password Action");*/
     }
 
 
@@ -393,11 +403,17 @@ public class mainViewController implements Initializable {
              */
 
             //TODO: then here we have to call the set_master_mpp_view.fxml and ask for the new passphrase
-            changePassphrase = FXMLLoader.load(getClass().getResource("../gui/change_passphrase_view.fxml"));
+
+            Stage stage = new Stage();
+            changePassphraseController changePP = new changePassphraseController();
+            changePP.getView(stage);
+            stage.show();
+
+            /*changePassphrase = FXMLLoader.load(getClass().getResource("../gui/change_passphrase_view.fxml"));
             Stage stage = new Stage();
             stage.setTitle("Change Passphrase");
             stage.setScene(new Scene(changePassphrase,600, 400));
-            stage.show();
+            stage.show();*/
 
 
         } catch (Exception e) {
@@ -438,5 +454,20 @@ public class mainViewController implements Initializable {
         Optional<ButtonType> resultConfirm = controller.startAlertWindows(alertText, TYPE, confirmation);
         return resultConfirm;
     }
+
+    @Override
+    public void getView(Stage stage) throws IOException {
+        loader = new FXMLLoader(getClass().getResource("../gui/main_view_2.fxml"));
+        Parent mainView = loader.load();
+        //stage stage = new Stage();
+        stage.setTitle("C3rBytes");
+        stage.setScene(new Scene(mainView, 1020, 600));
+    }
+
+    @Override
+    public Object getController() throws IOException {
+        return loader.getController();
+    }
+
 
 }
