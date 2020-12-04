@@ -132,16 +132,8 @@ public class mainViewController implements Initializable, IController {
 
         copyURLOption.setOnAction((event) -> {
             //copyClickedEntry();
-            String url = profileTable.getSelectionModel().getSelectedItem().getUrl();
             // send plain text password to clipboard
-            ClipboardHandler clipboardHandler = new ClipboardHandler();
-            try {
-                if(url!=null){
-                    clipboardHandler.copyPasswordToClipboard(url);
-                }
-            }catch (Exception e){
-
-            }
+            copyURL();
 
         });
 
@@ -312,6 +304,20 @@ public class mainViewController implements Initializable, IController {
 
         }
     }
+    private void copyURL(){
+        ClipboardHandler clipboardHandler = new ClipboardHandler();
+        try {
+            String url = profileTable.getSelectionModel().getSelectedItem().getUrl();
+            if(url!=null){
+                clipboardHandler.copyPasswordToClipboard(url);
+            }
+        }catch (Exception e){
+            System.out.println("url is null "+e);
+
+        }
+
+    }
+
     public void copyPasswordAction(ActionEvent event) throws Exception {
         //TODO: Copy password -> get password text field content
         System.out.println("Copy Password Action");
