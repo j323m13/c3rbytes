@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.FileEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.main.Main;
+import sample.ch.ffhs.c3rbytes.utils.PasswordRevealer;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -125,19 +126,8 @@ public class loginViewMasterpassphraseController implements IController {
 
 
     public void showPassword(ActionEvent actionEvent) {
-        if (isHidingPassword) {
-            String password = masterPassPhraseField.getText();
-            loginMPPTextField.setText(password);
-            masterPassPhraseField.setVisible(false);
-            loginMPPTextField.setVisible(true);
-            isHidingPassword = false;
-        } else{
-            String password = loginMPPTextField.getText();
-            masterPassPhraseField.setText(password);
-            loginMPPTextField.setVisible(false);
-            masterPassPhraseField.setVisible(true);
-            isHidingPassword = true;
-        }
+        new PasswordRevealer().passwordReveal(masterPassPhraseField, loginMPPTextField, isHidingPassword);
+        isHidingPassword =! isHidingPassword;
     }
 
 

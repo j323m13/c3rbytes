@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.StringHasher;
 import sample.ch.ffhs.c3rbytes.connection.DBConnection;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
+import sample.ch.ffhs.c3rbytes.utils.PasswordRevealer;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -26,7 +27,7 @@ public class loginViewController implements IController{
     @FXML private javafx.scene.control.TextField loginViewPasswordTextField;
     private final String HASHALGORITHM = "SHA3-512";
     private int loginCounter = 0;
-    private boolean isHidingPassword = true;
+    public boolean isHidingPassword = true;
     FXMLLoader loader = null;
 
     public void loginAction(javafx.event.ActionEvent actionEvent) throws IOException, SQLException, ClassNotFoundException {
@@ -133,19 +134,8 @@ public class loginViewController implements IController{
     }
 
     public void showPassword(ActionEvent actionEvent) {
-        if (isHidingPassword) {
-            String password = loginViewPasswordField.getText();
-            loginViewPasswordTextField.setText(password);
-            loginViewPasswordField.setVisible(false);
-            loginViewPasswordTextField.setVisible(true);
-            isHidingPassword = false;
-        } else{
-            String password = loginViewPasswordTextField.getText();
-            loginViewPasswordField.setText(password);
-            loginViewPasswordTextField.setVisible(false);
-            loginViewPasswordField.setVisible(true);
-            isHidingPassword = true;
-        }
+        new PasswordRevealer().passwordReveal(loginViewPasswordField, loginViewPasswordTextField, isHidingPassword);
+        isHidingPassword =! isHidingPassword;
     }
 
 
