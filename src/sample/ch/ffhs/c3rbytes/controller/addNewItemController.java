@@ -63,6 +63,10 @@ public class addNewItemController implements IController {
 
         passwordGeneratorController passwordGenerator = new passwordGeneratorController();
         passwordGenerator.getView(stage);
+        passwordGeneratorController pwGenController = (passwordGeneratorController)passwordGenerator.getController();
+        pwGenController.getpwdOutputTextField(passwordField);
+
+
         stage.show();
 
         /*//TODO: for all views: find a better approach to handle stage changes
