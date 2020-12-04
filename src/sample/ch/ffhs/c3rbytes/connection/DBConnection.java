@@ -21,6 +21,13 @@ public class DBConnection {
 
 
     public static void dbConnect(String JDBC_URL) throws SQLException {
+        System.out.println("Connecting to db ... ");
+        //System.out.println("url inside dbconnect(): " + createURL());
+        connection = DriverManager.getConnection(JDBC_URL);
+        System.out.println("connection successful");
+        getConnectionInstance();
+
+    /*
         try {
             System.out.println("Connecting to db ... ");
             //System.out.println("url inside dbconnect(): " + createURL());
@@ -32,7 +39,7 @@ public class DBConnection {
             System.out.println("Connection Failed! Check output console" + e);
             e.printStackTrace();
             throw e;
-        }
+        }*/
 
     }
 

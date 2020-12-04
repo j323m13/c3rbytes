@@ -61,8 +61,11 @@ public class setMasterPPViewController implements IController {
 
         //Main.entryView(stage);
         loginViewMasterpassphraseController lvmc = new loginViewMasterpassphraseController();
+        Stage stage = (Stage) setMPPViewloginButton.getScene().getWindow();
+        stage.close();
         lvmc.startMainView();
-        abordMPPAction();
+        //lvmc.closeStage();
+        //abordMPPAction();
         //startMainView();
     }
 

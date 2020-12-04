@@ -34,6 +34,7 @@ public class loginViewMasterpassphraseController implements IController {
     private ArrayList<String> holder = new ArrayList<>();
     FXMLLoader loader = null;
     private boolean isHidingPassword = true;
+    Stage stage = null;
     DatabaseEntryDao mainViewDao = new DatabaseEntryDao();
 
     public void loginActionMPP() throws Exception {
@@ -63,6 +64,7 @@ public class loginViewMasterpassphraseController implements IController {
             Stage stage =  (Stage) loginButtonMPP.getScene().getWindow();
             stage.close();
         }catch(javax.crypto.AEADBadTagException e){
+            denied();/*
             //TODO: Here should come a notification to the user --> login failed
             System.out.println("Access denied due passphrase error");
             loginCounter++;
@@ -74,9 +76,25 @@ public class loginViewMasterpassphraseController implements IController {
             if (loginCounter == 3){
                 System.out.println("logoutAciton");
                 logoutActionMPP();
-            }
+            }*/
         }catch (IOException e) {
+            denied();
         e.printStackTrace();
+        }
+    }
+
+    public void denied(){
+        //TODO: Here should come a notification to the user --> login failed
+        System.out.println("Access denied due passphrase error");
+        loginCounter++;
+        System.out.println(loginCounter);
+        int leftLogins = 3 - loginCounter;
+        masterPassPhraseField.setText("");
+        masterPassPhraseField.requestFocus();
+        wrongLogin.setText("Login failed. " + leftLogins + " attempts left");
+        if (loginCounter == 3){
+            System.out.println("logoutAciton");
+            logoutActionMPP();
         }
     }
 
@@ -91,7 +109,7 @@ public class loginViewMasterpassphraseController implements IController {
     }
 
     public void startMainView() throws IOException{
-        Stage stage = new Stage();
+        stage = new Stage();
         mainViewController mainViewController = new mainViewController();
         mainViewController.getView(stage);
 
@@ -149,6 +167,7 @@ public class loginViewMasterpassphraseController implements IController {
 
     @Override
     public void getView(Stage stage) throws IOException {
+        //this.stage = stage;
         loader = new FXMLLoader(getClass().getResource("../gui/login_view_masterpassphrase.fxml"));
         Parent loginViewMPP = loader.load();
         //stage stage = new Stage();
@@ -166,9 +185,18 @@ public class loginViewMasterpassphraseController implements IController {
         System.out.println("Key released");
         if (keyEvent.getCode().equals(KeyCode.ENTER)){
             System.out.println("Enter");
-            loginActionMPP();
+            try {
+                loginActionMPP();
+            } catch (Exception e){
+                denied();
+            }
         }
     }
 
+/*
+    public void closeStage() {
+        stage.close();
+    }
 
+ */
 }

@@ -220,7 +220,7 @@ public class DatabaseEntryDao implements Dao{
 
     }
 
-    public void setupEncryption(String encryptionKey) throws SQLException, InterruptedException, ClassNotFoundException {
+    public void setupEncryption(String encryptionKey) throws InterruptedException, ClassNotFoundException, SQLException {
         bootPassword = encryptionKey;
         /*
         String encryptString = "CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY('bootPassword', '"+ bootPassword+","+bootPassword+"')";

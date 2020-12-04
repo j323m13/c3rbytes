@@ -86,11 +86,13 @@ public class loginViewController implements IController{
             window.setScene(loginView);
             window.show();
             */
-
+            stage =  (Stage) loginButton.getScene().getWindow();
+            stage.close();
 
         }catch (SQLException | InterruptedException e){
             loginCounter++;
             int leftLogins = 3 - loginCounter;
+            System.out.println(leftLogins);
             loginViewPasswordField.setText("");
             loginViewPasswordField.requestFocus();
             wrongLoginLabel.setText("Login failed. " + leftLogins + " attempts left");
@@ -103,8 +105,7 @@ public class loginViewController implements IController{
             e.printStackTrace();
         }
 
-        Stage stage =  (Stage) loginButton.getScene().getWindow();
-        stage.close();
+
 
     }
 
