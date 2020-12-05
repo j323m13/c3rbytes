@@ -5,11 +5,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import sample.ch.ffhs.c3rbytes.crypto.FileEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.crypto.PasswordGenerator;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.utils.FileHandler;
+import sample.ch.ffhs.c3rbytes.utils.PasswordRevealer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,9 +24,13 @@ public class setMasterPPViewController implements IController {
     public final String filename = ".c3r.c3r";
 
     @FXML javafx.scene.control.PasswordField setMPPViewPasswordField;
+    @FXML javafx.scene.control.TextField setMPPViewTextField;
+    private boolean isHidingPassword = true;
     @FXML javafx.scene.control.Button setMPPViewloginButton;
+    FXMLLoader loader = null;
 
-    public void saveMPPAction(ActionEvent actionEvent) throws Exception {
+
+    public void saveMPPAction() throws Exception {
         String masterPassPhrase = setMPPViewPasswordField.getText();
         System.out.println(masterPassPhrase);
 
@@ -60,10 +68,13 @@ public class setMasterPPViewController implements IController {
         */
 
         //Main.entryView(stage);
-        loginViewMasterpassphraseController lvmc = new loginViewMasterpassphraseController();
-        Stage stage = (Stage) setMPPViewloginButton.getScene().getWindow();
+        Stage stage = new Stage();
+        mainViewController mainViewController = new mainViewController();
+        mainViewController.getView(stage);
+        stage.show();
+        stage = (Stage) setMPPViewloginButton.getScene().getWindow();
         stage.close();
-        lvmc.startMainView();
+
         //lvmc.closeStage();
         //abordMPPAction();
         //startMainView();
@@ -85,11 +96,33 @@ public class setMasterPPViewController implements IController {
 
     @Override
     public void getView(Stage stage) throws IOException {
-
+        loader = new FXMLLoader(getClass().getResource("../gui/set_master_pw_view.fxml"));
+        Parent setMasterpasswordView = loader.load();
+        //stage stage = new Stage();
+        stage.setTitle("Welcome to C3rBytes");
+        stage.setScene(new Scene(setMasterpasswordView, 552, 371));
+        stage.show();
     }
 
     @Override
     public Object getController() throws IOException {
-        return null;
+        return loader.getController();
+    }
+
+    public void showPassword(ActionEvent actionEvent) {
+        new PasswordRevealer().passwordReveal(setMPPViewPasswordField, setMPPViewTextField, isHidingPassword);
+        isHidingPassword =! isHidingPassword;
+    }
+
+    public void manageKeyInput(KeyEvent keyEvent) throws Exception {
+        System.out.println("Key released");
+        if (keyEvent.getCode().equals(KeyCode.ENTER)){
+            System.out.println("Enter");
+            try {
+                saveMPPAction();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 }

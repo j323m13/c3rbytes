@@ -38,7 +38,7 @@ public class setMasterPWViewController implements IController {
 
 
         try {
-
+            //TODO: Hier hakts irgendwo beim call von getView(Stage stage)
             setMasterPPViewController mppvc = new setMasterPPViewController();
             mppvc.getView();
 
