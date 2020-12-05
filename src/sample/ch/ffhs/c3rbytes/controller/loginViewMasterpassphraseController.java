@@ -28,7 +28,7 @@ public class loginViewMasterpassphraseController implements IController {
     @FXML private javafx.scene.control.Label wrongLogin;
     @FXML private javafx.scene.control.Label information;
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
-    private final String filename = ".c3r.c3r";
+    private final String filename = "c3r.c3r";
     public static String passwordDecrypterPassword;
     private int loginCounter = 0;
     private ArrayList<String> holder = new ArrayList<>();

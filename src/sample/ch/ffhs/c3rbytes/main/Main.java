@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class Main extends Application {
-    private final String file = ".c3r.c3r";
+    private final String file = "c3r.c3r";
     private final String dbFile = DBConnection.databaseName;
 
 

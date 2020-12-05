@@ -21,7 +21,7 @@ import java.util.ArrayList;
 //import static sample.ch.ffhs.c3rbytes.controller.loginViewMasterpassphraseController.startMainView;
 
 public class setMasterPPViewController implements IController {
-    public final String filename = ".c3r.c3r";
+    public final String filename = "c3r.c3r";
 
     @FXML javafx.scene.control.PasswordField setMPPViewPasswordField;
     @FXML javafx.scene.control.TextField setMPPViewTextField;
@@ -48,6 +48,7 @@ public class setMasterPPViewController implements IController {
         String passwordDecrypterPassword = passwordGenerator.generatePassword();
 
         try {
+            loginViewMasterpassphraseController.passwordDecrypterPassword = masterPassPhrase;
             FileEncrypterDecrypter fileEncrypterDecrypter = new FileEncrypterDecrypter();
             fileEncrypterDecrypter.encryptFile(passwordDecrypterPassword, filename, masterPassPhrase);
             DatabaseEntryDao newStartUp = new DatabaseEntryDao();

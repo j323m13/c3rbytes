@@ -70,7 +70,7 @@ public class FileEncrypterDecrypterTest {
         FileEncrypterDecrypter fileEncrypterDecrypter = new FileEncrypterDecrypter();
 
         String originalContent = "LUv&qp3ewq^Hn+VB+ *s{rgUGkodd(3P";
-        String file = ".c3r.c3r";
+        String file = "c3r.c3r";
         String password = "123";
 
         // decrypt file
