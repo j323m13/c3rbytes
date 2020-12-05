@@ -5,10 +5,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.StringHasher;
 import sample.ch.ffhs.c3rbytes.connection.DBConnection;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
+import sample.ch.ffhs.c3rbytes.utils.PasswordRevealer;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -16,10 +19,14 @@ import java.sql.SQLException;
 public class setMasterPWViewController implements IController {
 
     @FXML javafx.scene.control.PasswordField setMPViewPasswordField;
+    @FXML javafx.scene.control.TextField setMPViewPasswordText;
     @FXML javafx.scene.control.Button setMPViewloginButton;
+    private boolean isHidingPassword = true;
+    FXMLLoader loader = null;
+
 
     // password to encrypt DB
-    public void saveMPAction(ActionEvent actionEvent) {
+    public void saveMPAction() {
         String plainBootPassword = setMPViewPasswordField.getText();
         System.out.println(plainBootPassword);
 
@@ -72,7 +79,8 @@ public class setMasterPWViewController implements IController {
 
     @Override
     public void getView(Stage stage) throws IOException {
-        Parent setMasterpasswordView = FXMLLoader.load(getClass().getResource("../gui/set_master_pw_view.fxml"));
+        loader = new FXMLLoader(getClass().getResource("../gui/set_master_pw_view.fxml"));
+        Parent setMasterpasswordView = loader.load();
         //stage stage = new Stage();
         stage.setTitle("Welcome to C3rBytes");
         stage.setScene(new Scene(setMasterpasswordView, 552, 371));
@@ -80,6 +88,24 @@ public class setMasterPWViewController implements IController {
 
     @Override
     public Object getController() throws IOException {
-        return null;
+        return loader.getController();
+    }
+
+    public void showPassword(ActionEvent actionEvent) {
+        new PasswordRevealer().passwordReveal(setMPViewPasswordField, setMPViewPasswordText, isHidingPassword);
+        isHidingPassword =! isHidingPassword;
+    }
+
+
+    public void manageKeyInput(KeyEvent keyEvent) throws Exception {
+        System.out.println("Key released");
+        if (keyEvent.getCode().equals(KeyCode.ENTER)){
+            System.out.println("Enter");
+            try {
+                saveMPAction();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 }
