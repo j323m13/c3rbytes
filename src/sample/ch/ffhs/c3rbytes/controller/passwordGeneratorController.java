@@ -16,6 +16,7 @@ import sample.ch.ffhs.c3rbytes.utils.ClipboardHandler;
 
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class passwordGeneratorController implements IController {
@@ -168,7 +169,8 @@ public class passwordGeneratorController implements IController {
 
     @Override
     public void getView(Stage stage) throws IOException {
-        loader = new FXMLLoader(getClass().getResource("../gui/password_generator_view.fxml"));
+        URL url = getClass().getClassLoader().getResource("password_generator_view.fxml");
+        loader = new FXMLLoader(url);
         Parent passwordGenerator = loader.load();
         //stage stage = new Stage();
         stage.setTitle("Password Generator");

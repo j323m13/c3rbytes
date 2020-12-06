@@ -227,7 +227,8 @@ public class mainViewController implements Initializable, IController {
     public void addNewItemAction(ActionEvent event){
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation((getClass().getResource("../gui/add_new_item_view.fxml")));
+            URL url = getClass().getClassLoader().getResource("add_new_item_view.fxml");
+            loader = new FXMLLoader(url);
             Parent addItemParent = loader.load();
             addNewItemController controller = loader.getController();
             controller.createCombox();
@@ -374,9 +375,8 @@ public class mainViewController implements Initializable, IController {
     }
 
     private void startOpenSelectedItemsToView(DatabaseEntry dbentry) throws IOException {
-
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("../gui/add_new_item_view.fxml"));
+        URL url = getClass().getClassLoader().getResource("add_new_item_view.fxml");
+        loader = new FXMLLoader(url);
         Parent viewItemControllerParent = loader.load();
         addNewItemController controller = loader.getController();
         controller.fillIn(copyClickedEntry());
@@ -484,8 +484,8 @@ public class mainViewController implements Initializable, IController {
     }
 
     private Optional<ButtonType> startAlert(String alertText, Alert.AlertType TYPE, String confirmation) throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("../gui/alert_view.fxml"));
+        URL url = getClass().getClassLoader().getResource("alert_view.fxml");
+        loader = new FXMLLoader(url);
         Parent alertViewParent = loader.load();
         alertViewController controller = loader.getController();
         Optional<ButtonType> resultConfirm = controller.startAlertWindows(alertText, TYPE, confirmation);
@@ -494,7 +494,8 @@ public class mainViewController implements Initializable, IController {
 
     @Override
     public void getView(Stage stage) throws IOException {
-        loader = new FXMLLoader(getClass().getResource("../gui/main_view_2.fxml"));
+        URL url = getClass().getClassLoader().getResource("main_view_2.fxml");
+        loader = new FXMLLoader(url);
         Parent mainView = loader.load();
         //stage stage = new Stage();
         stage.setTitle("C3rBytes");

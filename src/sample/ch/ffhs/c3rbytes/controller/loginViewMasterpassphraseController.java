@@ -15,6 +15,7 @@ import sample.ch.ffhs.c3rbytes.main.Main;
 import sample.ch.ffhs.c3rbytes.utils.PasswordRevealer;
 
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
@@ -122,7 +123,8 @@ public class loginViewMasterpassphraseController implements IController {
     }
 
     public void getLoginViewMasterpassphrase(javafx.event.ActionEvent actionEvent) throws IOException, SQLException, ClassNotFoundException {
-        loader = new FXMLLoader(getClass().getResource("../gui/login_view_masterpassphrase.fxml"));
+        URL url = getClass().getClassLoader().getResource("login_view_masterpassphrase.fxml");
+        loader = new FXMLLoader(url);
         Parent parent = loader.load();
         Scene loginView = new Scene(parent);
         //Stage stage = new Stage();

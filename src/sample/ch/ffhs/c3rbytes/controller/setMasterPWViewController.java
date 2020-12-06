@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
@@ -14,6 +15,7 @@ import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.utils.PasswordRevealer;
 
 import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
 
 public class setMasterPWViewController implements IController {
@@ -79,7 +81,9 @@ public class setMasterPWViewController implements IController {
 
     @Override
     public void getView(Stage stage) throws IOException {
-        loader = new FXMLLoader(getClass().getResource("../gui/set_master_pw_view.fxml"));
+        URL url = getClass().getClassLoader().getResource("set_master_pw_view.fxml");
+        System.out.println(url);
+        loader = new FXMLLoader(url);
         Parent setMasterpasswordView = loader.load();
         //stage stage = new Stage();
         stage.setTitle("Welcome to C3rBytes");

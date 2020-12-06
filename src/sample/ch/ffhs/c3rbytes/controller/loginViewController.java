@@ -15,6 +15,7 @@ import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.utils.PasswordRevealer;
 
 import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
 
 public class loginViewController implements IController{
@@ -116,7 +117,8 @@ public class loginViewController implements IController{
 
     @Override
     public void getView(Stage stage) throws IOException {
-        loader = new FXMLLoader(getClass().getResource("../gui/login_view.fxml"));
+        URL url = getClass().getClassLoader().getResource("login_view.fxml");
+        loader = new FXMLLoader(url);
         Parent loginViewMP = loader.load();
         //stage stage = new Stage();
         stage.setTitle("C3rBytes Login Masterpassword");

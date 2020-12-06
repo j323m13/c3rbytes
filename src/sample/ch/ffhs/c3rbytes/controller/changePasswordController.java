@@ -11,6 +11,7 @@ import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.utils.PasswordRevealer;
 
 import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
 
 public class changePasswordController implements IController {
@@ -91,7 +92,8 @@ public class changePasswordController implements IController {
 
     @Override
     public void getView(Stage stage) throws IOException {
-        loader = new FXMLLoader(getClass().getResource("../gui/change_password_view.fxml"));
+        URL url = getClass().getClassLoader().getResource("change_password_view.fxml");
+        loader = new FXMLLoader(url);
         Parent addNewItemView = loader.load();
         stage.setTitle("Change Password");
         stage.setScene(new Scene(addNewItemView, 497, 313));

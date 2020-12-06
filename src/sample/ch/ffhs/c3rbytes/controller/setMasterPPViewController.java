@@ -16,6 +16,7 @@ import sample.ch.ffhs.c3rbytes.utils.FileHandler;
 import sample.ch.ffhs.c3rbytes.utils.PasswordRevealer;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 
 //import static sample.ch.ffhs.c3rbytes.controller.loginViewMasterpassphraseController.startMainView;
@@ -87,7 +88,8 @@ public class setMasterPPViewController implements IController {
     }
 
     public void getView() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/set_master_mpp_view.fxml"));
+        URL url = getClass().getClassLoader().getResource("set_master_mpp_view.fxml");
+        FXMLLoader loader = new FXMLLoader(url);
         Parent root = loader.load();
         Stage stage = new Stage();
         stage.setTitle("Welcome to C3rBytes");

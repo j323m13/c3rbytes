@@ -11,6 +11,7 @@ import sample.ch.ffhs.c3rbytes.utils.PasswordRevealer;
 
 import javax.crypto.AEADBadTagException;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
@@ -98,7 +99,8 @@ public class changePassphraseController implements IController{
 
     @Override
     public void getView(Stage stage) throws IOException {
-        loader = new FXMLLoader(getClass().getResource("../gui/change_passphrase_view.fxml"));
+        URL url = getClass().getClassLoader().getResource("change_passphrase_view.fxml");
+        loader = new FXMLLoader(url);
         Parent changePassPhrase = loader.load();
         stage.setTitle("Change Passphrase");
         stage.setScene(new Scene(changePassPhrase, 493, 313));

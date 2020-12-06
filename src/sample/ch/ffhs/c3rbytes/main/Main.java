@@ -1,6 +1,7 @@
 package sample.ch.ffhs.c3rbytes.main;
 
 import javafx.application.Application;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.controller.loginViewController;
 import sample.ch.ffhs.c3rbytes.controller.setMasterPWViewController;
@@ -91,7 +92,7 @@ public class Main extends Application {
             //stage stage = new Stage();
             stage.setTitle("C3rBytes Login Masterpassword");
             stage.setScene(new Scene(loginViewMP, 552, 371));
-
+e
              */
         }
         //fileHandler.setReadWriteAttributes(file,"deny");
