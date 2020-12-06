@@ -112,7 +112,7 @@ public class DatabaseEntryDao implements Dao{
         try {
             //delete db file
             dbExecuteUpdate(deleteAccountStmt,createURLSimple());
-            Path dbFile = Paths.get(databaseName);
+            Path dbFile = Paths.get("db");
             File db = new File(dbFile.toAbsolutePath().toString());
             deleteDatabaseFolder(db);
             //delete db log file

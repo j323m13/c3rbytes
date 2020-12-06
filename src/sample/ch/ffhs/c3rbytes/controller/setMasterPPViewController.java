@@ -17,6 +17,7 @@ import sample.ch.ffhs.c3rbytes.utils.PasswordRevealer;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 //import static sample.ch.ffhs.c3rbytes.controller.loginViewMasterpassphraseController.startMainView;
@@ -29,6 +30,7 @@ public class setMasterPPViewController implements IController {
     private boolean isHidingPassword = true;
     @FXML javafx.scene.control.Button setMPPViewloginButton;
     FXMLLoader loader = null;
+    DatabaseEntryDao newStartUp = new DatabaseEntryDao();
 
 
     public void saveMPPAction() throws Exception {
@@ -48,11 +50,13 @@ public class setMasterPPViewController implements IController {
         passwordGenerator.buildPassword(charSet, passwordLength);
         String passwordDecrypterPassword = passwordGenerator.generatePassword();
 
+
+
         try {
             loginViewMasterpassphraseController.passwordDecrypterPassword = masterPassPhrase;
             FileEncrypterDecrypter fileEncrypterDecrypter = new FileEncrypterDecrypter();
             fileEncrypterDecrypter.encryptFile(passwordDecrypterPassword, filename, masterPassPhrase);
-            DatabaseEntryDao newStartUp = new DatabaseEntryDao();
+
             newStartUp.setup();
 
 
@@ -61,6 +65,7 @@ public class setMasterPPViewController implements IController {
             // Reset Settings by deleting .c3r.c3r
             FileHandler fileHandler = new FileHandler();
             fileHandler.deleteFile(".c3r.c3r");
+            newStartUp.deleteAccount();
         }
 
 
@@ -82,8 +87,9 @@ public class setMasterPPViewController implements IController {
         //startMainView();
     }
 
-    public void abordMPPAction() {
+    public void abordMPPAction() throws SQLException, ClassNotFoundException {
         System.out.println("System exit");
+        newStartUp.deleteAccount();
         System.exit(0);
     }
 
