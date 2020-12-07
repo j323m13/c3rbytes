@@ -56,11 +56,14 @@ public class FileHandler {
 
         if (lock){
             //Runtime.getRuntime().exec(new String[]{"attrib", "+H", file});
-            Runtime.getRuntime().exec("attrib +H -R" + file);
-            //file1.setWritable(false);
+            //Runtime.getRuntime().exec("attrib +H +W +R" + file1);
+            file1.setReadable(false);
+             file1.setWritable(false);
+
         } else{
-            Runtime.getRuntime().exec("attrib +H +R" + file);
-            //file1.setWritable(true);
+            //Runtime.getRuntime().exec("attrib +H -W -R" + file1);
+            file1.setWritable(true);
+            file1.setReadable(true);
         }
 
         /*
