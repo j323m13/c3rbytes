@@ -21,6 +21,7 @@ public class FileHandler {
 
         // write to file
         Files.write(path, content);
+        Files.setAttribute(path, "dos:hidden", Boolean.TRUE);
 
         //setReadWriteAttributes(file, false);
         //setReadWriteAttributes(file, "deny");
@@ -58,7 +59,7 @@ public class FileHandler {
             //Runtime.getRuntime().exec(new String[]{"attrib", "+H", file});
             //Runtime.getRuntime().exec("attrib +H +W +R" + file1);
             file1.setReadable(false);
-             file1.setWritable(false);
+            file1.setWritable(false);
 
         } else{
             //Runtime.getRuntime().exec("attrib +H -W -R" + file1);
