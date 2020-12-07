@@ -62,9 +62,9 @@ public class setMasterPPViewController implements IController {
 
 
         } catch(Exception e){
-            // Reset Settings by deleting .c3r.c3r
+            // Reset Settings by deleting c3r.c3r
             FileHandler fileHandler = new FileHandler();
-            fileHandler.deleteFile(".c3r.c3r");
+            fileHandler.deleteFile("c3r.c3r");
             newStartUp.deleteAccount();
         }
 
@@ -118,12 +118,12 @@ public class setMasterPPViewController implements IController {
         return loader.getController();
     }
 
-    public void showPassword(ActionEvent actionEvent) {
+    public void showPassword() {
         new PasswordRevealer().passwordReveal(setMPPViewPasswordField, setMPPViewTextField, isHidingPassword);
         isHidingPassword =! isHidingPassword;
     }
 
-    public void manageKeyInput(KeyEvent keyEvent) throws Exception {
+    public void manageKeyInput(KeyEvent keyEvent) {
         System.out.println("Key released");
         if (keyEvent.getCode().equals(KeyCode.ENTER)){
             System.out.println("Enter");

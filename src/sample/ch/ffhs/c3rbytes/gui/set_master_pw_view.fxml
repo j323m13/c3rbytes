@@ -16,5 +16,6 @@
       <Polygon fill="DODGERBLUE" layoutX="277.0" layoutY="102.0" points="0.0, 39.5, 0.0, 39.5, 36.0, -17.0, 36.0, -51.0, 0.0, -60.0, -37.0, -51.0, -37.0, -17.0" stroke="BLACK" strokeType="INSIDE" />
       <Label alignment="CENTER" contentDisplay="CENTER" layoutX="149.0" layoutY="164.0" prefHeight="43.0" prefWidth="256.0" text="This is your first Login. Please enter a Masterpassword" textAlignment="CENTER" wrapText="true" />
       <Button fx:id="showPasswordButton" layoutX="389.0" layoutY="240.0" mnemonicParsing="false" onAction="#showPassword" prefHeight="25.0" prefWidth="32.0" text="👁" />
+      <Label fx:id="errorLabel" layoutX="193.0" layoutY="338.0" prefHeight="19.0" prefWidth="169.0" />
    </children>
 </AnchorPane>

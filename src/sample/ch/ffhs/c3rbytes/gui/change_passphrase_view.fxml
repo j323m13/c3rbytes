@@ -1,29 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-
 <?import javafx.scene.control.PasswordField?>
-<AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="313.0" prefWidth="497.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.ch.ffhs.c3rbytes.controller.changePassphraseController">
+
+<AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="313.0" prefWidth="497.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.ch.ffhs.c3rbytes.controller.changePassphraseController">
    <children>
-      <TextField fx:id="oldMasterPassphraseText" layoutX="176.0" layoutY="71.0" prefHeight="25.0" prefWidth="223.0" visible="false"/>
-      <TextField fx:id="newPassphraseText" layoutX="176.0" layoutY="138.0" prefHeight="25.0" prefWidth="223.0" visible="false"/>
-      <TextField fx:id="newPassphraseConfirmText" layoutX="177.0" layoutY="182.0" prefHeight="25.0" prefWidth="223.0" visible="false"/>
-      <PasswordField fx:id="oldMasterPassphraseField" layoutX="176.0" layoutY="71.0" prefHeight="25.0" prefWidth="223.0"/>
-      <PasswordField fx:id="newPassphraseField" layoutX="176.0" layoutY="138.0" prefHeight="25.0" prefWidth="223.0"/>
-      <PasswordField fx:id="newPassphraseConfirmField" layoutX="177.0" layoutY="182.0" prefHeight="25.0" prefWidth="223.0"/>
+      <TextField fx:id="oldMasterPassphraseText" layoutX="176.0" layoutY="71.0" prefHeight="25.0" prefWidth="223.0" visible="false" />
+      <TextField fx:id="newPassphraseText" layoutX="176.0" layoutY="138.0" prefHeight="25.0" prefWidth="223.0" visible="false" />
+      <TextField fx:id="newPassphraseConfirmText" layoutX="177.0" layoutY="182.0" prefHeight="25.0" prefWidth="223.0" visible="false" />
+      <PasswordField fx:id="oldMasterPassphraseField" layoutX="176.0" layoutY="71.0" prefHeight="25.0" prefWidth="223.0" />
+      <PasswordField fx:id="newPassphraseField" layoutX="176.0" layoutY="138.0" prefHeight="25.0" prefWidth="223.0" />
+      <PasswordField fx:id="newPassphraseConfirmField" layoutX="177.0" layoutY="182.0" prefHeight="25.0" prefWidth="223.0" />
       <Button fx:id="savePassphraseButton" layoutX="170.0" layoutY="247.0" mnemonicParsing="false" onAction="#changePassphraseAction" prefHeight="25.0" prefWidth="73.0" text="Save" />
       <Button fx:id="discardPassphraseButton" layoutX="260.0" layoutY="247.0" mnemonicParsing="false" onAction="#discardPassphraseAction" prefHeight="25.0" prefWidth="73.0" text="Discard" />
       <Label layoutX="123.0" layoutY="14.0" prefHeight="43.0" prefWidth="256.0" text="Please enter your old passphrase." wrapText="true" />
       <Label fx:id="oldPassphraseLabel" layoutX="38.0" layoutY="75.0" text="Old Passphrase" />
       <Label fx:id="newPassphraseLabel" layoutX="38.0" layoutY="142.0" text="New Passphrase" />
       <Label fx:id="newPassphraseConfirmLabel" layoutX="38.0" layoutY="186.0" text="Confirm New Passphrase" />
-      <Label fx:id="passphraseMatchErrorLabel" layoutX="177.0" layoutY="220.0" prefHeight="17.0" prefWidth="185.0" textAlignment="CENTER" />
+      <Label fx:id="passphraseMatchErrorLabel" layoutX="177.0" layoutY="220.0" prefHeight="27.0" prefWidth="223.0" textAlignment="CENTER" />
       <Label fx:id="oldPassphraseErrorLabel" layoutX="176.0" layoutY="107.0" prefHeight="17.0" prefWidth="223.0" textAlignment="CENTER" />
       <Button fx:id="showPasswordOld" layoutX="427.0" layoutY="71.0" mnemonicParsing="false" onAction="#showPasswordOld" prefHeight="25.0" prefWidth="28.0" text="👁" />
-      <Button fx:id="showPasswordNew" layoutX="427.0" layoutY="138.0" mnemonicParsing="false" onAction="#showPasswordNew" prefHeight="25.0" prefWidth="28.0" text="👁" />
-      <Button fx:id="showPasswordConfirm" layoutX="427.0" layoutY="182.0" mnemonicParsing="false" onAction="#showPasswordConfirm" prefHeight="25.0" prefWidth="28.0" text="👁" />
+      <Button fx:id="showPasswordNew" layoutX="427.0" layoutY="138.0" mnemonicParsing="false" onAction="#showPasswordNew" prefHeight="25.0" prefWidth="28.0" text="👁👁" />
+      <Button fx:id="showPasswordConfirm" layoutX="427.0" layoutY="182.0" mnemonicParsing="false" onAction="#showPasswordConfirm" prefHeight="25.0" prefWidth="28.0" text="👁👁👁" />
    </children>
 </AnchorPane>

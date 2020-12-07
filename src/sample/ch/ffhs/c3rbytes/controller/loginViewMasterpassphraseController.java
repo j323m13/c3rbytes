@@ -40,7 +40,7 @@ public class loginViewMasterpassphraseController implements IController {
 
     public void loginActionMPP() throws Exception {
 
-        // check pw in .c3r.c3r file and assign to passwordDecrypterpassword
+        // check pw in c3r.c3r file and assign to passwordDecrypterpassword
         String masterPassPhrase = masterPassPhraseField.getText();
         DatabaseEntryDao setupEncryptionDao = new DatabaseEntryDao();
         //setupEncryptionDao.setupEncryption();

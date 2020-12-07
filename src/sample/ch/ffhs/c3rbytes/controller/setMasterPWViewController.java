@@ -23,14 +23,22 @@ public class setMasterPWViewController implements IController {
     @FXML javafx.scene.control.PasswordField setMPViewPasswordField;
     @FXML javafx.scene.control.TextField setMPViewPasswordText;
     @FXML javafx.scene.control.Button setMPViewloginButton;
+    @FXML javafx.scene.control.Label errorLabel;
     private boolean isHidingPassword = true;
     FXMLLoader loader = null;
 
 
     // password to encrypt DB
     public void saveMPAction() {
+        errorLabel.setText("");
         String plainBootPassword = setMPViewPasswordField.getText();
         System.out.println(plainBootPassword);
+
+        if (plainBootPassword.length() < 8) {
+            errorLabel.setText("Enter at least 8 characters");
+            setMPViewPasswordField.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
+            return;
+        }
 
         // Hashing masterpassword
         StringHasher sha = new StringHasher();
@@ -61,13 +69,14 @@ public class setMasterPWViewController implements IController {
 
              */
 
-        }catch (IOException e) {
-            e.printStackTrace();
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }catch (IOException e) {
             e.printStackTrace();
         }
 

@@ -5,9 +5,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.FileEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.utils.PasswordRevealer;
+import sample.ch.ffhs.c3rbytes.utils.PasswordValidator;
 
 import javax.crypto.AEADBadTagException;
 import java.io.IOException;
@@ -17,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 
 public class changePassphraseController implements IController{
 
-    public static final String FILENAME = ".c3r.c3r";
+    public static final String FILENAME = "c3r.c3r";
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
 
     @FXML javafx.scene.control.TextField oldMasterPassphraseText;
@@ -37,15 +40,60 @@ public class changePassphraseController implements IController{
 
     public void changePassphraseAction(ActionEvent actionEvent) {
         //String oldPassPhrase = "password123";
-        String oldMasterpassphrase = oldMasterPassphraseText.getText();
-        String newMasterpassphrase = newPassphraseText.getText();
-        String newMasterpassphraseConfirmed = newPassphraseConfirmText.getText();
-        boolean isFilledOut = true;
+        String oldMasterpassphrase = oldMasterPassphraseField.getText();
+        String newMasterpassphrase = newPassphraseField.getText();
+        String newMasterpassphraseConfirmed = newPassphraseConfirmField.getText();
+
+        resetStyle(oldMasterPassphraseField, oldMasterPassphraseText);
+        resetStyle(newPassphraseField, newPassphraseText);
+        resetStyle(newPassphraseConfirmField, newPassphraseConfirmText);
+
 
         oldPassphraseErrorLabel.setText("");
         passphraseMatchErrorLabel.setText("");
         System.out.println(oldMasterpassphrase);
 
+        PasswordValidator passwordValidator = new PasswordValidator();
+        boolean oldPw = passwordValidator.checkFillOut(oldMasterpassphrase);
+        boolean newPw = passwordValidator.checkFillOut(newMasterpassphrase);
+        boolean newPwConfirmed = passwordValidator.checkFillOut(newMasterpassphraseConfirmed);
+        boolean isEqualNewPw = passwordValidator.isEqual(newMasterpassphrase, newMasterpassphraseConfirmed);
+
+        if (oldPw && newPw && newPwConfirmed && isEqualNewPw){
+            changePassPhrase(oldMasterpassphrase, newMasterpassphraseConfirmed);
+        } else{
+            passphraseMatchErrorLabel.setText("Pass phrase change not possible");
+            System.out.println("New password does not match");
+        }
+
+        if (!oldPw){
+            setStyle(oldMasterPassphraseField, oldMasterPassphraseText);
+            oldPassphraseErrorLabel.setText("Please fill out old master pass phrase");
+            System.out.println("fill out masterpassphrase");
+        }
+
+        if (!newPw){
+            setStyle(newPassphraseField, newPassphraseText);
+            passphraseMatchErrorLabel.setText("Please fill out new master pass phrase");
+            System.out.println("fill out masterpassphrase");
+        }
+
+        if (!newPwConfirmed){
+            setStyle(newPassphraseConfirmField, newPassphraseConfirmText);
+            passphraseMatchErrorLabel.setText("Please confirm new master pass phrase");
+            System.out.println("fill out masterpassphrase");
+        }
+
+        if (!isEqualNewPw){
+            setStyle(newPassphraseField, newPassphraseText);
+            setStyle(newPassphraseConfirmField, newPassphraseConfirmText);
+            passphraseMatchErrorLabel.setText("New pass phrase not correctly confirmed");
+            System.out.println("fill out masterpassphrase");
+        }
+
+
+
+        /*
         if (oldMasterpassphrase.equals("") || oldMasterpassphrase.length() == 0){
             oldPassphraseErrorLabel.setText("Please fill out old master pass phrase");
             isFilledOut = false;
@@ -88,7 +136,41 @@ public class changePassphraseController implements IController{
         }else{
             passphraseMatchErrorLabel.setText("New pass phrase does not match");
             System.out.println("New password does not match");
-        }
+        }*/
+    }
+
+    private void setStyle(PasswordField passwordField, TextField textField){
+        passwordField.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
+        textField.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
+    }
+
+    private void resetStyle(PasswordField passwordField, TextField textField){
+        passwordField.setStyle(null);
+        textField.setStyle(null);
+    }
+
+    private void changePassPhrase(String oldMasterpassphrase, String newMasterpassphraseConfirmed){
+            try {
+                FileEncrypterDecrypter fileEncrypterDecrypter = new FileEncrypterDecrypter();
+                byte[] decryptedText = fileEncrypterDecrypter.decryptFile(FILENAME, oldMasterpassphrase);
+                String originalContent = new String(decryptedText, UTF_8);
+
+                //String newPassPhrase = "password123";
+                //String newPassPhrase = newPassphraseConfirmField.getText();
+                fileEncrypterDecrypter.encryptFile(originalContent, FILENAME, newMasterpassphraseConfirmed);
+
+
+                passphraseMatchErrorLabel.setText("Master pass phrase successful. Please discard the window");
+
+            } catch(
+                    AEADBadTagException e){
+                System.out.println("Pass phrase change denied");
+                setStyle(oldMasterPassphraseField, oldMasterPassphraseText);
+                oldPassphraseErrorLabel.setText("Old pass phrase not correct");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
     }
 
     @FXML javafx.scene.control.Button discardPassphraseButton;
