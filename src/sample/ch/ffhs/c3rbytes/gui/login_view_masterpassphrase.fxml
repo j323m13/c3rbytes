@@ -25,7 +25,7 @@
       <Button fx:id="showPasswordButton" layoutX="376.0" layoutY="240.0" mnemonicParsing="false" onAction="#showPassword" prefHeight="25.0" prefWidth="28.0" text="👁" />
       <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="202.0" layoutY="36.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../../../../img/logo3.png" />
+            <Image url="@logo3.png" />
          </image>
       </ImageView>
    </children>
