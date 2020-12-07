@@ -5,10 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.PasswordGenerator;
@@ -150,17 +147,20 @@ public class passwordGeneratorController implements IController {
 
     @FXML
     private javafx.scene.control.Button savePassword;
-    @FXML TextField passwordField;
+    @FXML PasswordField passwordField;
+    @FXML TextField passwordTextField;
     public void savePasswordAction(ActionEvent actionEvent) throws IOException {
         //TODO: Add necessary method and data transfer before closing the window.
         String pwdOutputFieldText = pwdOutputField.getText();
         passwordField.setText(pwdOutputFieldText);
+        passwordTextField.setText(passwordField.getText());
         Stage stage = (Stage) savePassword.getScene().getWindow();
         closeStage(stage);
     }
 
-    public void getpwdOutputTextField(TextField pwTextField){
-        this.passwordField = pwTextField;
+    public void getpwdOutputTextField(PasswordField passwordField, TextField pwTextField){
+        this.passwordField = passwordField;
+        this.passwordTextField = pwTextField;
     }
 
     public void closeStage(Stage stage){

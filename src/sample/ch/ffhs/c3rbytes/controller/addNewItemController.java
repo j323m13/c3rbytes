@@ -5,9 +5,12 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.InputMethodEvent;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -64,8 +67,7 @@ public class addNewItemController implements IController {
         passwordGeneratorController passwordGenerator = new passwordGeneratorController();
         passwordGenerator.getView(stage);
         passwordGeneratorController pwGenController = (passwordGeneratorController)passwordGenerator.getController();
-        pwGenController.getpwdOutputTextField(passwordField);
-
+        pwGenController.getpwdOutputTextField(passwordField, showPasswordTextField);
 
         stage.show();
 
@@ -277,5 +279,28 @@ public class addNewItemController implements IController {
     }
 
 
+    public void update(InputMethodEvent inputMethodEvent) {
+        Node n = (Node)inputMethodEvent.getSource();
+        String id = n.getId();
+
+        switch (id) {
+            case "passwordField":
+                showPasswordTextField.setText(passwordField.getText());
+                break;
+
+            case "showPasswordTextField":
+                passwordField.setText(showPasswordTextField.getText());
+                break;
+        }
+
+    }
+
+    public void updatePasswordField() {
+        passwordField.setText(showPasswordTextField.getText());
+    }
+
+    public void updateTextField() {
+        showPasswordTextField.setText(passwordField.getText());
+    }
 }
 

@@ -71,7 +71,7 @@ public class FileEncrypterDecrypterTest {
 
         String originalContent = "LUv&qp3ewq^Hn+VB+ *s{rgUGkodd(3P";
         String file = "c3r.c3r";
-        String password = "123";
+        String password = "12345678";
 
         // decrypt file
         String pText = "Access denied";

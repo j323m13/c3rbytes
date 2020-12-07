@@ -8,18 +8,18 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
-
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ChoiceBox?>
-<VBox prefHeight="342.0" prefWidth="586.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.ch.ffhs.c3rbytes.controller.addNewItemController">
+
+<VBox prefHeight="342.0" prefWidth="586.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.ch.ffhs.c3rbytes.controller.addNewItemController">
     <children>
         <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="371.0" prefWidth="640.0" VBox.vgrow="ALWAYS">
             <children>
-                <TextField fx:id="userNameField" layoutX="160.0" layoutY="42.0" prefHeight="25.0" prefWidth="333.0" />
+                <TextField fx:id="userNameField" layoutX="160.0" layoutY="42.0" onKeyReleased="#updatePasswordField" prefHeight="25.0" prefWidth="333.0" />
                 <Label fx:id="usernameFieldLabelError" layoutX="160.0" layoutY="60.0" prefHeight="25.0" prefWidth="333.0" />
-                <PasswordField fx:id="passwordField" layoutX="160.0" layoutY="90.0" prefHeight="25.0" prefWidth="220.0" />
+                <PasswordField fx:id="passwordField" layoutX="160.0" layoutY="90.0" onInputMethodTextChanged="#update" onKeyReleased="#updateTextField" prefHeight="25.0" prefWidth="220.0" />
                 <Label fx:id="passwordFieldLabelError" layoutX="160.0" layoutY="110.0" prefHeight="25.0" prefWidth="333.0" />
-                <ChoiceBox fx:id="typeField" layoutX="160.0" layoutY="140.0" prefHeight="25.0" prefWidth="333.0"  />
+                <ChoiceBox fx:id="typeField" layoutX="160.0" layoutY="140.0" prefHeight="25.0" prefWidth="333.0" />
                 <Label fx:id="typeFieldLabelError" layoutX="160.0" layoutY="170.0" prefHeight="17.0" prefWidth="333.0" textAlignment="CENTER" />
                 <TextField fx:id="urlField" layoutX="160.0" layoutY="189.0" prefHeight="25.0" prefWidth="333.0" />
                 <TextField fx:id="notesField" layoutX="160.0" layoutY="238.0" prefHeight="25.0" prefWidth="333.0" />
@@ -28,9 +28,9 @@
                 <Label layoutX="57.0" layoutY="144.0" prefHeight="17.0" prefWidth="91.0" text="Type:" />
                 <Label layoutX="57.0" layoutY="193.0" prefHeight="17.0" prefWidth="91.0" text="URL:" />
                 <Label layoutX="57.0" layoutY="242.0" prefHeight="17.0" prefWidth="91.0" text="Notes:" />
-                <Button fx:id="showPasswordButton" layoutX="428.0" layoutY="90.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="28.0" text="👁"  onAction="#showPassword"/>
-                <Button fx:id="generatePasswordButton" layoutX="390.0" layoutY="90.0" mnemonicParsing="false" onAction="#generatePassword" prefHeight="25.0" prefWidth="28.0" text="🔄" />
-                <Button fx:id="passwordCopyButton" layoutX="466.0" layoutY="90.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="28.0" text="📋" />
+                <Button fx:id="showPasswordButton" layoutX="428.0" layoutY="90.0" mnemonicParsing="false" onAction="#showPassword" prefHeight="25.0" prefWidth="28.0" text="👁" />
+                <Button fx:id="generatePasswordButton" layoutX="390.0" layoutY="90.0" mnemonicParsing="false" onAction="#generatePassword" prefHeight="25.0" prefWidth="28.0" text="👁🔄" />
+                <Button fx:id="passwordCopyButton" layoutX="466.0" layoutY="90.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="28.0" text="👁🔄📋" />
                 <Button fx:id="saveButton" layoutX="351.0" layoutY="286.0" mnemonicParsing="false" onAction="#onSaveButton" prefHeight="25.0" prefWidth="56.0" text="Save" />
                 <Button fx:id="discardButton" layoutX="437.0" layoutY="286.0" mnemonicParsing="false" onAction="#onDiscardButton" text="Discard" />
                 <Label fx:id="viewCreationDateLabel" layoutX="57.0" layoutY="313.0" prefHeight="17.0" prefWidth="250.0" />

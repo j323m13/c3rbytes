@@ -185,6 +185,19 @@ public class loginViewMasterpassphraseController implements IController {
 
     public void manageKeyInput(KeyEvent keyEvent) throws Exception {
         System.out.println("Key released");
+
+        Node n = (Node)keyEvent.getSource();
+        String id = n.getId();
+        switch (id) {
+            case "masterPassPhraseField":
+                loginMPPTextField.setText(masterPassPhraseField.getText());
+                break;
+
+            case "loginMPPTextField":
+                masterPassPhraseField.setText(loginMPPTextField.getText());
+                break;
+        }
+
         if (keyEvent.getCode().equals(KeyCode.ENTER)){
             System.out.println("Enter");
             try {
@@ -195,10 +208,4 @@ public class loginViewMasterpassphraseController implements IController {
         }
     }
 
-/*
-    public void closeStage() {
-        stage.close();
-    }
-
- */
 }

@@ -3,6 +3,7 @@ package sample.ch.ffhs.c3rbytes.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
@@ -131,7 +132,23 @@ public class loginViewController implements IController{
     }
 
     public void manageKeyInput(KeyEvent keyEvent) throws SQLException, IOException, ClassNotFoundException {
-        System.out.println("Key released");
+
+
+        System.out.println(keyEvent.getSource());
+        Node n = (Node)keyEvent.getSource();
+        String id = n.getId();
+
+        switch (id) {
+            case "loginViewPasswordField":
+                loginViewPasswordTextField.setText(loginViewPasswordField.getText());
+                break;
+
+            case "loginViewPasswordTextField":
+                loginViewPasswordField.setText(loginViewPasswordTextField.getText());
+                break;
+        }
+
+
         if (keyEvent.getCode().equals(KeyCode.ENTER)){
             System.out.println("Enter");
             ActionEvent ae = new ActionEvent(keyEvent.getSource(), keyEvent.getTarget());
@@ -139,10 +156,19 @@ public class loginViewController implements IController{
         }
     }
 
+    /*
+    public void updatePasswordField(KeyEvent keyEvent) {
+        loginViewPasswordField.setText(loginViewPasswordTextField.getText());
+
+    }
+     */
+
     public void showPassword(ActionEvent actionEvent) {
         new PasswordRevealer().passwordReveal(loginViewPasswordField, loginViewPasswordTextField, isHidingPassword);
         isHidingPassword =! isHidingPassword;
     }
+
+
 
 
 

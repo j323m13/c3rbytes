@@ -3,6 +3,7 @@ package sample.ch.ffhs.c3rbytes.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -112,6 +113,20 @@ public class setMasterPWViewController implements IController {
 
     public void manageKeyInput(KeyEvent keyEvent) throws Exception {
         System.out.println("Key released");
+
+        Node n = (Node)keyEvent.getSource();
+        String id = n.getId();
+
+        switch (id) {
+            case "setMPViewPasswordField":
+                setMPViewPasswordText.setText(setMPViewPasswordField.getText());
+                break;
+
+            case "setMPViewPasswordText":
+                setMPViewPasswordField.setText(setMPViewPasswordText.getText());
+                break;
+        }
+
         if (keyEvent.getCode().equals(KeyCode.ENTER)){
             System.out.println("Enter");
             try {
