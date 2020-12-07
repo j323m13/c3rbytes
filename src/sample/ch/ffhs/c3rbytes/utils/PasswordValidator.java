@@ -27,6 +27,8 @@ public class PasswordValidator {
         return isEqual;
     }
 
+    public void updateText(){
 
+    }
 
 }

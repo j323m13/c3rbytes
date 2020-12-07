@@ -7,13 +7,17 @@ public class PasswordRevealer {
 
     public void passwordReveal (PasswordField passwordField, TextField textField, boolean passwordHidden) {
         if (passwordHidden){
+            /*
             String password = passwordField.getText();
             textField.setText(password);
+            */
             passwordField.setVisible(false);
             textField.setVisible(true);
         } else {
+            /*
             String password = textField.getText();
             passwordField.setText(password);
+            */
             textField.setVisible(false);
             passwordField.setVisible(true);
         }
