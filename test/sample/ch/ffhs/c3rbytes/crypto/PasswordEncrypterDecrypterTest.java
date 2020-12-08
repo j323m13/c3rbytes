@@ -71,8 +71,8 @@ public class PasswordEncrypterDecrypterTest {
 
         PasswordEncrypterDecrypter encryptorAesGcmPassword = new PasswordEncrypterDecrypter();
         //String encryptedTextBase64 = encryptorAesGcmPassword.encrypt(plainText.getBytes(UTF_8), password);
-        String encryptedTextBase64 = "STl1V2J5ZnloRUViZ3ZaejZpMjUybXFVSGtGZHlkblBIbFk2RjBPQlY2NGVBZ0tya3B2bnBVeGYvTlB4MjlkSFNNUm5wSGR5NG5mWEdETC9uR2lqa01TaXMvQks2dGY1NVY1T0V3PT0=";
-        String password = "z`B-9yVS|>Z!Ll)\\+]G3MTPkT<,7Kruu";
+        String encryptedTextBase64 = "KYjPPQnGnX1UCZ3Zlf9bjJG+R4cMZMNND9suLy1QqQ9Zt+a5mqj42SQu+ze9mEc=";
+        String password = "yb<T$rXo4VbwIywE<eg r/pctVDD]c19";
         String decryptedText = "";
         try {
             decryptedText = encryptorAesGcmPassword.decrypt(encryptedTextBase64, password);

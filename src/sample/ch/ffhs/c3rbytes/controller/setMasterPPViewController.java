@@ -52,10 +52,12 @@ public class setMasterPPViewController implements IController {
         passwordGenerator.buildPassword(charSet, passwordLength);
         String passwordDecrypterPassword = passwordGenerator.generatePassword();
 
+        System.out.println(passwordDecrypterPassword);
 
 
         try {
-            loginViewMasterpassphraseController.passwordDecrypterPassword = masterPassPhrase;
+            //loginViewMasterpassphraseController.passwordDecrypterPassword = masterPassPhrase;
+            loginViewMasterpassphraseController.passwordDecrypterPassword = passwordDecrypterPassword;
             FileEncrypterDecrypter fileEncrypterDecrypter = new FileEncrypterDecrypter();
             fileEncrypterDecrypter.encryptFile(passwordDecrypterPassword, filename, masterPassPhrase);
 
