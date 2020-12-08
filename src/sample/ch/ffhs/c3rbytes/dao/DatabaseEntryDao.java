@@ -121,8 +121,16 @@ public class DatabaseEntryDao implements Dao{
             log.delete();
             //delete c3r.c3r file
             dbExecuteUpdate(deleteAccountStmt,createURLSimple());
-            Path c3rFile = Paths.get("c3r.c3r");
-            File c3r = new File(c3rFile.toAbsolutePath().toString());
+            String osName = null;
+            osName = System.getProperty("os.name");
+            String fileName = null;
+            if(osName.equals("win")){
+                fileName = "c3r.c3r";
+            }else{
+                fileName = ".c3r.c3r";
+            }
+            Path c3rfile = Paths.get(fileName);
+            File c3r = new File(c3rfile.toAbsolutePath().toString());
             c3r.delete();
         }catch (SQLException | ClassNotFoundException | InterruptedException e) {
             System.out.print("Error occurred while DELETE Operation: " + e);

@@ -39,10 +39,17 @@ public class FileHandler {
 
     }
 
-    public String readFromFile(String filename) throws IOException {
-
+    public String readFromFile(String filenameFinal) throws IOException {
+        String filename = null;
+        String osName = null;
         // create new file instance
+        osName = System.getProperty("os.name");
+        if (!osName.equals("win")) {
+            filename = "."+filenameFinal;
+        }
+        System.out.println(filename);
         File file = new File(filename);
+
 
         // if not exists return, else read and cast content to string
         if (file.exists()) {

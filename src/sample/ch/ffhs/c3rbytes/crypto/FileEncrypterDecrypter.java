@@ -42,14 +42,16 @@ public class FileEncrypterDecrypter {
             //fileHandler.setReadWriteAttributes(toFile,false);
             //fileHandler.setReadWriteAttributes(toFile,"deny");
         }else{
-            fileHandler.writeToFile(toFile, encryptedByteText);
+            System.out.println(encryptedText);
+            System.out.println(toFile);
+            fileHandler.writeToFile("."+toFile, encryptedByteText);
         }
         fileHandler = null;
         passwordEncrypterDecrypter = null;
     }
 
     public byte[] decryptFile(String fromEncryptedFile, String password) throws Exception {
-
+        String fromEncryptedFilePath = null;
         // create new passwordEncrypterDecrypter
         PasswordEncrypterDecrypter passwordEncrypterDecrypter = new PasswordEncrypterDecrypter();
 
@@ -60,9 +62,17 @@ public class FileEncrypterDecrypter {
 
         //fileHandler.setReadWriteAttributes(fromEncryptedFile, "allow");
 
+        String osName = null;
+        osName = System.getProperty("os.name");
+        if(osName.equals("win")){
+            fromEncryptedFilePath = fromEncryptedFile;
+        }else {
+            fromEncryptedFilePath = "."+fromEncryptedFile;
+        }
 
         // read from file
-        byte[] fileContent = Files.readAllBytes(Paths.get(fromEncryptedFile));
+        System.out.println(fromEncryptedFilePath);
+        byte[] fileContent = Files.readAllBytes(Paths.get(fromEncryptedFilePath));
 
         // in purpose of obfuscation encoding in Base64 --> odd way
         //String cryptedText = Base64.getEncoder().encodeToString(fileContent);
