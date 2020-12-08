@@ -86,7 +86,7 @@ public class mainViewController implements Initializable, IController {
                 profileTable.getSelectionModel().getSelectedItem().getLastUpdate(),
                 profileTable.getSelectionModel().getSelectedItem().getNote());
         //System.out.println("id from profiletable :"+profileTable.getSelectionModel().getSelectedItem().getDummyId());
-        System.out.print("the object: "+tmp.getDummyId()+","+tmp.getId()+", "+tmp.getUsername() + ", " + tmp.getPassword() + ", " + tmp.getUrl() + ", " + tmp.getHiddenPasswordTrick()
+        System.out.println("the object: "+tmp.getDummyId()+","+tmp.getId()+", "+tmp.getUsername() + ", "+ tmp.getDescription()+", " + tmp.getPassword() + ", " + tmp.getUrl() + ", " + tmp.getHiddenPasswordTrick()
                 +", "+tmp.getNote()+", "+tmp.getCreationDate()+", "+tmp.getLastUpdate());
         return tmp;
     }
