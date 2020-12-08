@@ -17,6 +17,8 @@ public class FileHandler {
     public void writeToFile(String file, byte[] content) throws IOException {
         String osName = null;
         osName = System.getProperty("os.name");
+        osName = osName.toLowerCase();
+        System.out.println("os name: "+osName);
         //check if the user os is Windows or something better.
         if(osName.equals("win")){
             System.out.println("windows");

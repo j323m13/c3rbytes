@@ -123,6 +123,7 @@ public class DatabaseEntryDao implements Dao{
             dbExecuteUpdate(deleteAccountStmt,createURLSimple());
             String osName = null;
             osName = System.getProperty("os.name");
+            osName = osName.toLowerCase();
             String fileName = null;
             if(osName.equals("win")){
                 fileName = "c3r.c3r";

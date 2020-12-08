@@ -64,6 +64,7 @@ public class FileEncrypterDecrypter {
 
         String osName = null;
         osName = System.getProperty("os.name");
+        osName = osName.toLowerCase();
         if(osName.equals("win")){
             fromEncryptedFilePath = fromEncryptedFile;
         }else {

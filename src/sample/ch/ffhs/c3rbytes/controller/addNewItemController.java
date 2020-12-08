@@ -107,23 +107,32 @@ public class addNewItemController implements IController {
         String passwordDecrypterPassword = loginViewMasterpassphraseController.passwordDecrypterPassword;
 
         try{
+            System.out.println("pass Description/Type "+dbentry.getDescription());
             id = dbentry.getId();
             System.out.println("id form fillIn() :"+id);
             creation = dbentry.getCreationDate();
+            System.out.println("pass "+creation);
             userNameField.setText(dbentry.getUsername());
+            System.out.println("pass "+userNameField.getText());
             String decryptedAccountPassword = passwordEncrypterDecrypter.decrypt(dbentry.getPassword(),
                     passwordDecrypterPassword);
             passwordField.setText(decryptedAccountPassword);
+            System.out.println("pass "+passwordField.getText());
             urlField.setText(dbentry.getUrl());
+            System.out.println("pass "+urlField.getText());
             //set Combox options
             typeField.setItems(options);
             //set option index from the option which was saved last time. return an index(int)
             typeField.setValue(options.get(options.indexOf(dbentry.getDescription())));
+            System.out.println("pass "+typeField.getValue());
             notesField.setText(dbentry.getNote());
+            System.out.println("pass "+dbentry.getNote());
             viewCreationDateLabel.setText("created on: "+dbentry.getCreationDate());
             viewLastUpdateLabel.setText("Last update: "+dbentry.getLastUpdate().toString());
         }catch (Exception e){
-            System.out.println("a field is null.");
+            System.out.println("a field is null. "+ e.getMessage());
+            System.out.println("a field is null. "+ e);
+            System.out.println("a field is null. "+ e.getStackTrace());
         }
 
     }
@@ -137,7 +146,7 @@ public class addNewItemController implements IController {
         try{
             type = typeField.getValue();
         }catch (Exception e){
-            type = "";
+            type = options.get(1);
         }
 
         if(userNameField.getText().equals("") || userNameField.getText().length()==0){
