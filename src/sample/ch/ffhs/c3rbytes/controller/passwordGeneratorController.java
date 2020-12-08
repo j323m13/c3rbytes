@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.PasswordGenerator;
@@ -174,6 +175,7 @@ public class passwordGeneratorController implements IController {
         Parent passwordGenerator = loader.load();
         //stage stage = new Stage();
         stage.setTitle("Password Generator");
+        stage.getIcons().add(new Image("logo3.png"));
         stage.setScene(new Scene(passwordGenerator, 552, 420));
     }
 

@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
@@ -109,6 +110,7 @@ public class setMasterPPViewController implements IController {
         Parent setMasterpasswordView = loader.load();
         //stage stage = new Stage();
         stage.setTitle("Welcome to C3rBytes");
+        stage.getIcons().add(new Image("logo3.png"));
         stage.setScene(new Scene(setMasterpasswordView, 552, 371));
         stage.show();
     }

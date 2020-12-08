@@ -9,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
@@ -270,6 +271,7 @@ public class addNewItemController implements IController {
         loader = new FXMLLoader(getClass().getResource("../gui/add_new_item_view.fxml"));
         Parent addNewItemView = loader.load();
         stage.setTitle("Add new item");
+        stage.getIcons().add(new Image("logo3.png"));
         stage.setScene(new Scene(addNewItemView, 586, 342));
     }
 
