@@ -285,11 +285,11 @@ public class addNewItemController implements IController {
 
         switch (id) {
             case "passwordField":
-                showPasswordTextField.setText(passwordField.getText());
+                updateTextField();//showPasswordTextField.setText(passwordField.getText());
                 break;
 
             case "showPasswordTextField":
-                passwordField.setText(showPasswordTextField.getText());
+                updatePasswordField();//passwordField.setText(showPasswordTextField.getText());
                 break;
         }
 
