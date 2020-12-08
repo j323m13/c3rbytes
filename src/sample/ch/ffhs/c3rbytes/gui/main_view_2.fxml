@@ -72,7 +72,7 @@
                   <Insets left="5.0" right="5.0" />
                </GridPane.margin>
             </Button>
-            <TextField fx:id="searchField" minHeight="25.0" minWidth="50.0" prefHeight="25.0" prefWidth="78.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+            <TextField fx:id="searchField" minHeight="25.0" minWidth="50.0" onKeyReleased="#manageInput" prefHeight="25.0" prefWidth="78.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
          </children>
       </GridPane>
         <SplitPane dividerPositions="0.20044543429844097" focusTraversable="true" minHeight="250.0" minWidth="900.0" prefHeight="500.0" prefWidth="900.0" VBox.vgrow="ALWAYS">

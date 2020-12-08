@@ -238,9 +238,10 @@ public class DatabaseEntryDao implements Dao{
     public ObservableList<DatabaseEntry> searchElement(String searched, ObservableList databaseEntries){
         String element = "SELECT \"user_id\",\"username\",\"description\",\"url_content\",\"password_text\",\"date_creation\",\"date_update\",\"note\"\n" +
                 "FROM \"CERBYTES\".\"database_entries\"\n" +
-                "WHERE \"username\" = '"+searched+"'\n" +
-                "OR \"description\"='"+searched+"'\n" +
-                "OR \"url_content\"='"+searched+"'";
+                "WHERE \"username\" LIKE '%"+searched+"%'\n" +
+                "OR \"description\" LIKE '%"+searched+"%'\n" +
+                "OR \"url_content\" LIKE '%"+searched+"%'\n" +
+                "OR \"note\" LIKE '%"+searched+"%'";
         System.out.println(element);
         try {
             dbExecuteQuery(element,databaseEntries,createURLSimple());

@@ -12,6 +12,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.PasswordEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.DatabaseEntry.DatabaseEntry;
@@ -380,6 +382,7 @@ public class mainViewController implements Initializable, IController {
         Parent viewItemControllerParent = loader.load();
         addNewItemController controller = loader.getController();
         controller.fillIn(copyClickedEntry());
+        controller.updateTextField();
         Stage stage = new Stage();
         stage.setTitle("View item");
         stage.setScene(new Scene(viewItemControllerParent, 600,400));
@@ -508,4 +511,11 @@ public class mainViewController implements Initializable, IController {
     }
 
 
+    public void manageInput(KeyEvent keyEvent) throws SQLException, IOException, ClassNotFoundException {
+        if (keyEvent.getCode().equals(KeyCode.ENTER)){
+            System.out.println("Enter");
+            searchAction(null);
+        }
+
+    }
 }
