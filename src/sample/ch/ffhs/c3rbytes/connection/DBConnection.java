@@ -20,39 +20,28 @@ public class DBConnection {
     public static Connection connection = null;
     public static String localValues = null;
 
-
+    /**
+     * methode to connect to the database
+     * @param JDBC_URL
+     * @throws SQLException
+     */
     public static void dbConnect(String JDBC_URL) throws SQLException {
         System.out.println("Connecting to db ... ");
-        //System.out.println("url inside dbconnect(): " + createURL());
         connection = DriverManager.getConnection(JDBC_URL);
         System.out.println("connection successful");
         getConnectionInstance();
-
-    /*
-        try {
-            System.out.println("Connecting to db ... ");
-            //System.out.println("url inside dbconnect(): " + createURL());
-            connection = DriverManager.getConnection(JDBC_URL);
-            System.out.println("connection successful");
-            getConnectionInstance();
-
-        } catch (SQLException e) {
-            System.out.println("Connection Failed! Check output console" + e);
-            throw e;
-        }*/
-
     }
 
-
-    //Close Connection
+    /**
+     * Methode to close the connection with the database
+     * @throws SQLException
+     */
     public static void dbDisconnect() throws SQLException {
         try {
             if (connection != null && !connection.isClosed()) {
-
                 System.out.println("disconnect ->");
                 connection.close();
                 System.out.println("disconnect() successful");
-                //connection.close();
                 getConnectionInstance();
             }
         } catch (Exception e) {
@@ -62,11 +51,15 @@ public class DBConnection {
     }
 
 
-    /*
+    /**
      * this methode holds all the entries from the database and return them to an ObservableList. For insertion, use dbExecuteUpdate()
-     * @param getAll (String)
-     * @param databaseEntries (ObservableList)
-     * @see dbExecuteUpdate()
+     * @param getAll a sql String
+     * @param databaseEntries ObservableList<DatabaseEntry> for holding the results from the query
+     * @param JDBC_URL an url (see createURL() and createURLSimple())
+     * @return databaseEntries
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException
      */
     public static ObservableList<DatabaseEntry> dbExecuteQuery(String getAll, ObservableList<DatabaseEntry> databaseEntries, String JDBC_URL) throws SQLException, ClassNotFoundException, InterruptedException {
         //Declare statement, resultSet and CachedResultSet as null
@@ -111,7 +104,15 @@ public class DBConnection {
         return databaseEntries;
     }
 
-    //DB Execute Update (For Update/Insert/Delete) Operation
+    /**
+     * DB Execute Update (For Update/Insert/Delete) Operation
+     * @param sqlStmt the query to be executed
+     * @param JDBC_URL the url
+     * @return true if successful.
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException
+     */
     public static boolean dbExecuteUpdate(String sqlStmt, String JDBC_URL) throws SQLException, ClassNotFoundException, InterruptedException {
         //Declare statement as null
         Statement stmt = null;
@@ -139,20 +140,21 @@ public class DBConnection {
     }
 
 
-    /*
+    /**
      * Set a password value to the userDB for security and queries.
-     * @param url to connect to the database
-     * @param passwordDB: the password to be set
-     * @param setupPasswordString: a sql statement to be executed.
+     * @param JDBC_URL url to connect to the database
+     * @param passwordDB the password to be set
+     * @param setupPasswordString a sql statement to be executed.
+     * @throws SQLException
      */
     public static void setupUserDBWithPasswordConnection(String JDBC_URL, String passwordDB, String setupPasswordString) throws SQLException {
 
         System.out.println("entering setup");
-        System.out.println(JDBC_URL);
+        //System.out.println(JDBC_URL);
         dbConnect(JDBC_URL);
-        System.out.println("Connect success -> " + JDBC_URL);
+       // System.out.println("Connect success -> " + JDBC_URL);
 
-        System.out.println("DBConnection.password: " + DBConnection.passwordDB);
+        //System.out.println("DBConnection.password: " + DBConnection.passwordDB);
 
         CallableStatement cs = connection.prepareCall(setupPasswordString);
         try {
@@ -160,22 +162,30 @@ public class DBConnection {
             cs.setString(2, passwordDB);
             cs.execute();
             System.out.println("Success: passwordDB has been set. " + userDB + ";" + DBConnection.passwordDB);
+            //we set the new password as the password of the db
             DBConnection.passwordDB = passwordDB;
         } catch (SQLException e) {
             System.out.println("PasswordDB has not been set. " + e);
         }
         cs.close();
-        System.out.println("JDBC_URL = " + createURLSimple());
+        //System.out.println("JDBC_URL = " + createURLSimple());
         dbDisconnect();
 
-        System.out.println("Connect -> " + createURLSimple() + ";password=" + DBConnection.passwordDB + "");
+        //System.out.println("Connect -> " + createURLSimple() + ";password=" + DBConnection.passwordDB + "");
+        //we test if we can connect with the new password.
         dbConnect(createURL() + ";password=" + DBConnection.passwordDB + "");
         System.out.println("success with password");
 
+        //close connection
         dbDisconnect();
 
     }
 
+    /**
+     * methode to reset the database pasword.
+     * @param reset the query for resetting the password of the user
+     * @param newUserDBPassword the new password
+     */
     public static void resetUserPwd(String reset, String newUserDBPassword) {
         try {
             dbConnect(createURLSimple());
@@ -185,6 +195,7 @@ public class DBConnection {
             cs.setString(2, newUserDBPassword);
             cs.execute();
             cs.close();
+            //if the operation is successful, we set the new password of the db for later use.
             DBConnection.passwordDB = newUserDBPassword;
             System.out.println("new password: " + passwordDB);
             System.out.println(createURLSimple());
@@ -193,7 +204,20 @@ public class DBConnection {
         }
     }
 
-
+    /**
+     * methode to create an url to connecto to the db
+     * This methode create the full url with:
+     * databaseName
+     * user
+     * passwordDB
+     * territory
+     * collation
+     * dataEncryption
+     * encryptionKeyLength
+     * encryptionAlgorithm
+     * bootPassword
+     * @return JDBC_URL the url created
+     */
     public static String createURL() {
         JDBC_URL = "jdbc:derby:" + databaseName + ";create=" + createDB + ";user=" + userDB + ";password=" + passwordDB +
                 ";territory="+localValues+";collation=TERRITORY_BASED:PRIMARY;dataEncryption=" + databaseEncryption + "" +
@@ -202,13 +226,23 @@ public class DBConnection {
         return JDBC_URL;
     }
 
-
+    /**
+     * Methode to create a simple URL
+     * databaseName
+     * user
+     * password
+     * @return JDBC_URL the url created
+     */
     public static String createURLSimple() {
         JDBC_URL = "jdbc:derby:" + databaseName + ";create=true;user=" + userDB + ";password=" + passwordDB + "";
         System.out.println("createURLSimple() -> " + JDBC_URL);
         return JDBC_URL;
     }
 
+    /**
+     * Methode to print the instance of the connection in the console (debugging)
+     * @throws SQLException
+     */
     public static void getConnectionInstance() throws SQLException {
         if (connection != null && !connection.isClosed()) {
             System.out.println("connection is open");
@@ -217,11 +251,14 @@ public class DBConnection {
         }
     }
 
-
+    /**
+     * Methode to shutdown the database properly.
+     * @throws SQLException
+     */
     public static void shutdownDB() throws SQLException {
         try {
-            getConnectionInstance();
-            connection = DriverManager.getConnection(createURLSimple() + ";shutdown=true");
+            dbConnect(createURLSimple()+";shutdown=true");
+            //connection = DriverManager.getConnection(createURLSimple() + ";shutdown=true");
             getConnectionInstance();
         } catch (SQLException e) {
             if (e.getSQLState().equals("08006")) {

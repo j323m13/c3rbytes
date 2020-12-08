@@ -2,7 +2,6 @@ package sample.ch.ffhs.c3rbytes.DatabaseEntry;
 
 
 import javafx.beans.property.SimpleStringProperty;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -20,8 +19,8 @@ public class DatabaseEntry {
     private SimpleStringProperty note;
     private String dummyId;
 
-    /*
-    * Empty constructor
+    /**
+     * empty contructor
      */
     public DatabaseEntry() {
         this.id = new SimpleStringProperty();
@@ -35,9 +34,18 @@ public class DatabaseEntry {
         passwordTrick = "* * * * *";
         dummyId = null;
     }
-    /*
-    * Constructor with full paramenters.
-    * @param: id, dummyId, username, description, url, password, creationDate, lastUpdate, note.
+
+    /**
+     * the contructor
+     * @param id an id set by the database
+     * @param dummyId the index of all the entries out of the database. it is used to have a better display in tableView
+     * @param username username
+     * @param description type of account
+     * @param url url
+     * @param password a password (encrypted)
+     * @param creationDate date of creation of the entry (getDateTime() from this class)
+     * @param lastUpdate date of last update (first time is the same date as date of creation)
+     * @param note a note of the user.
      */
     public DatabaseEntry(String id, String dummyId, String username, String description,
                          String url, String password, String creationDate,
@@ -53,6 +61,10 @@ public class DatabaseEntry {
         this.note = new SimpleStringProperty(note);
         passwordTrick = "* * * * *";
     }
+
+    /*
+    * below all the setter and getter.
+     */
 
     public String getDescription() {
         if(creationDate.get() == null){
@@ -142,14 +154,12 @@ public class DatabaseEntry {
     }
 
 
-
-
-
-        /*
-        * Methode to create the a time stamp for the date_creation (Database) and date_update (Database)
-        * This methode is also used to store a time stamp value inside an DatabaseEntry Object, for the fields creationDate and
-        * lastUpdate.
-         */
+    /**
+     * Methode to create the a time stamp for the date_creation (Database) and date_update (Database)
+     * This methode is also used to store a time stamp value inside an DatabaseEntry Object, for the fields creationDate and
+     * lastUpdate.
+     * @return myDateObj (LocalDateTime) formatted as dd-MM-yyyy HH:mm:ss
+     */
     public static String getDateTime(){
         LocalDateTime myDateObj = LocalDateTime.now();
         //System.out.println("Before formatting: " + myDateObj);
@@ -158,8 +168,9 @@ public class DatabaseEntry {
         return myDateObj.format(myFormatObj);
     }
 
-    /*
-    * Retur 5 ***** to simulate a password field. it ain't stupid if it works.
+    /**
+     * Return 5 ***** to simulate a password field. it ain't stupid if it works.
+     * @return
      */
     public String getHiddenPasswordTrick() {
         return passwordTrick;

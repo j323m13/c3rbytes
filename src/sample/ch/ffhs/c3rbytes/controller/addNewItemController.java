@@ -58,11 +58,19 @@ public class addNewItemController implements IController {
             "Social","Business", "Shopping", "Productivity", "Entertainment", "Family", "Health", "Other"
     );
 
+    /**
+     * Create a comebox menu
+     */
     public void createCombox(){
         typeField.setItems(options);
         typeField.setValue(options.get(1).toString());
     }
 
+    /**
+     * Open a new view with a password generator
+     * @param event bouton click
+     * @throws IOException
+     */
     //@FXML private javafx.scene.control.Button generatePasswordButton;
     public void generatePassword(ActionEvent event) throws IOException{
         Stage stage = new Stage();
@@ -93,13 +101,21 @@ public class addNewItemController implements IController {
     }
 
     //show or hide passwordField
+
+    /**
+     * Show the password in field password (view protected)
+     * @param event mouse click
+     */
     public void showPassword(ActionEvent event){
         new PasswordRevealer().passwordReveal(passwordField, showPasswordTextField, isHidingPassword);
         isHidingPassword =! isHidingPassword;
     }
 
-    /*
-    methode to populate the field of for add new Item
+
+    /**
+     * methode to populate the field of for add new Item
+     * @param dbentry
+     * @throws Exception
      */
     public void fillIn(DatabaseEntry dbentry) throws Exception {
         usernameFieldLabelError.setVisible(false);
@@ -142,6 +158,10 @@ public class addNewItemController implements IController {
 
     }
 
+    /**
+     * control if the mandatory fields are note empty.
+     * @return isFilledOut
+     */
     public boolean controlFieldInput(){
         usernameFieldLabelError.setText("");
         passwordFieldLabelError.setText("");
@@ -175,10 +195,20 @@ public class addNewItemController implements IController {
         return isFilledOut;
     }
 
+    /**
+     * discard action
+     * @param actionEvent mouse click
+     */
     public void onDiscardButton(ActionEvent actionEvent) {
         Stage stage = (Stage) discardButton.getScene().getWindow();
         stage.close();
     }
+
+    /**
+     * Save action
+     * @param actionEvent mouse click
+     * @throws Exception
+     */
     public void onSaveButton(ActionEvent actionEvent) throws Exception {
         if(controlFieldInput()){
             String username = userNameField.getText();
@@ -268,6 +298,10 @@ public class addNewItemController implements IController {
 
     }
 
+    /**
+     * Copy password in memory
+     * @param actionEvent mouse click
+     */
     public void copyPassword(ActionEvent actionEvent) {
         // get password from passwordField
         String accountPassword = passwordField.getText();
@@ -280,6 +314,11 @@ public class addNewItemController implements IController {
 
     }
 
+    /**
+     * Get the view
+     * @param stage
+     * @throws IOException
+     */
     @Override
     public void getView(Stage stage) throws IOException {
         loader = new FXMLLoader(getClass().getResource("../gui/add_new_item_view.fxml"));
@@ -289,12 +328,21 @@ public class addNewItemController implements IController {
         stage.setScene(new Scene(addNewItemView, 586, 342));
     }
 
+    /**
+     * get controller
+     * @return loader.getController()
+     * @throws IOException
+     */
     @Override
     public Object getController() throws IOException {
         return loader.getController();
     }
 
-
+    /**
+     * Update the passwordfield (show vs hide password)
+     * @param inputMethodEvent
+     *
+     */
     public void update(InputMethodEvent inputMethodEvent) {
         Node n = (Node)inputMethodEvent.getSource();
         String id = n.getId();
@@ -311,10 +359,16 @@ public class addNewItemController implements IController {
 
     }
 
+    /**
+     * update the passwordField
+     */
     public void updatePasswordField() {
         passwordField.setText(showPasswordTextField.getText());
     }
 
+    /**
+     * update the textField (password)
+     */
     public void updateTextField() {
         showPasswordTextField.setText(passwordField.getText());
     }

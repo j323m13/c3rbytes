@@ -24,7 +24,13 @@ public class alertViewController implements IController {
     DatabaseEntry databaseEntryToDelete;
     public static boolean confirmation = false;
 
-
+    /**
+     * start an alert
+     * @param alertText the text of the alert
+     * @param TYPE of the alert
+     * @param confirmation the button to confirm or discard the action
+     * @return option: the chosen option to operate an action on come back.
+     */
     public Optional<ButtonType> startAlertWindows(String alertText, Alert.AlertType TYPE, String confirmation){
         Alert alert = new Alert(TYPE);
         alert.setWidth(300);
@@ -43,19 +49,10 @@ public class alertViewController implements IController {
 
         Optional<ButtonType> option = alert.showAndWait();
         return option;
-
-        //alertField.setText("be careful");
-        //Text textAlert = new Text();
-        /*
-        textAlert.setText(a);
-        textAlert.setFont(Font.font ("Verdana", 20));
-        textAlert.setFill(Color.RED);
-        textAlert.setTextAlignment(TextAlignment.CENTER);
-         */
-
-
     }
 
+
+   /*
     public void onConfirm(javafx.event.ActionEvent actionEvent) {
         System.out.print("delete that shit.");
         Stage stage = (Stage) confirmButton.getScene().getWindow();
@@ -68,6 +65,7 @@ public class alertViewController implements IController {
         Stage stage = (Stage)discardButton.getScene().getWindow();
         stage.close();
     }
+    */
 
     @Override
     public void getView(Stage stage) throws IOException {

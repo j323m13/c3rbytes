@@ -7,6 +7,7 @@ import sample.ch.ffhs.c3rbytes.controller.loginViewController;
 import sample.ch.ffhs.c3rbytes.controller.setMasterPWViewController;
 import sample.ch.ffhs.c3rbytes.connection.DBConnection;
 import sample.ch.ffhs.c3rbytes.utils.FileHandler;
+import sample.ch.ffhs.c3rbytes.utils.OSBasedAction;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -14,7 +15,7 @@ import java.util.Locale;
 
 public class Main extends Application {
     private final String file = "c3r.c3r";
-    private final String dbFile = DBConnection.databaseName;
+
 
 
 
@@ -55,12 +56,9 @@ public class Main extends Application {
         // First Init
         FileHandler fileHandler = new FileHandler();
 
-        //check user lang and country variable
-        Locale locale = Locale.getDefault();
-        String lang = locale.getLanguage();
-        String country = locale.getCountry();
-        System.out.println(lang+"_"+country);
-        DBConnection.localValues = lang+"_"+country;
+        //check user lang and country variable. pass the result to DBConnenction
+        OSBasedAction helper = new OSBasedAction();
+        helper.setLocalValue();
 
 
         //fileHandler.setReadWriteAttributes(file,"allow");
@@ -108,6 +106,8 @@ e
         //fileHandler.setReadWriteAttributes(file,"deny");
         stage.show();
     }
+
+
 
     /*
     private static void getView(Stage stage ,String resource, String title, int width, int height) throws IOException {

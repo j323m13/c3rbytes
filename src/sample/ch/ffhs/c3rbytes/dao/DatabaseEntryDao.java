@@ -4,12 +4,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import sample.ch.ffhs.c3rbytes.DatabaseEntry.DatabaseEntry;
 import sample.ch.ffhs.c3rbytes.connection.DBConnection;
+import sample.ch.ffhs.c3rbytes.utils.OSBasedAction;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.*;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import static sample.ch.ffhs.c3rbytes.connection.DBConnection.*;
@@ -66,7 +63,7 @@ public class DatabaseEntryDao implements Dao{
      * @see DBConnection.class
      */
     @Override
-    public Dao update(DatabaseEntry entry) throws SQLException, ClassNotFoundException {
+    public void update(DatabaseEntry entry) throws SQLException, ClassNotFoundException {
         String updateStmt = "UPDATE \"CERBYTES\".\"database_entries\"\n" +
                 "SET \"username\"='"+entry.getUsername()+"', \"description\"='"+entry.getDescription()+"'," +
                 "\"url_content\"='"+entry.getUrl()+"', \"password_text\"='"+entry.getPassword()+"', \"date_update\"='"+entry.getLastUpdate()+"'," +
@@ -77,7 +74,6 @@ public class DatabaseEntryDao implements Dao{
                 System.out.print("Error occurred while DELETE Operation: " + e);
 
             }
-        return null;
 
     }
 
@@ -107,50 +103,32 @@ public class DatabaseEntryDao implements Dao{
     * Delete also the database folders
     * @return null
      */
-    public Dao deleteAccount() throws SQLException, ClassNotFoundException {
+    public void deleteAccount() throws SQLException, ClassNotFoundException {
         System.out.print("account will be deleted");
         String deleteAccountStmt = "DELETE FROM \"CERBYTES\".\"database_entries\"";
         try {
+            OSBasedAction handler = new OSBasedAction();
             //delete db file
             dbExecuteUpdate(deleteAccountStmt,createURLSimple());
-            Path dbFile = Paths.get("db");
-            File db = new File(dbFile.toAbsolutePath().toString());
-            deleteDatabaseFolder(db);
-            //delete db log file
-            Path logFile = Paths.get("derby.log");
-            File log = new File(logFile.toAbsolutePath().toString());
-            log.delete();
-            //delete c3r.c3r file
+            handler.deleteDatabaseFolder(handler.getPath("db"));
+            //delete db log file (derby.log)
+            handler.deleteDatabaseFolder(handler.getPath("derby.log"));
             dbExecuteUpdate(deleteAccountStmt,createURLSimple());
-            String osName = null;
-            osName = System.getProperty("os.name").toLowerCase();
             String fileName = null;
-            if(osName.contains("win")){
+            if(handler.getOSName().contains("win")){
                 fileName = "c3r.c3r";
             }else{
                 fileName = ".c3r.c3r";
             }
-            Path c3rfile = Paths.get(fileName);
-            File c3r = new File(c3rfile.toAbsolutePath().toString());
-            c3r.delete();
+            //delete c3r.c3r file
+            handler.deleteDatabaseFolder(handler.getPath(fileName));
         }catch (SQLException | ClassNotFoundException | InterruptedException e) {
             System.out.print("Error occurred while DELETE Operation: " + e);
 
         }
 
-        return null;
     }
 
-    private void deleteDatabaseFolder(File file){
-            for (File subFile : file.listFiles()) {
-                if(subFile.isDirectory()) {
-                    deleteDatabaseFolder(subFile);
-                } else {
-                    subFile.delete();
-                }
-            }
-            file.delete();
-    }
 
 
     /*
@@ -167,21 +145,32 @@ public class DatabaseEntryDao implements Dao{
 
     @Override
     public void setup() throws SQLException, ClassNotFoundException, InterruptedException {
-        //setupEncryption(bootPassword);
         setupUserDBWithPassword(passwordDB);
         setupTable();
 
     }
 
+    /*
+    * Methode to setup user of the db with a password.
+    * on first call, database will be create if it does not exist: (create=true).
+    * DB is created with an url passed to dbConnect()
+    * @see DBConnection.java
+    * @see createURLSimple() (without bootPassword)
+    * @see createURL() (with bootPassword)
+     */
     public void setupUserDBWithPassword(String newPasswordDB) throws SQLException, InterruptedException, ClassNotFoundException {
         //TODO get a string 10CHARS from bootpassword as passwordDB
-        //on first call, database will be create if it does not exist: (create=true).
-        String url = createURLSimple();
+        //on first call, database will be create if it does not exist: (create=true). -> see create
         // set userDB's password
         String setupPasswordString = "CALL SYSCS_UTIL.SYSCS_CREATE_USER(?,?)";
-        setupUserDBWithPasswordConnection(url, newPasswordDB, setupPasswordString);
+        setupUserDBWithPasswordConnection(createURLSimple(), newPasswordDB, setupPasswordString);
     }
 
+    /*
+    * Reset the password of the user of the Dtabase
+    * @param the new password
+    * @see resetUserPwd() from DBConnection.java
+     */
     public void resetUserDBWithPassword(String newPasswordDB) throws SQLException, InterruptedException, ClassNotFoundException {
         //TODO get a string 10CHARS from bootpassword as passwordDB
         //on first call, database will be create if it does not exist: (create=true).
@@ -190,7 +179,15 @@ public class DatabaseEntryDao implements Dao{
         resetUserPwd(setupPasswordString, newPasswordDB);
     }
 
+    /*
+    * change the bootpassword of the db. it is the encryption key.
+    * @param newBootPassword (encryption key)
+    * @param newPasswordDB (user of the db)
+    * the db has to be shutdown to perform the change of the bootpassword. furthermore, the database owner (our user) has to own the database
+    * if not, the action is not allowed.
+     */
     public void changeBootPassword(String newBootPassword, String newPasswordDB) throws SQLException {
+        //shutdown the dabase. without a shutdown, this action is not allowed.
         shutdownDB();
             try {
                 System.out.println("sleeping 1");
@@ -209,7 +206,11 @@ public class DatabaseEntryDao implements Dao{
         }
 
 
-
+    /*
+    * Methode to setup the table in the database
+    * Setup shema (CERBYTES)
+    * setup table (database_entries)
+     */
     public void setupTable() throws SQLException, ClassNotFoundException, InterruptedException {
         String urlForSetupSchemaAndTable = createURLSimple()+";password="+passwordDB;
         String slqCreateSchema = "CREATE SCHEMA \"CERBYTES\"";
@@ -227,23 +228,23 @@ public class DatabaseEntryDao implements Dao{
         dbExecuteUpdate(slqCreateSchema,urlForSetupSchemaAndTable);
         dbExecuteUpdate(sqlCreateTable,urlForSetupSchemaAndTable);
 
-    }
-
+    }/*
+    * methode to setup the encryption.
+    * During the first start (and first creation of the db), a bootPassword is applied and become the encryption key.
+    * to start the db, the bootpassowrd has to be provided.
+    *@param encryptionKey (=bootPassword)
+    */
     public void setupEncryption(String encryptionKey) throws InterruptedException, ClassNotFoundException, SQLException {
         bootPassword = encryptionKey;
-        /*
-        String encryptString = "CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY('bootPassword', '"+ bootPassword+","+bootPassword+"')";
-        //setupDBEncryption(encryptionKey);
-        //dbExecuteUpdate(encryptString,createURL());
-        dbConnect(createURLSimple()+";bootPassword="+bootPassword+"");
-        System.out.println("DB ist encrypted with: "+bootPassword);
-         */
-
         dbConnect(createURL());
-
-
     }
 
+    /*
+    * Methode to search the db with a searchElement
+    * @param searched: a string to search
+    * @param databaseEntries: an ObservableList to hold the result(s) and display it(them) on the tableView of the main view.
+    * @return the databaEntries (observableList)
+     */
     public ObservableList<DatabaseEntry> searchElement(String searched, ObservableList databaseEntries){
         String element = "SELECT \"user_id\",\"username\",\"description\",\"url_content\",\"password_text\",\"date_creation\",\"date_update\",\"note\"\n" +
                 "FROM \"CERBYTES\".\"database_entries\"\n" +
@@ -260,10 +261,17 @@ public class DatabaseEntryDao implements Dao{
         return databaseEntries;
     }
 
+    /*
+    * Shutdown the DB
+    * @see shutDownDB() in DBConnection.java
+     */
     public void shutdown() throws SQLException {
         shutdownDB();
     }
 
+    /*
+    * Methode to get the url (JDBC_URL). call createURL() (with bootPassword)
+     */
     public String getUrl() {
         return DBConnection.createURL();
     }

@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import sample.ch.ffhs.c3rbytes.connection.DBConnection;
 import sample.ch.ffhs.c3rbytes.crypto.StringHasher;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.utils.PasswordRevealer;
@@ -42,6 +43,9 @@ public class changePasswordController implements IController {
         String newMasterpassword = newPasswordField.getText();
         String newMasterpasswordConfirmed = newPasswordConfirmField.getText();
         boolean isFilledOut = true;
+        StringHasher stringHasher = new StringHasher();
+        String oldMasterpasswordHashed = stringHasher.encryptSHA3(HASHALGORITHM, oldMasterpassword);
+
 
         System.out.println(oldMasterpassword + " " + newMasterpassword + " " + newMasterpasswordConfirmed);
 
@@ -62,20 +66,24 @@ public class changePasswordController implements IController {
         boolean newPw = passwordValidator.checkFillOut(newMasterpassword);
         boolean newPwConfirmed = passwordValidator.checkFillOut(newMasterpasswordConfirmed);
         boolean isEqualNewPw = passwordValidator.isEqual(newMasterpassword, newMasterpasswordConfirmed);
-
-        if (oldPw && newPw && newPwConfirmed && isEqualNewPw){
-            changePassword(oldMasterpassword, newMasterpasswordConfirmed);
-        } else{
-            passwordMatchErrorLabel.setText("Password change not possible");
-            System.out.println("New password does not match");
-        }
+        boolean oldPWisCorrect = passwordValidator.isEqual(oldMasterpasswordHashed,DBConnection.bootPassword);
 
         if (!oldPw){
             setStyle(oldMasterPasswordField, oldMasterPasswordText);
             oldMasterPasswordText.setText("Please fill out old master password");
             System.out.println("fill out masterpassphrase");
         }
+        if (oldPw){
+            setStyle(oldMasterPasswordField, oldMasterPasswordText);
+            oldMasterPasswordText.setText("Please fill out old master password");
+            System.out.println("fill out masterpassphrase");
 
+        }
+        if (!oldPWisCorrect){
+            setStyle(oldMasterPasswordField, oldMasterPasswordText);
+            oldPasswordErrorLabel.setText("old Master Password is not correct.");
+            System.out.println("Enter the correct Master Password.");
+        }
         if (!newPw){
             setStyle(newPasswordField, newPasswordText);
             passwordMatchErrorLabel.setText("Please fill out new master password");
@@ -94,6 +102,13 @@ public class changePasswordController implements IController {
             passwordMatchErrorLabel.setText("New password not correctly confirmed");
             System.out.println("fill out masterpassphrase");
         }
+        if (oldPw && newPw && newPwConfirmed && isEqualNewPw && oldPWisCorrect){
+            changePassword(oldMasterpassword, newMasterpasswordConfirmed);
+        } else{
+            passwordMatchErrorLabel.setText("Password change not possible");
+            System.out.println("New password does not match");
+        }
+
 
 
 
@@ -209,7 +224,9 @@ public class changePasswordController implements IController {
             String hashedNewMasterpassword = stringHasher.encryptSHA3(HASHALGORITHM, newMasterpassword);
             String hashedNewPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM, hashedNewMasterpassword).substring(32, 64);
             DatabaseEntryDao setup = new DatabaseEntryDao();
-            setup.changeBootPassword(hashedNewMasterpassword, hashedNewPasswordDB);
+            if(hashedOldMasterpassword.equals(DBConnection.bootPassword)){
+                setup.changeBootPassword(hashedNewMasterpassword, hashedNewPasswordDB);
+            }
 
             //DBConnection.changebootPasswordAndEncryptDBWithNewBootPassword(hashedOldMasterpassword, hashedNewMasterpassword);
             //DBConnection.changeBootPassword(oldMasterpassword, newMasterpassword);

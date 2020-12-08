@@ -1,6 +1,7 @@
 package sample.ch.ffhs.c3rbytes.crypto;
 
 import sample.ch.ffhs.c3rbytes.utils.FileHandler;
+import sample.ch.ffhs.c3rbytes.utils.OSBasedAction;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -12,6 +13,7 @@ import java.util.Locale;
 public class FileEncrypterDecrypter {
 
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
+    OSBasedAction handler = new OSBasedAction();
 
     public void encryptFile(String content, String toFile, String password) throws Exception {
 
@@ -30,11 +32,10 @@ public class FileEncrypterDecrypter {
 
         // Base64 Encoding the standard way
         byte[] encryptedByteText = Base64.getEncoder().encode(encryptedText.getBytes(UTF_8));
-        FileHandler fileHandler = new FileHandler();
-        String osName = null;
-        osName = System.getProperty("os.name").toLowerCase();
 
-        if(osName.contains("win")){
+        FileHandler fileHandler = new FileHandler();
+
+        if(handler.getOSName().contains("win")){
             // save to file and disable write permissions
             //fileHandler.setReadWriteAttributes(toFile,false);
             //fileHandler.setReadWriteAttributes(toFile,"allow");
@@ -63,10 +64,7 @@ public class FileEncrypterDecrypter {
         //fileHandler.setReadWriteAttributes(fromEncryptedFile, true);
 
         //fileHandler.setReadWriteAttributes(fromEncryptedFile, "allow");
-
-        String osName = null;
-        osName = System.getProperty("os.name").toLowerCase();
-        if(osName.contains("win")){
+        if(handler.getOSName().contains("win")){
             fromEncryptedFilePath = fromEncryptedFile;
         }else {
             fromEncryptedFilePath = "."+fromEncryptedFile;

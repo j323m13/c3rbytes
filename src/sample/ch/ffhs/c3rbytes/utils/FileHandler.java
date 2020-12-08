@@ -13,14 +13,12 @@ import java.util.Locale;
 public class FileHandler {
 
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
+    OSBasedAction helper = new OSBasedAction();
 
     // if file exists, it overwrites it's content. if not, it creates a new file and write the content into
     public void writeToFile(String file, byte[] content) throws IOException {
-        String osName = null;
-        osName = System.getProperty("os.name").toLowerCase();
         //check if the user os is Windows or something better.
-        if(osName.contains("win")){
-            System.out.println("windows");
+        if(helper.getOSName().contains("win")){
             // get filepath
             Path path = Paths.get(file);
 
@@ -42,11 +40,8 @@ public class FileHandler {
 
     public String readFromFile(String filenameFinal) throws IOException {
         String filename = filenameFinal;
-        String osName = null;
         // create new file instance
-        osName = System.getProperty("os.name").toLowerCase();
-        System.out.println(osName);
-        if (!osName.contains("win")) {
+        if (!helper.getOSName().contains("win")) {
             filename = "."+filenameFinal;
         }
         System.out.println("filename " +filename);
@@ -106,7 +101,7 @@ public class FileHandler {
 
          */
     }
-
+    //Todo: use delte methode in OSBasedAction.java
     public void deleteFile(String filename){
         File file = new File(filename);
 
@@ -124,6 +119,7 @@ public class FileHandler {
         return false;
     }
 
+    //TODO to delete
     public static void main(String[] args) throws IOException {
         FileHandler fileHandler = new FileHandler();
 

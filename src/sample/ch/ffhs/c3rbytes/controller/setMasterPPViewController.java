@@ -93,6 +93,7 @@ public class setMasterPPViewController implements IController {
 
     public void abordMPPAction() throws SQLException, ClassNotFoundException {
         System.out.println("System exit");
+        //delete db if the user abort during passphrase setup
         newStartUp.deleteAccount();
         System.exit(0);
     }
@@ -109,7 +110,8 @@ public class setMasterPPViewController implements IController {
 
     @Override
     public void getView(Stage stage) throws IOException {
-        loader = new FXMLLoader(getClass().getResource("../gui/set_master_pw_view.fxml"));
+        URL url = getClass().getClassLoader().getResource("set_master_mpp_view.fxml");
+        FXMLLoader loader = new FXMLLoader(url);
         Parent setMasterpasswordView = loader.load();
         //stage stage = new Stage();
         stage.setTitle("Welcome to C3rBytes");
