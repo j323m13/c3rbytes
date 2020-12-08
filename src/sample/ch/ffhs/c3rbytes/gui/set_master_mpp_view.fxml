@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -21,5 +22,10 @@
       <Label alignment="CENTER" contentDisplay="CENTER" layoutX="149.0" layoutY="164.0" prefHeight="43.0" prefWidth="256.0" text="This is your first Login. Please enter a Masterpassphrase" textAlignment="CENTER" wrapText="true" />
       <Button fx:id="showPasswordButton" layoutX="389.0" layoutY="240.0" mnemonicParsing="false" onAction="#showPassword" prefHeight="25.0" prefWidth="32.0" text="👁" />
       <Label fx:id="errorLabel" layoutX="193.0" layoutY="338.0" prefHeight="19.0" prefWidth="169.0" />
+      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="203.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@logo3.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>

@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.StringHasher;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
@@ -257,5 +258,29 @@ public class changePasswordController implements IController {
     public void showPasswordConfirm(ActionEvent actionEvent) {
         new PasswordRevealer().passwordReveal(newPasswordConfirmField, newPasswordConfirmText, isHidingConfirm);
         isHidingConfirm =! isHidingConfirm;
+    }
+
+    public void updateOldPWPasswordField(KeyEvent keyEvent) {
+        oldMasterPasswordField.setText(oldMasterPasswordText.getText());
+    }
+
+    public void updateNewPWPasswordField(KeyEvent keyEvent) {
+        newPasswordField.setText(newPasswordText.getText());
+    }
+
+    public void updateConfirmedPWPasswordField(KeyEvent keyEvent) {
+        newPasswordConfirmField.setText(newPasswordConfirmText.getText());
+    }
+
+    public void updateOldPWTextField(KeyEvent keyEvent) {
+        oldMasterPasswordText.setText(oldMasterPasswordField.getText());
+    }
+
+    public void updateNewPWTextField(KeyEvent keyEvent) {
+        newPasswordText.setText(newPasswordField.getText());
+    }
+
+    public void updateConfirmedPWTextField(KeyEvent keyEvent) {
+        newPasswordConfirmText.setText(newPasswordConfirmField.getText());
     }
 }
