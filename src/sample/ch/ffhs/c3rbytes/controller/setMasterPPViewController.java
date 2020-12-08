@@ -66,7 +66,6 @@ public class setMasterPPViewController implements IController {
             // Reset Settings by deleting c3r.c3r
             FileHandler fileHandler = new FileHandler();
             fileHandler.deleteFile("c3r.c3r");
-            newStartUp.deleteAccount();
         }
 
 

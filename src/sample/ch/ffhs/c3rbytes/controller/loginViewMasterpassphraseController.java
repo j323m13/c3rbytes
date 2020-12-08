@@ -169,8 +169,8 @@ public class loginViewMasterpassphraseController implements IController {
 
     @Override
     public void getView(Stage stage) throws IOException {
-        //this.stage = stage;
-        loader = new FXMLLoader(getClass().getResource("../gui/login_view_masterpassphrase.fxml"));
+        URL url = getClass().getClassLoader().getResource("login_view_masterpassphrase.fxml");
+        loader = new FXMLLoader(url);
         Parent loginViewMPP = loader.load();
         //stage stage = new Stage();
         stage.setTitle("C3rBytes Login Master Passphrase");

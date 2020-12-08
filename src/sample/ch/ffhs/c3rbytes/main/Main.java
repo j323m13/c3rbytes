@@ -10,6 +10,7 @@ import sample.ch.ffhs.c3rbytes.utils.FileHandler;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Locale;
 
 public class Main extends Application {
     private final String file = "c3r.c3r";
@@ -54,11 +55,20 @@ public class Main extends Application {
         // First Init
         FileHandler fileHandler = new FileHandler();
 
+        //check user lang and country variable
+        Locale locale = Locale.getDefault();
+        String lang = locale.getLanguage();
+        String country = locale.getCountry();
+        System.out.println(lang+"_"+country);
+        DBConnection.localValues = lang+"_"+country;
+
 
         //fileHandler.setReadWriteAttributes(file,"allow");
 
         if (fileHandler.readFromFile(file).equals("File does not exist")){
             System.out.println("Enter Masterpassword Dialog");
+
+
 
 
             setMasterPWViewController mpwvc = new setMasterPWViewController();

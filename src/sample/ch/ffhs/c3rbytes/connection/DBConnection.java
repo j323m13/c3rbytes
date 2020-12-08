@@ -18,6 +18,7 @@ public class DBConnection {
     private static boolean createDB = true;
     public static String JDBC_URL;
     public static Connection connection = null;
+    public static String localValues = null;
 
 
     public static void dbConnect(String JDBC_URL) throws SQLException {
@@ -194,7 +195,8 @@ public class DBConnection {
 
 
     public static String createURL() {
-        JDBC_URL = "jdbc:derby:" + databaseName + ";create=" + createDB + ";user=" + userDB + ";password=" + passwordDB + ";dataEncryption=" + databaseEncryption + "" +
+        JDBC_URL = "jdbc:derby:" + databaseName + ";create=" + createDB + ";user=" + userDB + ";password=" + passwordDB +
+                ";territory="+localValues+";collation=TERRITORY_BASED:PRIMARY;dataEncryption=" + databaseEncryption + "" +
                 ";encryptionKeyLength=" + encryptionKeyLength + ";encryptionAlgorithm=" + encryptionAlgorithm + ";bootPassword=" + bootPassword + "";
         System.out.println("createURL() -> " + JDBC_URL);
         return JDBC_URL;

@@ -92,7 +92,6 @@ public class setMasterPWViewController implements IController {
     @Override
     public void getView(Stage stage) throws IOException {
         URL url = getClass().getClassLoader().getResource("set_master_pw_view.fxml");
-        System.out.println(url);
         loader = new FXMLLoader(url);
         Parent setMasterpasswordView = loader.load();
         //stage stage = new Stage();

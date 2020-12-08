@@ -29,17 +29,22 @@ public class FileEncrypterDecrypter {
 
         // Base64 Encoding the standard way
         byte[] encryptedByteText = Base64.getEncoder().encode(encryptedText.getBytes(UTF_8));
-
-        // save to file and disable write permissions
         FileHandler fileHandler = new FileHandler();
-        fileHandler.setReadWriteAttributes(toFile,false);
-        //fileHandler.setReadWriteAttributes(toFile,"allow");
-        fileHandler.writeToFile(toFile, encryptedByteText);
-        fileHandler.setReadWriteAttributes(toFile, true);
-        //fileHandler.setReadWriteAttributes(toFile,false);
-        //fileHandler.setReadWriteAttributes(toFile,"deny");
-        fileHandler = null;
+        String osName = null;
+        osName = System.getProperty("os.name");
 
+        if(osName.equals("win")){
+            // save to file and disable write permissions
+            fileHandler.setReadWriteAttributes(toFile,false);
+            //fileHandler.setReadWriteAttributes(toFile,"allow");
+            fileHandler.writeToFile(toFile, encryptedByteText);
+            fileHandler.setReadWriteAttributes(toFile, true);
+            //fileHandler.setReadWriteAttributes(toFile,false);
+            //fileHandler.setReadWriteAttributes(toFile,"deny");
+        }else{
+            fileHandler.writeToFile(toFile, encryptedByteText);
+        }
+        fileHandler = null;
         passwordEncrypterDecrypter = null;
     }
 

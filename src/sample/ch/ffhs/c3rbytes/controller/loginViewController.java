@@ -46,10 +46,11 @@ public class loginViewController implements IController{
         System.out.println("masterpassword: " + mpTextField);
 
         try {
-
-            DBConnection.bootPassword = mpTextField;
+            //TODO change this line for an tmp line. if not security risk (password in clear text)
+            //BootPassword should not be transmitted in clear like this. unecessary.
+            //String tmpBootPassword= mpTextField;
             StringHasher stringHasher = new StringHasher();
-            String hashedBootPassword = stringHasher.encryptSHA3(HASHALGORITHM,DBConnection.bootPassword);
+            String hashedBootPassword = stringHasher.encryptSHA3(HASHALGORITHM,mpTextField);
             String hashedPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM,hashedBootPassword).substring(32,64);
 
             //String hashedPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM,DBConnection.bootPassword);

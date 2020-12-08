@@ -15,16 +15,27 @@ public class FileHandler {
 
     // if file exists, it overwrites it's content. if not, it creates a new file and write the content into
     public void writeToFile(String file, byte[] content) throws IOException {
+        String osName = null;
+        osName = System.getProperty("os.name");
+        //check if the user os is Windows or something better.
+        if(osName.equals("win")){
+            System.out.println("windows");
+            // get filepath
+            Path path = Paths.get(file);
 
-        // get filepath
-        Path path = Paths.get(file);
+            // write to file
+            Files.write(path, content);
+            Files.setAttribute(path, "dos:hidden", Boolean.TRUE);
 
-        // write to file
-        Files.write(path, content);
-        Files.setAttribute(path, "dos:hidden", Boolean.TRUE);
+            //setReadWriteAttributes(file, false);
+            //setReadWriteAttributes(file, "deny");
+        }else{
+            System.out.println("Unix system");
+            Path path = Paths.get(file);
 
-        //setReadWriteAttributes(file, false);
-        //setReadWriteAttributes(file, "deny");
+            // write to file
+            Files.write(path, content);
+        }
 
     }
 
