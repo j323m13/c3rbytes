@@ -12,6 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
@@ -236,6 +237,7 @@ public class mainViewController implements Initializable, IController {
             controller.createCombox();
             Stage stage = new Stage();
             stage.setTitle("Add new Item");
+            stage.getIcons().add(new Image("logo3.png"));
             stage.setScene(new Scene(addItemParent, 600, 400));
             stage.showAndWait();
             reloadMainView();
@@ -385,6 +387,7 @@ public class mainViewController implements Initializable, IController {
         controller.updateTextField();
         Stage stage = new Stage();
         stage.setTitle("View item");
+        stage.getIcons().add(new Image("logo3.png"));
         stage.setScene(new Scene(viewItemControllerParent, 600,400));
         stage.showAndWait();
         reloadMainView();
@@ -502,6 +505,7 @@ public class mainViewController implements Initializable, IController {
         Parent mainView = loader.load();
         //stage stage = new Stage();
         stage.setTitle("C3rBytes");
+        stage.getIcons().add(new Image("logo3.png"));
         stage.setScene(new Scene(mainView, 1020, 600));
     }
 

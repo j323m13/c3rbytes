@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
@@ -124,6 +125,7 @@ public class loginViewController implements IController{
         Parent loginViewMP = loader.load();
         //stage stage = new Stage();
         stage.setTitle("C3rBytes Login Masterpassword");
+        stage.getIcons().add(new Image("logo3.png"));
         stage.setScene(new Scene(loginViewMP, 552, 371));
     }
 

@@ -96,6 +96,7 @@ public class setMasterPWViewController implements IController {
         Parent setMasterpasswordView = loader.load();
         //stage stage = new Stage();
         stage.setTitle("Welcome to C3rBytes");
+        stage.getIcons().add(new Image("logo3.png"));
         stage.setScene(new Scene(setMasterpasswordView, 552, 371));
     }
 

@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.FileEncrypterDecrypter;
@@ -186,6 +187,7 @@ public class changePassphraseController implements IController{
         loader = new FXMLLoader(url);
         Parent changePassPhrase = loader.load();
         stage.setTitle("Change Passphrase");
+        stage.getIcons().add(new Image("logo3.png"));
         stage.setScene(new Scene(changePassPhrase, 493, 313));
     }
 

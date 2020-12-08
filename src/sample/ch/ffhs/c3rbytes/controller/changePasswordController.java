@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.StringHasher;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
@@ -233,6 +234,7 @@ public class changePasswordController implements IController {
         loader = new FXMLLoader(url);
         Parent addNewItemView = loader.load();
         stage.setTitle("Change Password");
+        stage.getIcons().add(new Image("logo3.png"));
         stage.setScene(new Scene(addNewItemView, 497, 313));
     }
 
