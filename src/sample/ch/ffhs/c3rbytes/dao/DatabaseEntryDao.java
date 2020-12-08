@@ -9,6 +9,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.*;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import static sample.ch.ffhs.c3rbytes.connection.DBConnection.*;
@@ -122,9 +123,9 @@ public class DatabaseEntryDao implements Dao{
             //delete c3r.c3r file
             dbExecuteUpdate(deleteAccountStmt,createURLSimple());
             String osName = null;
-            osName = System.getProperty("os.name");
+            osName = System.getProperty("os.name").toLowerCase();
             String fileName = null;
-            if(osName.equals("win")){
+            if(osName.contains("win")){
                 fileName = "c3r.c3r";
             }else{
                 fileName = ".c3r.c3r";

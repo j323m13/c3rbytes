@@ -63,7 +63,28 @@ public class PasswordEncrypterDecrypterTest {
         assertFalse(plainText.equals(decryptedText));
     }
 
+    @Test
+    public void decryptPassword() throws Exception {
 
+        //String password = "z`B-9yVS|>Z!Ll)\\+]G3MTPkT<,7Kruu";
+        //String plainText = "12345";
+
+        PasswordEncrypterDecrypter encryptorAesGcmPassword = new PasswordEncrypterDecrypter();
+        //String encryptedTextBase64 = encryptorAesGcmPassword.encrypt(plainText.getBytes(UTF_8), password);
+        String encryptedTextBase64 = "STl1V2J5ZnloRUViZ3ZaejZpMjUybXFVSGtGZHlkblBIbFk2RjBPQlY2NGVBZ0tya3B2bnBVeGYvTlB4MjlkSFNNUm5wSGR5NG5mWEdETC9uR2lqa01TaXMvQks2dGY1NVY1T0V3PT0=";
+        String password = "z`B-9yVS|>Z!Ll)\\+]G3MTPkT<,7Kruu";
+        String decryptedText = "";
+        try {
+            decryptedText = encryptorAesGcmPassword.decrypt(encryptedTextBase64, password);
+            System.out.println("Decrypted (plain text): " + decryptedText);
+        }catch(javax.crypto.AEADBadTagException e){
+            decryptedText = "Access denied";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
 
 
 }

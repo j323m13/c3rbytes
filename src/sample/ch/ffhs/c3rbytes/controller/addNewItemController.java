@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+import org.junit.platform.engine.support.descriptor.FileSystemSource;
 import sample.ch.ffhs.c3rbytes.crypto.PasswordEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.DatabaseEntry.DatabaseEntry;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
@@ -27,6 +28,7 @@ import sample.ch.ffhs.c3rbytes.utils.PasswordRevealer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.util.Base64;
 
 
 public class addNewItemController implements IController {
@@ -99,21 +101,33 @@ public class addNewItemController implements IController {
     /*
     methode to populate the field of for add new Item
      */
-    public void fillIn(DatabaseEntry dbentry){
+    public void fillIn(DatabaseEntry dbentry) throws Exception {
         usernameFieldLabelError.setVisible(false);
         passwordFieldLabelError.setVisible(false);
         typeFieldLabelError.setVisible(false);
-        PasswordEncrypterDecrypter passwordEncrypterDecrypter = new PasswordEncrypterDecrypter();
-        String passwordDecrypterPassword = loginViewMasterpassphraseController.passwordDecrypterPassword;
+
 
         try{
             id = dbentry.getId();
             System.out.println("id form fillIn() :"+id);
             creation = dbentry.getCreationDate();
             userNameField.setText(dbentry.getUsername());
-            String decryptedAccountPassword = passwordEncrypterDecrypter.decrypt(dbentry.getPassword(),
+
+            String passwordDecrypterPassword = loginViewMasterpassphraseController.passwordDecrypterPassword;
+
+            // get password of the selected row
+            String encryptedAccountPassword = dbentry.getPassword();
+
+            // decrypt account password
+            PasswordEncrypterDecrypter passwordEncrypterDecrypter = new PasswordEncrypterDecrypter();
+            String decryptedAccountPassword = passwordEncrypterDecrypter.decrypt(encryptedAccountPassword,
                     passwordDecrypterPassword);
+            /*
+            String decryptedAccountPassword = passwordEncrypterDecrypter.decrypt(dbentry.getPassword(),
+                    passwordDecrypterPassword);*/
             passwordField.setText(decryptedAccountPassword);
+
+
             urlField.setText(dbentry.getUrl());
             //set Combox options
             typeField.setItems(options);

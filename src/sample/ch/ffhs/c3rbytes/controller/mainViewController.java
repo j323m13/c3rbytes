@@ -102,6 +102,8 @@ public class mainViewController implements Initializable, IController {
                         startOpenSelectedItemsToView(copyClickedEntry());
                     } catch (IOException e) {
                         e.printStackTrace();
+                    } catch (Exception e){
+                        e.printStackTrace();
                     }
 
                     //TODO open view of the selected item
@@ -378,7 +380,7 @@ public class mainViewController implements Initializable, IController {
         }
     }
 
-    private void startOpenSelectedItemsToView(DatabaseEntry dbentry) throws IOException {
+    private void startOpenSelectedItemsToView(DatabaseEntry dbentry) throws IOException, Exception {
         URL url = getClass().getClassLoader().getResource("add_new_item_view.fxml");
         loader = new FXMLLoader(url);
         Parent viewItemControllerParent = loader.load();

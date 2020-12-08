@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Locale;
 
 
 public class FileHandler {
@@ -16,16 +17,16 @@ public class FileHandler {
     // if file exists, it overwrites it's content. if not, it creates a new file and write the content into
     public void writeToFile(String file, byte[] content) throws IOException {
         String osName = null;
-        osName = System.getProperty("os.name");
+        osName = System.getProperty("os.name").toLowerCase();
         //check if the user os is Windows or something better.
-        if(osName.equals("win")){
+        if(osName.contains("win")){
             System.out.println("windows");
             // get filepath
             Path path = Paths.get(file);
 
             // write to file
             Files.write(path, content);
-            Files.setAttribute(path, "dos:hidden", Boolean.TRUE);
+            //Files.setAttribute(path, "dos:hidden", Boolean.TRUE);
 
             //setReadWriteAttributes(file, false);
             //setReadWriteAttributes(file, "deny");
@@ -40,14 +41,15 @@ public class FileHandler {
     }
 
     public String readFromFile(String filenameFinal) throws IOException {
-        String filename = null;
+        String filename = filenameFinal;
         String osName = null;
         // create new file instance
-        osName = System.getProperty("os.name");
-        if (!osName.equals("win")) {
+        osName = System.getProperty("os.name").toLowerCase();
+        System.out.println(osName);
+        if (!osName.contains("win")) {
             filename = "."+filenameFinal;
         }
-        System.out.println(filename);
+        System.out.println("filename " +filename);
         File file = new File(filename);
 
 

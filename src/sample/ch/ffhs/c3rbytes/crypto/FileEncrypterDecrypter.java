@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Base64;
+import java.util.Locale;
 
 public class FileEncrypterDecrypter {
 
@@ -31,14 +32,15 @@ public class FileEncrypterDecrypter {
         byte[] encryptedByteText = Base64.getEncoder().encode(encryptedText.getBytes(UTF_8));
         FileHandler fileHandler = new FileHandler();
         String osName = null;
-        osName = System.getProperty("os.name");
+        osName = System.getProperty("os.name").toLowerCase();
 
-        if(osName.equals("win")){
+        if(osName.contains("win")){
             // save to file and disable write permissions
-            fileHandler.setReadWriteAttributes(toFile,false);
+            //fileHandler.setReadWriteAttributes(toFile,false);
             //fileHandler.setReadWriteAttributes(toFile,"allow");
+            //Thread.sleep(1000);
             fileHandler.writeToFile(toFile, encryptedByteText);
-            fileHandler.setReadWriteAttributes(toFile, true);
+            //fileHandler.setReadWriteAttributes(toFile, true);
             //fileHandler.setReadWriteAttributes(toFile,false);
             //fileHandler.setReadWriteAttributes(toFile,"deny");
         }else{
@@ -63,8 +65,8 @@ public class FileEncrypterDecrypter {
         //fileHandler.setReadWriteAttributes(fromEncryptedFile, "allow");
 
         String osName = null;
-        osName = System.getProperty("os.name");
-        if(osName.equals("win")){
+        osName = System.getProperty("os.name").toLowerCase();
+        if(osName.contains("win")){
             fromEncryptedFilePath = fromEncryptedFile;
         }else {
             fromEncryptedFilePath = "."+fromEncryptedFile;
