@@ -1,29 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.shape.Polygon?>
 
-<AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="371.0" prefWidth="552.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.ch.ffhs.c3rbytes.controller.loginViewMasterpassphraseController">
+<AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="371.0" prefWidth="552.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.ch.ffhs.c3rbytes.controller.loginViewMasterpassphraseController">
    <children>
       <PasswordField fx:id="masterPassPhraseField" layoutX="195.0" layoutY="240.0" onKeyReleased="#manageKeyInput" prefHeight="25.0" prefWidth="164.0" />
       <TextField fx:id="loginMPPTextField" layoutX="195.0" layoutY="240.0" onKeyReleased="#manageKeyInput" prefHeight="25.0" prefWidth="164.0" visible="false" />
       <Button fx:id="loginButtonMPP" layoutX="196.0" layoutY="289.0" mnemonicParsing="false" onAction="#loginActionMPP" prefHeight="25.0" prefWidth="73.0" text="Login" />
       <Button fx:id="logoutButtonMPP" layoutX="286.0" layoutY="289.0" mnemonicParsing="false" onAction="#logoutActionMPP" prefHeight="25.0" prefWidth="73.0" text="Logout" />
-      <Polygon fill="#ffa1002d" layoutX="277.0" layoutY="121.0" points="0.0, 39.5, 0.0, 39.5, 36.0, -17.0, 36.0, -51.0, 0.0, -60.0, -37.0, -51.0, -37.0, -17.0" stroke="BLACK" strokeType="INSIDE" />
       <Label layoutX="148.0" layoutY="168.0" prefHeight="63.0" prefWidth="256.0" text="Your Password Manager is still locked. Please enter your masterpassphrase to unlock and continue." wrapText="true" />
       <Label fx:id="wrongLogin" layoutX="148.0" layoutY="325.0" prefHeight="25.0" prefWidth="256.0" wrapText="true" />
       <Label fx:id="information" layoutX="148.0" layoutY="325.0" prefHeight="25.0" prefWidth="256.0" wrapText="true" />
       <Button fx:id="showPasswordButton" layoutX="376.0" layoutY="240.0" mnemonicParsing="false" onAction="#showPassword" prefHeight="25.0" prefWidth="32.0" text="👁" />
-      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="202.0" layoutY="36.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="202.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@logo3.png" />
          </image>

@@ -22,8 +22,6 @@ public class passwordGeneratorController implements IController {
     int useLower;
     int useUpper;
     int useSymbols;
-    int minDigits = 0;
-    int minSymbols = 0;
     FXMLLoader loader = null;
 
     @FXML private CheckBox digitCheck;
@@ -44,12 +42,6 @@ public class passwordGeneratorController implements IController {
         System.out.println("Include uppercase in password");
     }
 
-    @FXML private TextField minimumDigits;
-    public void minimumDigitsAction(ActionEvent actionEvent) {
-        //This field does not do anything by itself, it is referenced when creating a password in onGenerateAction
-        System.out.println("minimum digits in password: ");
-    }
-
     @FXML private Label lengthTextField;
     @FXML private Slider lengthSlider;
     public void lengthSliderAction(MouseEvent mouseEvent) {
@@ -62,12 +54,6 @@ public class passwordGeneratorController implements IController {
     public void onSymbolAction(ActionEvent actionEvent) {
         //This field does not do anything by itself, it is referenced when creating a password in onGenerateAction
         System.out.println("Include special characters in password");
-    }
-
-    @FXML private TextField minimumSpecialCharacters;
-    public void minimumSpecialAction(ActionEvent actionEvent) {
-        //This field does not do anything by itself, it is referenced when creating a password in onGenerateAction
-        System.out.println("minimum special characters in password: ");
     }
 
     // Generate Password
@@ -108,10 +94,6 @@ public class passwordGeneratorController implements IController {
 
        System.out.println(charSet.toString());
 
-        //TODO make minimum digits and symbols into sliders to prevent null and non-digit entries
-        minDigits = Integer.parseInt(minimumDigits.getText());
-        minSymbols = Integer.parseInt(minimumSpecialCharacters.getText());
-
         System.out.println("Generating password");
         //TODO: call algorithm and enter in pwdOutputField.setText
 
@@ -122,7 +104,7 @@ public class passwordGeneratorController implements IController {
 
         System.out.println(pw);
 
-        //pwdOutputField.setText((int)lengthSlider.getValue() + " " + useDigits +" "+ useLower +" "+ useUpper +" "+ useSymbols +" "+ minDigits +" "+ minSymbols);
+        //pwdOutputField.setText((int)lengthSlider.getValue() + " " + useDigits +" "+ useLower +" "+ useUpper +" "+ useSymbols);
         pwdOutputField.setText(pw);
 
         pwg = null;
