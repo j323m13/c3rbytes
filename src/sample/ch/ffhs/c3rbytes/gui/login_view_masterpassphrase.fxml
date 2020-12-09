@@ -22,7 +22,7 @@
       <Label layoutX="148.0" layoutY="168.0" prefHeight="63.0" prefWidth="256.0" text="Your Password Manager is still locked. Please enter your masterpassphrase to unlock and continue." wrapText="true" />
       <Label fx:id="wrongLogin" layoutX="148.0" layoutY="325.0" prefHeight="25.0" prefWidth="256.0" wrapText="true" />
       <Label fx:id="information" layoutX="148.0" layoutY="325.0" prefHeight="25.0" prefWidth="256.0" wrapText="true" />
-      <Button fx:id="showPasswordButton" layoutX="376.0" layoutY="240.0" mnemonicParsing="false" onAction="#showPassword" prefHeight="25.0" prefWidth="28.0" text="👁" />
+      <Button fx:id="showPasswordButton" layoutX="376.0" layoutY="240.0" mnemonicParsing="false" onAction="#showPassword" prefHeight="25.0" prefWidth="32.0" text="👁" />
       <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="202.0" layoutY="36.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@logo3.png" />

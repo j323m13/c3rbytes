@@ -25,8 +25,8 @@
       <Label fx:id="newPassphraseConfirmLabel" layoutX="38.0" layoutY="186.0" text="Confirm New Passphrase" />
       <Label fx:id="passphraseMatchErrorLabel" layoutX="177.0" layoutY="220.0" prefHeight="27.0" prefWidth="223.0" textAlignment="CENTER" />
       <Label fx:id="oldPassphraseErrorLabel" layoutX="176.0" layoutY="107.0" prefHeight="17.0" prefWidth="223.0" textAlignment="CENTER" />
-      <Button fx:id="showPasswordOld" layoutX="427.0" layoutY="71.0" mnemonicParsing="false" onAction="#showPasswordOld" prefHeight="25.0" prefWidth="28.0" text="👁" />
-      <Button fx:id="showPasswordNew" layoutX="427.0" layoutY="138.0" mnemonicParsing="false" onAction="#showPasswordNew" prefHeight="25.0" prefWidth="28.0" text="👁👁" />
-      <Button fx:id="showPasswordConfirm" layoutX="427.0" layoutY="182.0" mnemonicParsing="false" onAction="#showPasswordConfirm" prefHeight="25.0" prefWidth="28.0" text="👁👁👁" />
+      <Button fx:id="showPasswordOld" layoutX="427.0" layoutY="71.0" mnemonicParsing="false" onAction="#showPasswordOld" prefHeight="25.0" prefWidth="32.0" text="👁" />
+      <Button fx:id="showPasswordNew" layoutX="427.0" layoutY="138.0" mnemonicParsing="false" onAction="#showPasswordNew" prefHeight="25.0" prefWidth="32.0" text="👁" />
+      <Button fx:id="showPasswordConfirm" layoutX="427.0" layoutY="182.0" mnemonicParsing="false" onAction="#showPasswordConfirm" prefHeight="25.0" prefWidth="32.0" text="👁" />
    </children>
 </AnchorPane>
