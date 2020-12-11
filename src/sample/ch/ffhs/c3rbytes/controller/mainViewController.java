@@ -16,22 +16,19 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import sample.ch.ffhs.c3rbytes.connection.DBConnection;
-import sample.ch.ffhs.c3rbytes.crypto.PasswordEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.DatabaseEntry.DatabaseEntry;
+import sample.ch.ffhs.c3rbytes.crypto.PasswordEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.utils.ClipboardHandler;
-import sample.ch.ffhs.c3rbytes.utils.OSBasedAction;
 import sample.ch.ffhs.c3rbytes.utils.UrlOpener;
 
-import javax.swing.plaf.metal.OceanTheme;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 import static java.lang.String.valueOf;
 
@@ -114,8 +111,6 @@ public class mainViewController implements Initializable, IController {
                     } catch (Exception e){
                         e.printStackTrace();
                     }
-
-                    //TODO open view of the selected item
                 }
             }
         });
@@ -228,7 +223,7 @@ public class mainViewController implements Initializable, IController {
 
     private void loadDatabaseEntries(ObservableList<DatabaseEntry> databaseEntries) {
         try {
-            ObservableList<DatabaseEntry> entries = DatabaseEntryDao.getAll();
+            ObservableList<DatabaseEntry> entries = mainViewDao.getAll();
             databaseEntries.clear();
             databaseEntries.addAll(entries);
             populateTableView(databaseEntries);

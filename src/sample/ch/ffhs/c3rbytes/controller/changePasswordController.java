@@ -37,6 +37,7 @@ public class changePasswordController implements IController {
     FXMLLoader loader = null;
 
     private final String HASHALGORITHM = "SHA3-512";
+    DatabaseEntryDao setup = new DatabaseEntryDao();
 
     public void changePasswordAction(ActionEvent actionEvent) throws SQLException {
         String oldMasterpassword = oldMasterPasswordField.getText();
@@ -66,7 +67,7 @@ public class changePasswordController implements IController {
         boolean newPw = passwordValidator.checkFillOut(newMasterpassword);
         boolean newPwConfirmed = passwordValidator.checkFillOut(newMasterpasswordConfirmed);
         boolean isEqualNewPw = passwordValidator.isEqual(newMasterpassword, newMasterpasswordConfirmed);
-        boolean oldPWisCorrect = passwordValidator.isEqual(oldMasterpasswordHashed,DBConnection.bootPassword);
+        boolean oldPWisCorrect = passwordValidator.isEqual(oldMasterpasswordHashed, setup.getBootPasswordDAO());
 
         if (!oldPw){
             setStyle(oldMasterPasswordField, oldMasterPasswordText);
@@ -223,8 +224,10 @@ public class changePasswordController implements IController {
             String hashedOldMasterpassword = stringHasher.encryptSHA3(HASHALGORITHM, oldMasterpassword);
             String hashedNewMasterpassword = stringHasher.encryptSHA3(HASHALGORITHM, newMasterpassword);
             String hashedNewPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM, hashedNewMasterpassword).substring(32, 64);
-            DatabaseEntryDao setup = new DatabaseEntryDao();
-            if(hashedOldMasterpassword.equals(DBConnection.bootPassword)){
+
+            if(hashedOldMasterpassword.equals(setup.getBootPasswordDAO())){
+                System.out.println("new bootPassword "+hashedNewMasterpassword);
+                System.out.println("New passwordDB "+hashedNewPasswordDB);
                 setup.changeBootPassword(hashedNewMasterpassword, hashedNewPasswordDB);
             }
 

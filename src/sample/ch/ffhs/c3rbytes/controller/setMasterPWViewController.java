@@ -54,9 +54,11 @@ public class setMasterPWViewController implements IController {
             mppvc.getView();
 
             //String hashedPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM,DBConnection.bootPassword);
-            DBConnection.bootPassword = hashedBootPassword;
-            DBConnection.passwordDB = hashedPasswordDB;
+            //DBConnection.bootPassword = hashedBootPassword;
+            //DBConnection.passwordDB = hashedPasswordDB;
             DatabaseEntryDao login = new DatabaseEntryDao();
+            login.setBootPasswordDAO(hashedBootPassword);
+            login.setPasswordDBDAO(hashedPasswordDB);
             //decryptDB or createdB on first boot
             login.setupEncryption(hashedBootPassword);
 

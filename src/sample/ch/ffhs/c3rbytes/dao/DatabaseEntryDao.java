@@ -3,7 +3,6 @@ package sample.ch.ffhs.c3rbytes.dao;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import sample.ch.ffhs.c3rbytes.DatabaseEntry.DatabaseEntry;
-import sample.ch.ffhs.c3rbytes.connection.DBConnection;
 import sample.ch.ffhs.c3rbytes.utils.OSBasedAction;
 
 import java.sql.*;
@@ -19,7 +18,7 @@ public class DatabaseEntryDao implements Dao{
     * @return ObservableList databaseEntries
     * @see DBConnection.java dbExecuteQuery()
      */
-    public static ObservableList<DatabaseEntry> getAll() throws SQLException, ClassNotFoundException, InterruptedException {
+    public ObservableList<DatabaseEntry> getAll() throws SQLException, ClassNotFoundException, InterruptedException {
         String getAll = "SELECT * FROM \"CERBYTES\".\"database_entries\"";
         ObservableList<DatabaseEntry> databaseEntries = FXCollections.observableArrayList();
         try{
@@ -39,7 +38,7 @@ public class DatabaseEntryDao implements Dao{
     * @see DBConnection.class
      */
     @Override
-    public Dao save(DatabaseEntry entry) throws SQLException, ClassNotFoundException {
+    public boolean save(DatabaseEntry entry) throws SQLException, ClassNotFoundException {
         System.out.println(entry.getUsername()+", "+entry.getDescription()+", "+
         entry.getPassword()+", "+ entry.getCreationDate()+", "+entry.getLastUpdate()+", "+entry.getUrl());
 
@@ -52,9 +51,10 @@ public class DatabaseEntryDao implements Dao{
             dbExecuteUpdate(saveStmt,createURLSimple());
         } catch (SQLException | ClassNotFoundException | InterruptedException e) {
             System.out.print("Error occurred while insert Operation: " + e);
+            return false;
 
         }
-        return null;
+        return true;
     }
 
     /*
@@ -103,7 +103,7 @@ public class DatabaseEntryDao implements Dao{
     * Delete also the database folders
     * @return null
      */
-    public void deleteAccount() throws SQLException, ClassNotFoundException {
+    public void deleteAccount() {
         System.out.print("account will be deleted");
         String deleteAccountStmt = "DELETE FROM \"CERBYTES\".\"database_entries\"";
         try {
@@ -114,7 +114,7 @@ public class DatabaseEntryDao implements Dao{
             //delete db log file (derby.log)
             handler.deleteDatabaseFolder(handler.getPath("derby.log"));
             dbExecuteUpdate(deleteAccountStmt,createURLSimple());
-            String fileName = null;
+            String fileName;
             if(handler.getOSName().contains("win")){
                 fileName = "c3r.c3r";
             }else{
@@ -138,6 +138,14 @@ public class DatabaseEntryDao implements Dao{
     public void connect() throws SQLException {
         dbConnect(createURL());
     }
+    /*
+     * call the dbConnect methode from DBConnenction.java with a newBootPassword element.
+     * use this methode when changing the bootpassword.
+     */
+    public void applyNewBootPassword(String newBootPassword) throws SQLException {
+        System.out.println("new BootPassword "+createURL()+";newBootpassword="+newBootPassword);
+        dbConnect(createURL() + ";newBootPassword=" + newBootPassword);
+    }
 
     /*
      * Setup a new password for the database user. it is not the bootPassword, which encrypt the database. it is only for queries with the db.
@@ -145,7 +153,7 @@ public class DatabaseEntryDao implements Dao{
 
     @Override
     public void setup() throws SQLException, ClassNotFoundException, InterruptedException {
-        setupUserDBWithPassword(passwordDB);
+        setupUserDBWithPassword(getPasswordDB());
         setupTable();
 
     }
@@ -158,7 +166,7 @@ public class DatabaseEntryDao implements Dao{
     * @see createURLSimple() (without bootPassword)
     * @see createURL() (with bootPassword)
      */
-    public void setupUserDBWithPassword(String newPasswordDB) throws SQLException, InterruptedException, ClassNotFoundException {
+    public void setupUserDBWithPassword(String newPasswordDB) throws SQLException {
         //TODO get a string 10CHARS from bootpassword as passwordDB
         //on first call, database will be create if it does not exist: (create=true). -> see create
         // set userDB's password
@@ -188,16 +196,23 @@ public class DatabaseEntryDao implements Dao{
      */
     public void changeBootPassword(String newBootPassword, String newPasswordDB) throws SQLException {
         //shutdown the dabase. without a shutdown, this action is not allowed.
-        shutdownDB();
+        shutdown();
             try {
+                System.out.println("new bootPassword "+newBootPassword);
+                System.out.println("New passwordDB "+newPasswordDB);
                 System.out.println("sleeping 1");
                 TimeUnit.SECONDS.sleep(1);
                 System.out.println("Applying new boot password.");
-                dbConnect(createURL() + ";newBootPassword=" + newBootPassword);
-                bootPassword = newBootPassword;
+                applyNewBootPassword(newBootPassword);
                 System.out.println("applying new database password.");
+                setBootPasswordDAO("");
+                setBootPasswordDAO(newBootPassword);
                 resetUserDBWithPassword(newPasswordDB);
+                System.out.println("new PasswordDB: "+getPasswordDBDAO());
                 System.out.println("success.");
+                System.out.println("test url full "+createURL());
+                shutdown();
+                connect();
             } catch (SQLException error) {
                 System.out.println("failed. -> "+error);
             } catch (InterruptedException | ClassNotFoundException interruptedException) {
@@ -212,7 +227,7 @@ public class DatabaseEntryDao implements Dao{
     * setup table (database_entries)
      */
     public void setupTable() throws SQLException, ClassNotFoundException, InterruptedException {
-        String urlForSetupSchemaAndTable = createURLSimple()+";password="+passwordDB;
+        String urlForSetupSchemaAndTable = createURLSimple()+";password="+getPasswordDBDAO();
         String slqCreateSchema = "CREATE SCHEMA \"CERBYTES\"";
         String sqlCreateTable = "CREATE TABLE \"CERBYTES\".\"database_entries\" (\n" +
                 "                        \"user_id\" INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY(Start with 1, Increment by 1),\n" +
@@ -235,8 +250,8 @@ public class DatabaseEntryDao implements Dao{
     *@param encryptionKey (=bootPassword)
     */
     public void setupEncryption(String encryptionKey) throws InterruptedException, ClassNotFoundException, SQLException {
-        bootPassword = encryptionKey;
-        dbConnect(createURL());
+        setBootPasswordDAO(encryptionKey);
+        connect();
     }
 
     /*
@@ -245,7 +260,7 @@ public class DatabaseEntryDao implements Dao{
     * @param databaseEntries: an ObservableList to hold the result(s) and display it(them) on the tableView of the main view.
     * @return the databaEntries (observableList)
      */
-    public ObservableList<DatabaseEntry> searchElement(String searched, ObservableList databaseEntries){
+    public ObservableList<DatabaseEntry> searchElement(String searched, ObservableList<DatabaseEntry> databaseEntries){
         String element = "SELECT \"user_id\",\"username\",\"description\",\"url_content\",\"password_text\",\"date_creation\",\"date_update\",\"note\"\n" +
                 "FROM \"CERBYTES\".\"database_entries\"\n" +
                 "WHERE \"username\" LIKE '%"+searched+"%'\n" +
@@ -260,6 +275,10 @@ public class DatabaseEntryDao implements Dao{
         }
         return databaseEntries;
     }
+    @Override
+    public void disconnect() throws SQLException {
+        dbDisconnect();
+    }
 
     /*
     * Shutdown the DB
@@ -273,8 +292,36 @@ public class DatabaseEntryDao implements Dao{
     * Methode to get the url (JDBC_URL). call createURL() (with bootPassword)
      */
     public String getUrl() {
-        return DBConnection.createURL();
+        return createURL();
     }
+
+
+    public void setPasswordDBDAO (String passwordDBString){
+        setPasswordDB(passwordDBString);
+    }
+
+    public void setBootPasswordDAO (String bootPasswordString){
+        setBootPassword(bootPasswordString);
+    }
+
+    public void setLocalValuesDAO (String localValuesString){
+        setLocalValues(localValuesString);
+    }
+
+    public void setDatabaseNameDAO(String databaseNameString){ setDatabaseName(databaseNameString); }
+
+    public String getPasswordDBDAO(){
+        return getPasswordDB();
+    }
+
+    public String getBootPasswordDAO(){
+        return getBootPassword();
+    }
+
+    public String getDatabaseNameDAO(){ return getDatabaseName();}
+
+
+
 
 }
 

@@ -1,6 +1,7 @@
 package sample.ch.ffhs.c3rbytes.utils;
 
 import sample.ch.ffhs.c3rbytes.connection.DBConnection;
+import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -65,9 +66,11 @@ public class OSBasedAction {
      * set DBConnection.localValues
      */
     public void setLocalValue() {
+        DatabaseEntryDao helper = new DatabaseEntryDao();
         Locale locale = Locale.getDefault();
         String lang = locale.getLanguage();
         String country = locale.getCountry();
-        DBConnection.localValues = lang+"_"+country;
+        System.out.println(lang+"_"+country);
+        helper.setLocalValuesDAO(lang+"_"+country);
     }
 }

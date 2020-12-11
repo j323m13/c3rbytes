@@ -36,10 +36,6 @@ public class loginViewController implements IController{
     public void loginAction(javafx.event.ActionEvent actionEvent) throws IOException, SQLException, ClassNotFoundException {
         //TODO: Correct login authentication with dB
         System.out.println("LoginAction");
-        // Here comes the db check, if mp is correct --> successful login if correct populate
-        // to test set dbLogincorrect to true
-
-        //boolean dbLogincorrect = true;
 
 
         // password to forward to the db
@@ -54,20 +50,15 @@ public class loginViewController implements IController{
             String hashedBootPassword = stringHasher.encryptSHA3(HASHALGORITHM,mpTextField);
             String hashedPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM,hashedBootPassword).substring(32,64);
 
-            //String hashedPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM,DBConnection.bootPassword);
-            DBConnection.bootPassword = hashedBootPassword;
-            DBConnection.passwordDB = hashedPasswordDB;
             DatabaseEntryDao login = new DatabaseEntryDao();
+            login.setBootPasswordDAO(hashedBootPassword);
+            login.setPasswordDBDAO(hashedPasswordDB);
+
             //decryptDB or createdB on first boot
+            //if master password is not correct, then an exception is raised. DB will not boot with the wrong password.
+            //if there is no DB, then a DB will be created with the master password.
             login.setupEncryption(hashedBootPassword);
 
-
-            //DBConnection.bootPassword = hashedPasswordDB;
-
-
-        //System.out.println("DBConnPW: " + DBConnection.passwordDB);
-
-        //debugging for the url
 
             Stage stage = new Stage();
             loginViewMasterpassphraseController loginPassphrase = new loginViewMasterpassphraseController();

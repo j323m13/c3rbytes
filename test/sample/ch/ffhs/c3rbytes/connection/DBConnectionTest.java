@@ -3,14 +3,15 @@ package sample.ch.ffhs.c3rbytes.connection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import sample.ch.ffhs.c3rbytes.DatabaseEntry.DatabaseEntry;
+import sample.ch.ffhs.c3rbytes.utils.OSBasedAction;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
 
@@ -18,39 +19,46 @@ import static org.junit.jupiter.api.Assertions.*;
 import static sample.ch.ffhs.c3rbytes.connection.DBConnection.*;
 
 class DBConnectionTest {
-
-    Connection connectionTest = null;
-    String passwordDB = "123456789";
-    String bootPassword = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-    String databaseName = "testDB/testDB";
-    String newPassworDB = null;
     String newBootPassword = null;
+    String passworDB = "123456789";
+    String dbName = "testDB2/testDB";
+    Connection connection = null;
+
+
+
+
+    @BeforeAll
+    public static void setup(){
+        setPasswordDB("123456789");
+        setBootPassword("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        //setDatabaseName("dbName");
+        setLocalValues("fr_CH");
+    }
 
     @Test
-    void setEncryption() throws SQLException {
-        DBConnection.databaseName = databaseName+"01";
-        DBConnection.passwordDB = passwordDB;
-        DBConnection.bootPassword = bootPassword;
-        DriverManager.getConnection(createURL());
-        //shutdown db
+    void setEncryptionTest() throws SQLException {
+        setDatabaseName(dbName+"01");
+        dbConnect(createURL());
 
         try {
-            DriverManager.getConnection(createURL() + ";shutdown=true");
+            //shutdown db
+            shutdownDB();
+            //DriverManager.getConnection(createURL() + ";shutdown=true");
         } catch (SQLException e) {
             if (e.getSQLState().equals("08006")) {
-                System.out.println("Database " + databaseName + " has shutdown successfully.");
+                System.out.println("Database " + getDatabaseName() + " has shutdown successfully.");
             }
         }
 
         //Start db wihtout bootPassword
         try {
-            bootPassword = null;
-            DriverManager.getConnection(createURL());
+            setBootPassword(null);
+            dbConnect(createURL());
         } catch (SQLException e) {
             assertEquals("Startup failed. An encrypted database cannot be accessed without the correct boot password.  ",e.getNextException().getMessage());
         }
 
-        bootPassword = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+        setBootPassword("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
 
         }
@@ -58,19 +66,17 @@ class DBConnectionTest {
 
     @Test
     void changeBootPasswordTest() throws  SQLException {
-        DBConnection.databaseName = databaseName+"01";
-        DBConnection.passwordDB = passwordDB;
-        DBConnection.bootPassword = bootPassword;
+        setDatabaseName(dbName+"06");
         newBootPassword = "987654321987654321";
         //create db for testing
-        DriverManager.getConnection(createURL());
+        dbConnect(createURLSimple());
 
         //shutdown db we just have created.
         try {
-            DriverManager.getConnection(createURL() + ";shutdown:true");
+            shutdownDB();
         } catch (SQLException e) {
             if (e.getSQLState().equals("08006")) {
-                System.out.println("Database " + databaseName + " has shutdown successfully.");
+                System.out.println("Database " + getDatabaseName() + " has shutdown successfully.");
             }
 
         }try {
@@ -79,10 +85,13 @@ class DBConnectionTest {
             System.out.println("Applying new boot password.");
             System.out.println("changing bootPassword");
             dbConnect(createURL() + ";newBootPassword=" + newBootPassword);
-            bootPassword = newBootPassword;
+            System.out.println("URL with new bootPassword "+createURL() + ";newBootPassword=" + newBootPassword);
+            setBootPassword(newBootPassword);
+            //bootPassword = newBootPassword;
             System.out.println("success.");
-            //hier we can see that the boot password ist not the same.
-            System.out.println(createURL());
+            //here we can see that the boot password ist not the same.
+            System.out.println(getBootPassword());
+            System.out.println("new URL "+createURL());
 
         } catch (SQLException error) {
             System.out.println("failed. -> " + error);
@@ -92,58 +101,53 @@ class DBConnectionTest {
         //check if the new bootPassword is not equals to the old bootPassword.
         //if this test passes this means that the bootPassword on the first place was properly set.
         //then per analogy this test checks if 1) the bootPassword has been set and 2) if the new bootPassword has been set (replaces the old bootPassword).
-        assertEquals("987654321987654321",bootPassword);
-        DBConnection.bootPassword = newBootPassword;
+        assertEquals("987654321987654321",getBootPassword());
+        setBootPassword(newBootPassword);
     }
 
     @Test
     void setupUserDBWithPasswordConnectionTest () throws SQLException {
-        DBConnection.databaseName = databaseName+"02";
-        DBConnection.passwordDB = passwordDB;
-        DBConnection.bootPassword = bootPassword;
-
-        connection = DriverManager.getConnection(createURL());
+        setPasswordDB("xxxxxxxxxxx");
+        setDatabaseName(dbName+"07");
+        dbConnect(createURL());
+        setPasswordDB("123456789");
         String setupPasswordString = "CALL SYSCS_UTIL.SYSCS_CREATE_USER(?,?)";
-        connection = DriverManager.getConnection(createURLSimple());
-        DBConnection.setupUserDBWithPasswordConnection(createURLSimple(),passwordDB,setupPasswordString);
-        assertEquals("123456789",passwordDB);
+        dbConnect(createURL());
+        setupUserDBWithPasswordConnection(createURLSimple(), getPasswordDB(), setupPasswordString);
+        assertEquals("123456789",getPasswordDB());
     }
 
     @Test
-    void resetUserDBWithPasswordTest () throws SQLException {
-        DBConnection.databaseName = databaseName + "02";
-        DBConnection.passwordDB = passwordDB;
-        DBConnection.bootPassword = bootPassword;
-        connection = DriverManager.getConnection(createURL());
+    void resetUserPwdTest () throws SQLException {
+        setDatabaseName(dbName+"02");
+        dbConnect(createURL());
         setupUserDBWithPasswordConnectionTest();
         String setupPasswordString = "CALL SYSCS_UTIL.SYSCS_RESET_PASSWORD(?,?)";
-        DBConnection.resetUserPwd(setupPasswordString, "3874436sjsjsjzszhshs");
-        passwordDB = "3874436sjsjsjzszhshs";
-        assertEquals("3874436sjsjsjzszhshs", passwordDB);
+        resetUserPwd(setupPasswordString, "3874436sjsjsjzszhshs");
+        setPasswordDB("3874436sjsjsjzszhshs");
+        assertEquals("3874436sjsjsjzszhshs", getPasswordDB());
     }
 
 
     @Test
     void dbConnectTest() throws SQLException {
-        DBConnection.databaseName = databaseName+"03";
-        DBConnection.passwordDB = passwordDB;
+        setDatabaseName(dbName+"03");
         dbConnect(createURLSimple());
-        assertFalse(connection.isClosed());
+        assertFalse(getConnection().isClosed());
     }
 
     @Test
     void dbDisconnectTest() throws SQLException {
-        DBConnection.databaseName = databaseName+"03";
-        DBConnection.passwordDB = passwordDB;
+        setDatabaseName(dbName+"03");
         dbDisconnect();
-        assertTrue(connection.isClosed());
+        assertTrue(getConnection().isClosed());
     }
 
     @Test
     void dbExecuteUpdateTest() throws InterruptedException, SQLException, ClassNotFoundException {
-        DBConnection.databaseName = databaseName+"04";
-        DBConnection.passwordDB = passwordDB;
-        connection = DriverManager.getConnection(createURLSimple());
+        setDatabaseName(dbName+"04");
+        setPasswordDB(passworDB);
+        dbConnect(createURL());
         DatabaseEntry entry = new DatabaseEntry();
         entry.setId("1");
         entry.setUsername("Jérome");
@@ -171,18 +175,18 @@ class DBConnectionTest {
                 "VALUES('"+entry.getUsername()+"','"+entry.getDescription()+"','"+entry.getUrl()+"','"+entry.getPassword()+"','"+entry.getCreationDate()+"', '"+entry.getLastUpdate()+"','"+entry.getNote()+"')";
 
 
-        assertTrue(DBConnection.dbExecuteUpdate(slqCreateSchemaTest,createURL()));
+        assertTrue(dbExecuteUpdate(slqCreateSchemaTest,createURL()));
         //assertFalse(DBConnection.dbExecuteUpdate(slqCreateSchema,createURL()));
-        assertTrue(DBConnection.dbExecuteUpdate(sqlCreateTableTest,createURL()));
+        assertTrue(dbExecuteUpdate(sqlCreateTableTest,createURL()));
         //assertFalse(DBConnection.dbExecuteUpdate(sqlCreateTable,createURL()));
-        assertTrue(DBConnection.dbExecuteUpdate(insertTest,createURL()));
+        assertTrue(dbExecuteUpdate(insertTest,createURL()));
     }
 
     @Test
     void dbExecuteQueryTest() throws InterruptedException, SQLException, ClassNotFoundException {
-        DBConnection.databaseName = databaseName+"04";
-        DBConnection.passwordDB = passwordDB;
-        connection = DriverManager.getConnection(createURLSimple());
+        setDatabaseName(dbName+"04");
+        setPasswordDB(passworDB);
+        dbConnect(createURL());
 
         DatabaseEntry entry = new DatabaseEntry();
                 entry.setUsername("Jérome");
@@ -197,9 +201,8 @@ class DBConnectionTest {
 
         ObservableList<DatabaseEntry> databaseEntriesTest = FXCollections.observableArrayList();
         ObservableList<DatabaseEntry> databaseEntriesTestResults = FXCollections.observableArrayList();
-        ObservableList<DatabaseEntry> databaseEntriesTestExpected = FXCollections.observableArrayList();
         databaseEntriesTest.add(entry);
-        databaseEntriesTestResults = DBConnection.dbExecuteQuery(queryTest,databaseEntriesTest,createURL());
+        databaseEntriesTestResults = dbExecuteQuery(queryTest,databaseEntriesTest,createURL());
         System.out.println(databaseEntriesTest.get(0));
         assertNotNull(databaseEntriesTestResults);
         //assertEquals();
@@ -210,13 +213,12 @@ class DBConnectionTest {
 
     @Test
     void shutdownDBTest() throws SQLException {
-        DBConnection.databaseName = databaseName+"05";
-        DBConnection.passwordDB = passwordDB;
-        DBConnection.databaseName = databaseName;
+        setDatabaseName(dbName+"05");
+        setPasswordDB(passworDB);
         //start db
-        DriverManager.getConnection(createURLSimple());
+        dbConnect(createURL());
         try{
-            connection = DriverManager.getConnection(createURLSimple()+";shutdown=true");
+            shutdownDB();
         }catch (SQLException e){
             System.out.println("db shutdown: "+e);
             assertEquals(e.getSQLState(), "08006");
@@ -229,18 +231,16 @@ class DBConnectionTest {
 
     @Test
     void removeTestsEffects() throws SQLException, InterruptedException, ClassNotFoundException {
-        DBConnection.databaseName = databaseName+"04";
-        DBConnection.passwordDB = passwordDB;
-        connection = DriverManager.getConnection(createURL());
+        OSBasedAction deleter = new OSBasedAction();
+        setDatabaseName(dbName+"04");
+        setPasswordDB(passworDB);
+        dbConnect(createURL());
         String deleteStmtTest = "DELETE FROM \"CERBYTES\".\"database_entries\"";
         try{
-            assertFalse(DBConnection.dbExecuteUpdate(deleteStmtTest,createURLSimple()));
+            assertFalse(dbExecuteUpdate(deleteStmtTest,createURLSimple()));
         }catch (SQLException exception){
             assertNotEquals(exception.getSQLState(),"Username not found in SYS.SYSUSERS");
         }
-        Path dbFile = Paths.get("testDB/");
-        File db = new File(dbFile.toAbsolutePath().toString());
-        deleteDatabaseFolderTest(db);
 
 
     }
@@ -248,22 +248,10 @@ class DBConnectionTest {
 
     @AfterAll
     static void clean(){
-        Path dbFile = Paths.get("testDB/");
+        OSBasedAction deleter = new OSBasedAction();
+        Path dbFile = Paths.get("testDB2");
         File db = new File(dbFile.toAbsolutePath().toString());
-        deleteDatabaseFolderTest(db);
+        deleter.deleteDatabaseFolder(db);
     }
-
-
-private static void deleteDatabaseFolderTest(File file){
-
-        for (File subFile : file.listFiles()) {
-        if(subFile.isDirectory()) {
-        deleteDatabaseFolderTest(subFile);
-        } else {
-        subFile.delete();
-        }
-        }
-        file.delete();
-        }
 
 }

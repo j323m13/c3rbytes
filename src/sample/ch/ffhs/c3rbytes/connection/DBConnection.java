@@ -7,18 +7,17 @@ import java.sql.*;
 import java.util.concurrent.TimeUnit;
 
 public class DBConnection {
-    public static String userDB = "cerbytes";
-    public static String passwordDB;
-    public static String bootPassword;
-    public boolean newBootPasswordEnabled = false;
+    private static final String userDB = "cerbytes";
+    private static String passwordDB;
+    private static String bootPassword;
     private static int encryptionKeyLength = 256;
     private static String encryptionAlgorithm = "AES/CBC/NoPadding";
-    public static String databaseName = "db/cerbytes";
+    private static String databaseName = "db/cerbytes";
     private static Boolean databaseEncryption = true;
     private static boolean createDB = true;
-    public static String JDBC_URL;
+    private static String JDBC_URL;
     public static Connection connection = null;
-    public static String localValues = null;
+    private static String localValues = null;
 
     /**
      * methode to connect to the database
@@ -27,7 +26,12 @@ public class DBConnection {
      */
     public static void dbConnect(String JDBC_URL) throws SQLException {
         System.out.println("Connecting to db ... ");
-        connection = DriverManager.getConnection(JDBC_URL);
+        try {
+            connection = DriverManager.getConnection(JDBC_URL);
+        }catch (SQLException connect){
+            System.out.println(connect.getMessage());
+            System.out.println(connect.getNextException());
+        }
         System.out.println("connection successful");
         getConnectionInstance();
     }
@@ -196,7 +200,7 @@ public class DBConnection {
             cs.execute();
             cs.close();
             //if the operation is successful, we set the new password of the db for later use.
-            DBConnection.passwordDB = newUserDBPassword;
+            setPasswordDB(newUserDBPassword);
             System.out.println("new password: " + passwordDB);
             System.out.println(createURLSimple());
         } catch (SQLException e) {
@@ -266,5 +270,36 @@ public class DBConnection {
             }
         }
     }
+
+
+    public static void setPasswordDB (String passwordDBString){
+        passwordDB = passwordDBString;
+    }
+
+    public static void setBootPassword (String bootPasswordString){
+        bootPassword = bootPasswordString;
+    }
+
+    public static void setLocalValues (String localValuesString){
+        localValues = localValuesString;
+    }
+
+    public static void setDatabaseName(String databaseNameString){ databaseName = databaseNameString; }
+
+    public static String getPasswordDB(){
+        return passwordDB;
+    }
+
+    public static String getBootPassword(){
+        return bootPassword;
+    }
+
+    public static String getDatabaseName(){
+        return databaseName;
+    }
+
+    public static Connection getConnection(){ return connection;}
+
+
 }
 
