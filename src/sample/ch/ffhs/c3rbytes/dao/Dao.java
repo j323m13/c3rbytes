@@ -12,7 +12,7 @@ public interface Dao {
 
     boolean save(DatabaseEntry databaseEntry) throws SQLException, ClassNotFoundException;
     void update(DatabaseEntry databaseEntry) throws SQLException, ClassNotFoundException;
-    Dao delete(DatabaseEntry databaseEntry) throws SQLException, ClassNotFoundException;
+    void delete(DatabaseEntry databaseEntry) throws SQLException, ClassNotFoundException;
     void deleteAccount() throws SQLException, ClassNotFoundException;
     void setup() throws SQLException, ClassNotFoundException, InterruptedException;
     void connect() throws SQLException;

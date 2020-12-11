@@ -84,7 +84,7 @@ public class loginViewController implements IController{
             stage =  (Stage) loginButton.getScene().getWindow();
             stage.close();
 
-        }catch (SQLException | InterruptedException e){
+        }catch (SQLException e){
             loginCounter++;
             int leftLogins = 3 - loginCounter;
             System.out.println(leftLogins);

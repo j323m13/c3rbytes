@@ -62,10 +62,11 @@ public class DatabaseEntry {
         passwordTrick = "* * * * *";
     }
 
-    /*
-    * below all the setter and getter.
-     */
 
+    /**
+     * get the description value (type of account)
+     * @return description
+     */
     public String getDescription() {
         if(creationDate.get() == null){
             creationDate.set(getDateTime());
@@ -73,58 +74,110 @@ public class DatabaseEntry {
         return description.get();
     }
 
-
+    /**
+     * set the type of account (description)
+     * @param description
+     */
     public void setDescription(String description) {
         this.description.set(description);
     }
+
+    /**
+     * get URL value
+     * @return the url value
+     */
 
     public String getUrl() {
         return url.get();
     }
 
+    /**
+     * set url value
+     * @param url the url to be set
+     */
     public void setUrl(String url) {
         this.url.set(url);
     }
 
+    /**
+     * get password value
+     * @return the password
+     */
     public String getPassword() {
         return password.get();
     }
 
+    /**
+     * set password value
+     * @param password the password to be set
+     */
     public void setPassword(String password) {
         this.password.set(password);
     }
 
+    /**
+     * get the date of creation of the object
+     * @return the date of creation
+     */
     public String getCreationDate() {
         return creationDate.get();
     }
 
-
+    /**
+     * set the creation date
+     * @param creationDate the creation date
+     */
     public void setCreationDate(String creationDate) {
         this.creationDate.set(creationDate);
     }
 
+    /**
+     * get the last update value of the object
+     * @return the last update value (a String)
+     */
     public String getLastUpdate() {
         String lastupdateString = lastUpdate.get();
         return lastupdateString;
     }
 
+    /**
+     * set the last update of the object
+     * @param lastUpdate the time of the last update (String)
+     */
     public void setLastUpdate(String lastUpdate) {
         this.lastUpdate.set(lastUpdate);
     }
 
+    /**
+     * get the username value of an object
+     * @return the username
+     */
     public String getUsername() {
         return username.get();
     }
 
-
+    /**
+     * set the username of a object
+     * @param username the username value
+     */
     public void setUsername(String username) {
         this.username.set(username);
     }
 
+    /**
+     * get the id of the object (id is generated in the database)
+     * @return the id
+     */
     public String getId() {
         return id.get();
     }
 
+    /**
+     * get a dummy id (dummy id is calculated on the amount of objects contained in the observableList which
+     * hold the results of a query.
+     * in the table view we see a chronological index (which is not the case with database ids)
+     * @return the dummy id
+     */
     public String getDummyId() {
         return dummyId;
     }
@@ -133,22 +186,26 @@ public class DatabaseEntry {
         this.dummyId = id;
     }
 
-    public SimpleStringProperty idProperty() {
-        return id;
-    }
-
+    /**
+     * set the id value
+     * @param id the id value (String)
+     */
     public void setId(String id) {
         this.id.set(id);
     }
 
-    public DatabaseEntry getAll() {
-        return this;
-    }
-
+    /**
+     * get the note of an object
+     * @return the note
+     */
     public String getNote() {
         return note.get();
     }
 
+    /**
+     * set the note value
+     * @param note the note value
+     */
     public void setNote(String note) {
         this.note.set(note);
     }
@@ -170,7 +227,7 @@ public class DatabaseEntry {
 
     /**
      * Return 5 ***** to simulate a password field. it ain't stupid if it works.
-     * @return
+     * @return the 5 *****
      */
     public String getHiddenPasswordTrick() {
         return passwordTrick;

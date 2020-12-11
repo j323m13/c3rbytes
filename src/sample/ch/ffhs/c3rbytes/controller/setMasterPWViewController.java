@@ -73,13 +73,7 @@ public class setMasterPWViewController implements IController {
              */
 
 
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }catch (IOException e) {
+        } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
 
