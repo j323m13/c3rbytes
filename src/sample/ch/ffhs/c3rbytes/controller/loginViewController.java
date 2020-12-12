@@ -1,31 +1,29 @@
 package sample.ch.ffhs.c3rbytes.controller;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.PasswordField;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.StringHasher;
-import sample.ch.ffhs.c3rbytes.connection.DBConnection;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.utils.PasswordRevealer;
-
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 
+
+/**
+ * This class controls the login View
+ */
 public class loginViewController implements IController{
 
-    //@FXML private javafx.scene.control.TextField masterPasswordField;
     @FXML private javafx.scene.control.PasswordField loginViewPasswordField;
     @FXML private javafx.scene.control.Button loginButton;
-    @FXML private javafx.scene.control.Button logoutButton;
     @FXML private javafx.scene.control.Label wrongLoginLabel;
     @FXML private javafx.scene.control.TextField loginViewPasswordTextField;
     private final String HASHALGORITHM = "SHA3-512";
@@ -33,7 +31,10 @@ public class loginViewController implements IController{
     public boolean isHidingPassword = true;
     FXMLLoader loader = null;
 
-    public void loginAction(javafx.event.ActionEvent actionEvent) throws IOException, SQLException, ClassNotFoundException {
+    /**
+     * This method logs in if password is correct
+     */
+    public void loginAction(){
         //TODO: Correct login authentication with dB
         System.out.println("LoginAction");
 
@@ -65,22 +66,6 @@ public class loginViewController implements IController{
             loginPassphrase.getView(stage);
             stage.show();
 
-
-            /*loginViewMasterpassphraseController loginViewMasterpassphraseController = new loginViewMasterpassphraseController();
-            loginViewMasterpassphraseController.getLoginViewMasterpassphrase(actionEvent);*/
-
-
-            /*
-            System.out.println("Access to DB granted");
-            Parent parent = FXMLLoader.load(getClass().getResource("../gui/login_view_masterpassphrase.fxml"));
-            Scene loginView = new Scene(parent);
-
-            //This line gets the Stage information
-            Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
-
-            window.setScene(loginView);
-            window.show();
-            */
             stage =  (Stage) loginButton.getScene().getWindow();
             stage.close();
 
@@ -99,8 +84,6 @@ public class loginViewController implements IController{
         }catch (IOException e) {
             e.printStackTrace();
         }
-
-
 
     }
 
@@ -125,8 +108,11 @@ public class loginViewController implements IController{
         return loader.getController();
     }
 
-    public void manageKeyInput(KeyEvent keyEvent) throws SQLException, IOException, ClassNotFoundException {
-
+    /**
+     * This method manges the key inputs of the fields
+     * @param keyEvent The key event
+     */
+    public void manageKeyInput(KeyEvent keyEvent) {
 
         System.out.println(keyEvent.getSource());
         Node n = (Node)keyEvent.getSource();
@@ -142,32 +128,16 @@ public class loginViewController implements IController{
                 break;
         }
 
-
         if (keyEvent.getCode().equals(KeyCode.ENTER)){
-            System.out.println("Enter");
-            ActionEvent ae = new ActionEvent(keyEvent.getSource(), keyEvent.getTarget());
-            loginAction(ae);
+            loginAction();
         }
     }
 
-    /*
-    public void updatePasswordField(KeyEvent keyEvent) {
-        loginViewPasswordField.setText(loginViewPasswordTextField.getText());
-
-    }
+    /**
+     * This method shows or hides password
      */
-
-    public void showPassword(ActionEvent actionEvent) {
+    public void showPassword() {
         new PasswordRevealer().passwordReveal(loginViewPasswordField, loginViewPasswordTextField, isHidingPassword);
         isHidingPassword =! isHidingPassword;
     }
-
-
-
-
-
-    /*
-    public void loginAction(javafx.event.ActionEvent actionEvent) {
-
-    }*/
 }

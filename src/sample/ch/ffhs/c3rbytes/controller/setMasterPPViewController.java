@@ -1,6 +1,5 @@
 package sample.ch.ffhs.c3rbytes.controller;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -10,31 +9,35 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import sample.ch.ffhs.c3rbytes.crypto.FileEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.crypto.PasswordGenerator;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.utils.FileHandler;
 import sample.ch.ffhs.c3rbytes.utils.PasswordRevealer;
-
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 //import static sample.ch.ffhs.c3rbytes.controller.loginViewMasterpassphraseController.startMainView;
 
+/**
+ * This class controls the setMasterPPView and interacts with crypto and model
+ */
+
 public class setMasterPPViewController implements IController {
-    public final String filename = "c3r.c3r";
 
     @FXML javafx.scene.control.PasswordField setMPPViewPasswordField;
     @FXML javafx.scene.control.TextField setMPPViewTextField;
-    private boolean isHidingPassword = true;
     @FXML javafx.scene.control.Button setMPPViewloginButton;
+    private boolean isHidingPassword = true;
+    public final String filename = "c3r.c3r";
     FXMLLoader loader = null;
     DatabaseEntryDao newStartUp = new DatabaseEntryDao();
 
-
+    /**
+     * This method sets a new masterpassphrase to encrypt the c3r.c3r file with a new passphrase
+     * @throws Exception if something went wrong
+     */
     public void saveMPPAction() throws Exception {
         String masterPassPhrase = setMPPViewPasswordField.getText();
         System.out.println(masterPassPhrase);
@@ -72,13 +75,6 @@ public class setMasterPPViewController implements IController {
             fileHandler.deleteFile("c3r.c3r");
         }
 
-
-        /*
-        Stage stage = (Stage) setMPPViewloginButton.getScene().getWindow();
-        stage.close();
-        */
-
-        //Main.entryView(stage);
         Stage stage = new Stage();
         mainViewController mainViewController = new mainViewController();
         mainViewController.getView(stage);
@@ -86,12 +82,9 @@ public class setMasterPPViewController implements IController {
         stage = (Stage) setMPPViewloginButton.getScene().getWindow();
         stage.close();
 
-        //lvmc.closeStage();
-        //abordMPPAction();
-        //startMainView();
     }
 
-    public void abordMPPAction() throws SQLException, ClassNotFoundException {
+    public void abordMPPAction() {
         System.out.println("System exit");
         //delete db if the user abort during passphrase setup
         newStartUp.deleteAccount();

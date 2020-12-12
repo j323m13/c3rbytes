@@ -1,6 +1,5 @@
 package sample.ch.ffhs.c3rbytes.controller;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -20,7 +19,7 @@ import java.net.URL;
 import java.sql.SQLException;
 
 /**
- * This class handles
+ * This class controls the setMasterPWView and interacts with crypto and model
  */
 
 public class setMasterPWViewController implements IController {
@@ -32,8 +31,9 @@ public class setMasterPWViewController implements IController {
     private boolean isHidingPassword = true;
     FXMLLoader loader = null;
 
-
-    // password to encrypt DB
+    /**
+     * This method sets a new masterpassword for the database
+     */
     public void saveMPAction() {
         errorLabel.setText("");
         String plainBootPassword = setMPViewPasswordField.getText();
@@ -66,17 +66,6 @@ public class setMasterPWViewController implements IController {
             //decryptDB or createdB on first boot
             login.setupEncryption(hashedBootPassword);
 
-            /*
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/set_master_mpp_view.fxml"));
-            Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("Welcome to C3rBytes");
-            stage.setScene(new Scene(root, 552, 371));
-            stage.show();
-
-             */
-
-
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
@@ -85,10 +74,16 @@ public class setMasterPWViewController implements IController {
         stage.close();
     }
 
-    public void abordMPAction(ActionEvent actionEvent) {
+
+    public void abordMPAction() {
         System.exit(0);
     }
 
+    /**
+     * This method provides the loader and the stage
+     * @param stage The stage to show
+     * @throws IOException if loader or stageicon or stage is null
+     */
     @Override
     public void getView(Stage stage) throws IOException {
         URL url = getClass().getClassLoader().getResource("set_master_pw_view.fxml");
@@ -105,13 +100,19 @@ public class setMasterPWViewController implements IController {
         return loader.getController();
     }
 
-    public void showPassword(ActionEvent actionEvent) {
+    /**
+     * This method shows or hides a password
+     */
+    public void showPassword() {
         new PasswordRevealer().passwordReveal(setMPViewPasswordField, setMPViewPasswordText, isHidingPassword);
         isHidingPassword =! isHidingPassword;
     }
 
-
-    public void manageKeyInput(KeyEvent keyEvent) throws Exception {
+    /**
+     * This method manages key inputs
+     * @param keyEvent The keyEvent
+     */
+    public void manageKeyInput(KeyEvent keyEvent) {
         System.out.println("Key released");
 
         Node n = (Node)keyEvent.getSource();

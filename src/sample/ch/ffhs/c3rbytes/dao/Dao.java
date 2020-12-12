@@ -1,6 +1,6 @@
 package sample.ch.ffhs.c3rbytes.dao;
 
-import sample.ch.ffhs.c3rbytes.DatabaseEntry.DatabaseEntry;
+import sample.ch.ffhs.c3rbytes.databaseEntry.DatabaseEntry;
 
 import java.sql.SQLException;
 import java.util.List;

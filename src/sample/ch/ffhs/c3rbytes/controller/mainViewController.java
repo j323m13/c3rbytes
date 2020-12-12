@@ -2,7 +2,7 @@ package sample.ch.ffhs.c3rbytes.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -15,7 +15,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import sample.ch.ffhs.c3rbytes.DatabaseEntry.DatabaseEntry;
+import sample.ch.ffhs.c3rbytes.databaseEntry.DatabaseEntry;
 import sample.ch.ffhs.c3rbytes.crypto.PasswordEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.utils.ClipboardHandler;
@@ -28,30 +28,24 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import static java.lang.String.valueOf;
 
+/**
+ * This is the mainView Controller. It controls the main view and interacts
+ */
 
 public class mainViewController implements Initializable, IController {
     @FXML private  Button openUrlButton;
     @FXML private  Button copyButton;
     @FXML private  Button modifyButton;
     @FXML private TextField searchField;
-    @FXML
-    private Label foundLabel;
-    @FXML
-    private javafx.scene.control.TableView<DatabaseEntry> profileTable;
-    @FXML
-    private TableColumn<DatabaseEntry, String> idColumn;
-    @FXML
-    private TableColumn<DatabaseEntry, String> categoryColumn;
-    @FXML
-    private TableColumn<DatabaseEntry, String> userNameColumn;
-    @FXML
-    private TableColumn<DatabaseEntry, String> passwordColumn;
-    @FXML
-    private TableColumn<DatabaseEntry, String> urlColumn;
-    @FXML
-    private TableColumn<DatabaseEntry, String> updateColumn;
-    @FXML
-    private TableColumn<DatabaseEntry, String> noteColumn;
+    @FXML private Label foundLabel;
+    @FXML private javafx.scene.control.TableView<DatabaseEntry> profileTable;
+    @FXML private TableColumn<DatabaseEntry, String> idColumn;
+    @FXML private TableColumn<DatabaseEntry, String> categoryColumn;
+    @FXML private TableColumn<DatabaseEntry, String> userNameColumn;
+    @FXML private TableColumn<DatabaseEntry, String> passwordColumn;
+    @FXML private TableColumn<DatabaseEntry, String> urlColumn;
+    @FXML private TableColumn<DatabaseEntry, String> updateColumn;
+    @FXML private TableColumn<DatabaseEntry, String> noteColumn;
     @FXML private Button logoutButton;
     @FXML private Button searchButton;
     @FXML private Button deleteButton;
@@ -60,7 +54,6 @@ public class mainViewController implements Initializable, IController {
 
 
     FXMLLoader loader = null;
-
     DatabaseEntryDao mainViewDao = new DatabaseEntryDao();
 
     /**
@@ -216,9 +209,8 @@ public class mainViewController implements Initializable, IController {
 
     /**
      * Add new item in the database. open a new view (add_new_item_view.fxml)
-     * @param event click on add profile button or add item in the menu.
      */
-    public void addNewItemAction(ActionEvent event){
+    public void addNewItemAction(){
         try {
             FXMLLoader loader;
             URL url = getClass().getClassLoader().getResource("add_new_item_view.fxml");
@@ -239,10 +231,9 @@ public class mainViewController implements Initializable, IController {
 
     /**
      * Logout Methode
-     * @param event click of the logout button
-     * @throws SQLException
+     * @throws SQLException if database queries was not successful
      */
-    public void logoutAction(ActionEvent event) throws SQLException {
+    public void logoutAction() throws SQLException {
         System.out.println("Logout Action");
         //TODO: Add necessary methods to clear/reencrypt/delete before closing the app.
         Stage stage = (Stage) logoutButton.getScene().getWindow();
@@ -256,11 +247,10 @@ public class mainViewController implements Initializable, IController {
     /**
      * Given a string, it searches an element in the database.
      * if nothing is to be found, it throws an information.
-     * @param event when the user click the search button
      * @throws IOException a problem has occurred.
      */
 
-    public void searchAction(ActionEvent event) throws IOException {
+    public void searchAction() throws IOException {
         Scene scene = searchButton.getScene();
         scene.setCursor(Cursor.WAIT);
         String searchElement = searchField.getText();
@@ -329,9 +319,8 @@ public class mainViewController implements Initializable, IController {
 
     /**
      *Button to copy the password in memory
-     * @param event click on copy password
      */
-    public void copyPasswordAction(ActionEvent event) {
+    public void copyPasswordAction() {
         //TODO: Copy password -> get password text field content
         System.out.println("Copy Password Action");
         try{
@@ -347,10 +336,9 @@ public class mainViewController implements Initializable, IController {
 
     /**
      * methode to delete an item in the database (and the tableview)
-     * @param event click on delete profile
      * @throws IOException Signals that an I/O exception of some sort has occurred.
      */
-    public void deleteProfileAction(ActionEvent event) throws IOException {
+    public void deleteProfileAction() throws IOException {
         DatabaseEntryDao deleter = new DatabaseEntryDao();
         Optional<ButtonType> confirm = null;
         try{
@@ -384,10 +372,9 @@ public class mainViewController implements Initializable, IController {
      * - the c3r.c3r file
      *
      * this action is final. no coming back from it. only tears.
-     * @param actionEvent click on delete Account button
      * @throws IOException Signals that an I/O exception of some sort has occurred.
      */
-    public void deleteAccountAction(ActionEvent actionEvent) throws IOException {
+    public void deleteAccountAction() throws IOException {
         //TODO: Define deleting account
         System.out.println("Delete Account Action");
         String alertText = "Are you sure you want to delete your account? \n" +
@@ -428,10 +415,9 @@ public class mainViewController implements Initializable, IController {
     /**
      * Methode to change the Master Password
      * @see changePasswordController
-     * @param actionEvent click on change master password button
      * @throws IOException Signals that an I/O exception of some sort has occurred.
      */
-    public void changeMasterAction(ActionEvent actionEvent) throws IOException{
+    public void changeMasterAction() throws IOException{
 
         System.out.println("Change Master Password Action");
             Stage stage = new Stage();
@@ -443,9 +429,8 @@ public class mainViewController implements Initializable, IController {
 
     /**
      * Methode to call the change master Passphrase action
-     * @param actionEvent  click on change master passphrase button
      */
-    public void changeMasterPPAction(ActionEvent actionEvent){
+    public void changeMasterPPAction(){
         //TODO: here we have to open login_view_masterpassphrase.fxml and aks for the passphrase or something similar
 
         //TODO delete ?
@@ -480,9 +465,8 @@ public class mainViewController implements Initializable, IController {
 
     /**
      * methode to action the opening of the url
-     * @param actionEvent click on open url button / or in the menu
      */
-    public void onOpenUrl(ActionEvent actionEvent) {
+    public void onOpenUrl() {
         // first get url form selected row
         try{
             DatabaseEntry dbEntry = profileTable.getSelectionModel().getSelectedItem();
@@ -498,19 +482,16 @@ public class mainViewController implements Initializable, IController {
 
     /**
      * Reload the main view when a button is pressed (or from the right click menu)
-     * @param actionEvent click on reload reload data button
      */
-    public void reload(ActionEvent actionEvent) {
+    public void reload() {
         reloadMainView();
 
     }
 
     /**
      * modify an entry when a button if pressed (or from the right click menu)
-     * @param actionEvent click on modify profile
-     * @throws Exception ignored print the element is null and the message in the console.
      */
-    public void onModifyProfile(ActionEvent actionEvent) throws Exception {
+    public void onModifyProfile() {
         try {
             startOpenSelectedItemsToView(copyClickedEntry());
         }catch (Exception ex){
@@ -570,7 +551,7 @@ public class mainViewController implements Initializable, IController {
     public void manageInput(KeyEvent keyEvent) throws IOException {
         if (keyEvent.getCode().equals(KeyCode.ENTER)){
             System.out.println("Enter");
-            searchAction(null);
+            searchAction();
         }
 
     }

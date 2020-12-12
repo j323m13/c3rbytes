@@ -1,75 +1,83 @@
 package sample.ch.ffhs.c3rbytes.controller;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.PasswordGenerator;
 import sample.ch.ffhs.c3rbytes.utils.ClipboardHandler;
-
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
+/**
+ * This class is the password generator controller.
+ */
+
 public class passwordGeneratorController implements IController {
+
+    @FXML private CheckBox digitCheck;
+    @FXML private CheckBox lowerCaseCheck;
+    @FXML private CheckBox upperCaseCheck;
+    @FXML private Label lengthTextField;
+    @FXML private Slider lengthSlider;
+    @FXML private CheckBox symbolCheck;
+    @FXML private TextField pwdOutputField;
+    @FXML private javafx.scene.control.Button savePassword;
+    @FXML PasswordField passwordField;
+    @FXML TextField passwordTextField;
+    @FXML private javafx.scene.control.Button discardPassword;
+
     int useDigits;
     int useLower;
     int useUpper;
     int useSymbols;
     FXMLLoader loader = null;
 
-    @FXML private CheckBox digitCheck;
-    public void onDigitsAction(ActionEvent actionEvent) {
+
+    public void onDigitsAction() {
         //This field does not do anything by itself, it is referenced when creating a password in onGenerateAction
         System.out.println("Include digits in password");
     }
 
-    @FXML private CheckBox lowerCaseCheck;
-    public void onLowerCaseAction(ActionEvent actionEvent) {
+    public void onLowerCaseAction() {
         //This field does not do anything by itself, it is referenced when creating a password in onGenerateAction
         System.out.println("Include lowercase in password");
     }
 
-    @FXML private CheckBox upperCaseCheck;
-    public void onUpperCaseAction(ActionEvent actionEvent) {
+    public void onUpperCaseAction() {
         //This field does not do anything by itself, it is referenced when creating a password in onGenerateAction
         System.out.println("Include uppercase in password");
     }
 
-    @FXML private Label lengthTextField;
-    @FXML private Slider lengthSlider;
-    public void lengthSliderAction(MouseEvent mouseEvent) {
+    public void lengthSliderAction() {
         lengthSlider.valueProperty().addListener((observable, oldValue, newValue ) -> {
             lengthTextField.setText(Integer.toString(newValue.intValue()));
         });
     }
 
-    @FXML private CheckBox symbolCheck;
-    public void onSymbolAction(ActionEvent actionEvent) {
-        //This field does not do anything by itself, it is referenced when creating a password in onGenerateAction
-        System.out.println("Include special characters in password");
+    public void onSymbolAction() {
+    //This field does not do anything by itself, it is referenced when creating a password in onGenerateAction
+    System.out.println("Include special characters in password");
     }
 
-    // Generate Password
-    @FXML private TextField pwdOutputField;
-    public void onGenerateAction(ActionEvent actionEvent) {
+    /**
+     * This method generates a new password with the desired length and the desired charset
+     *         /* input for ArrayList<Integer> charSet must come from option buttons with options
+     *          * 0 = lower case letters
+     *          * 1 = upper case letters
+     *          * 2 = digits
+     *          * 3 = special characters
+     *          * or combinations of them
+     */
+    public void onGenerateAction() {
 
-        /* input for ArrayList<Integer> charSet must come from option buttons with options
-         * 0 = lower case letters
-         * 1 = upper case letters
-         * 2 = digits
-         * 3 = special characters
-         * or combinations of them
-        */
+
         ArrayList<Integer> charSet = new ArrayList<>();
 
-        //int pwlength = lengthSlider.getValue().int;
         int pwlength = Integer.parseInt(lengthTextField.getText());
 
         if (lowerCaseCheck.isSelected()) {
@@ -95,8 +103,6 @@ public class passwordGeneratorController implements IController {
        System.out.println(charSet.toString());
 
         System.out.println("Generating password");
-        //TODO: call algorithm and enter in pwdOutputField.setText
-
 
         PasswordGenerator pwg = new PasswordGenerator();
         pwg.buildPassword(charSet, pwlength);
@@ -104,14 +110,15 @@ public class passwordGeneratorController implements IController {
 
         System.out.println(pw);
 
-        //pwdOutputField.setText((int)lengthSlider.getValue() + " " + useDigits +" "+ useLower +" "+ useUpper +" "+ useSymbols);
         pwdOutputField.setText(pw);
 
-        pwg = null;
     }
 
-    public void onCopyAction(ActionEvent actionEvent) {
-        //TODO: Copy contents of pwdOutputField.
+    /**
+     * This method copies the password to the clipboard
+     *
+     */
+    public void onCopyAction() {
         System.out.println("Copying password");
         ClipboardHandler clipboardHandler = new ClipboardHandler();
         String pwdOutputFieldText = pwdOutputField.getText();
@@ -119,20 +126,18 @@ public class passwordGeneratorController implements IController {
 
     }
 
-    @FXML
-    private javafx.scene.control.Button discardPassword;
-    public void discardPasswordAction(ActionEvent actionEvent) {
+
+    public void discardPasswordAction() {
         System.out.println("Discarding Password");
         //TODO: Discard information and close the window window.
         Stage stage = (Stage) discardPassword.getScene().getWindow();
         closeStage(stage);
     }
 
-    @FXML
-    private javafx.scene.control.Button savePassword;
-    @FXML PasswordField passwordField;
-    @FXML TextField passwordTextField;
-    public void savePasswordAction(ActionEvent actionEvent) throws IOException {
+    /**
+     * This method the password to the addNewItemView
+     */
+    public void savePasswordAction() {
         //TODO: Add necessary method and data transfer before closing the window.
         String pwdOutputFieldText = pwdOutputField.getText();
         passwordField.setText(pwdOutputFieldText);
@@ -166,9 +171,7 @@ public class passwordGeneratorController implements IController {
         return loader.getController();
     }
 
-
-
-    public void lengthSliderMouseRelease(MouseEvent mouseEvent) {
+    public void lengthSliderMouseRelease() {
         lengthTextField.setText(Integer.toString(lengthSlider.valueProperty().intValue()));
     }
 }

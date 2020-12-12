@@ -1,7 +1,7 @@
 package sample.ch.ffhs.c3rbytes.connection;
 
 import javafx.collections.ObservableList;
-import sample.ch.ffhs.c3rbytes.DatabaseEntry.DatabaseEntry;
+import sample.ch.ffhs.c3rbytes.databaseEntry.DatabaseEntry;
 
 import java.sql.*;
 import java.util.concurrent.TimeUnit;

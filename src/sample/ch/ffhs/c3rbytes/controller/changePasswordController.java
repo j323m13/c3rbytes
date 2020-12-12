@@ -1,6 +1,5 @@
 package sample.ch.ffhs.c3rbytes.controller;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,18 +7,19 @@ import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import sample.ch.ffhs.c3rbytes.connection.DBConnection;
 import sample.ch.ffhs.c3rbytes.crypto.StringHasher;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.utils.PasswordRevealer;
 import sample.ch.ffhs.c3rbytes.utils.PasswordValidator;
-
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
 
+
+/**
+ * This class controls the changePWView
+ *
+ */
 public class changePasswordController implements IController {
 
     @FXML javafx.scene.control.TextField oldMasterPasswordText;
@@ -30,23 +30,24 @@ public class changePasswordController implements IController {
     @FXML javafx.scene.control.PasswordField oldMasterPasswordField;
     @FXML javafx.scene.control.PasswordField newPasswordField;
     @FXML javafx.scene.control.PasswordField newPasswordConfirmField;
+    @FXML javafx.scene.control.Button discardPasswordButton;
     private boolean isHidingOld = true;
     private boolean isHidingNew = true;
     private boolean isHidingConfirm = true;
-
     FXMLLoader loader = null;
-
     private final String HASHALGORITHM = "SHA3-512";
     DatabaseEntryDao setup = new DatabaseEntryDao();
 
-    public void changePasswordAction(ActionEvent actionEvent) throws SQLException {
+    /**
+     * This method compares the old with the new masterpassword. If correct it triggers the change
+     * otherwise the aciton will be cancelled
+     */
+    public void changePasswordAction() {
         String oldMasterpassword = oldMasterPasswordField.getText();
         String newMasterpassword = newPasswordField.getText();
         String newMasterpasswordConfirmed = newPasswordConfirmField.getText();
-        //boolean isFilledOut = true;
         StringHasher stringHasher = new StringHasher();
         String oldMasterpasswordHashed = stringHasher.encryptSHA3(HASHALGORITHM, oldMasterpassword);
-
 
         System.out.println(oldMasterpassword + " " + newMasterpassword + " " + newMasterpasswordConfirmed);
 
@@ -56,7 +57,6 @@ public class changePasswordController implements IController {
         resetStyle(oldMasterPasswordField, oldMasterPasswordText);
         resetStyle(newPasswordField, newPasswordText);
         resetStyle(newPasswordConfirmField, newPasswordConfirmText);
-
 
         oldPasswordErrorLabel.setText("");
         passwordMatchErrorLabel.setText("");
@@ -111,17 +111,31 @@ public class changePasswordController implements IController {
         }
     }
 
+    /**
+     * This method sets the style of the passwordfild if input is invalid
+     * @param passwordField The passwordfield
+     * @param textField The textfield
+     */
     private void setStyle(PasswordField passwordField, TextField textField){
         passwordField.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
         textField.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
     }
 
+    /**
+     * This method resets the Fields
+     * @param passwordField PasswordField
+     * @param textField TextField
+     */
     private void resetStyle(PasswordField passwordField, TextField textField){
         passwordField.setStyle(null);
         textField.setStyle(null);
     }
 
-
+    /**
+     * This method encrypts the db with the new masterpassword
+     * @param oldMasterpassword String. The old masterpassword
+     * @param newMasterpassword String. The new masterpassword
+     */
     private void changePassword(String oldMasterpassword, String newMasterpassword) {
         try {
             StringHasher stringHasher = new StringHasher();
@@ -136,7 +150,7 @@ public class changePasswordController implements IController {
             }
 
             System.out.println(newMasterpassword);
-            discardPasswordAction(null);
+            discardPasswordAction();
         } catch (Exception e) {
             System.out.println("Password incorrect");
             setStyle(oldMasterPasswordField, oldMasterPasswordText);
@@ -145,8 +159,8 @@ public class changePasswordController implements IController {
         }
     }
 
-    @FXML javafx.scene.control.Button discardPasswordButton;
-    public void discardPasswordAction(ActionEvent actionEvent) {
+
+    public void discardPasswordAction() {
         Stage stage = (Stage) discardPasswordButton.getScene().getWindow();
         stage.close();
     }
@@ -167,42 +181,42 @@ public class changePasswordController implements IController {
     }
 
 
-    public void showPasswordOld(ActionEvent actionEvent) {
+    public void showPasswordOld() {
         new PasswordRevealer().passwordReveal(oldMasterPasswordField, oldMasterPasswordText, isHidingOld);
         isHidingOld =! isHidingOld;
     }
 
-    public void showPasswordNew(ActionEvent actionEvent) {
+    public void showPasswordNew() {
         new PasswordRevealer().passwordReveal(newPasswordField, newPasswordText, isHidingNew);
         isHidingNew =! isHidingNew;
     }
 
-    public void showPasswordConfirm(ActionEvent actionEvent) {
+    public void showPasswordConfirm() {
         new PasswordRevealer().passwordReveal(newPasswordConfirmField, newPasswordConfirmText, isHidingConfirm);
         isHidingConfirm =! isHidingConfirm;
     }
 
-    public void updateOldPWPasswordField(KeyEvent keyEvent) {
+    public void updateOldPWPasswordField() {
         oldMasterPasswordField.setText(oldMasterPasswordText.getText());
     }
 
-    public void updateNewPWPasswordField(KeyEvent keyEvent) {
+    public void updateNewPWPasswordField() {
         newPasswordField.setText(newPasswordText.getText());
     }
 
-    public void updateConfirmedPWPasswordField(KeyEvent keyEvent) {
+    public void updateConfirmedPWPasswordField() {
         newPasswordConfirmField.setText(newPasswordConfirmText.getText());
     }
 
-    public void updateOldPWTextField(KeyEvent keyEvent) {
+    public void updateOldPWTextField() {
         oldMasterPasswordText.setText(oldMasterPasswordField.getText());
     }
 
-    public void updateNewPWTextField(KeyEvent keyEvent) {
+    public void updateNewPWTextField() {
         newPasswordText.setText(newPasswordField.getText());
     }
 
-    public void updateConfirmedPWTextField(KeyEvent keyEvent) {
+    public void updateConfirmedPWTextField() {
         newPasswordConfirmText.setText(newPasswordConfirmField.getText());
     }
 }

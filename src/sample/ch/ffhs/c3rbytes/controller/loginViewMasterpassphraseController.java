@@ -22,6 +22,10 @@ import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * This class controls the loginViewMPPView
+ */
+
 public class loginViewMasterpassphraseController implements IController {
     @FXML private javafx.scene.control.PasswordField masterPassPhraseField;
     @FXML private javafx.scene.control.TextField loginMPPTextField;
@@ -39,6 +43,10 @@ public class loginViewMasterpassphraseController implements IController {
     Stage stage = null;
     DatabaseEntryDao mainViewDao = new DatabaseEntryDao();
 
+    /**
+     *
+     * @throws Exception
+     */
     public void loginActionMPP() throws Exception {
 
         // check pw in c3r.c3r file and assign to passwordDecrypterpassword
@@ -150,7 +158,7 @@ public class loginViewMasterpassphraseController implements IController {
     }
 
 
-    public void showPassword(ActionEvent actionEvent) {
+    public void showPassword() {
         new PasswordRevealer().passwordReveal(masterPassPhraseField, loginMPPTextField, isHidingPassword);
         isHidingPassword =! isHidingPassword;
     }
@@ -185,7 +193,7 @@ public class loginViewMasterpassphraseController implements IController {
     }
 
 
-    public void manageKeyInput(KeyEvent keyEvent) throws Exception {
+    public void manageKeyInput(KeyEvent keyEvent) {
         System.out.println("Key released");
 
         Node n = (Node)keyEvent.getSource();

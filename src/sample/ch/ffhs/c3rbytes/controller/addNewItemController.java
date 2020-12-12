@@ -2,7 +2,6 @@ package sample.ch.ffhs.c3rbytes.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -14,7 +13,7 @@ import javafx.scene.input.InputMethodEvent;
 import javafx.stage.Stage;
 import java.io.IOException;
 import sample.ch.ffhs.c3rbytes.crypto.PasswordEncrypterDecrypter;
-import sample.ch.ffhs.c3rbytes.DatabaseEntry.DatabaseEntry;
+import sample.ch.ffhs.c3rbytes.databaseEntry.DatabaseEntry;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.utils.ClipboardHandler;
 import sample.ch.ffhs.c3rbytes.utils.PasswordRevealer;
@@ -22,7 +21,9 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 
-
+/**
+ * This class controls the addNewItemView and interacts with the model and crypto *
+ */
 
 public class addNewItemController implements IController {
 
@@ -60,7 +61,7 @@ public class addNewItemController implements IController {
 
     /**
      * Open a new view with a password generator
-     * @throws IOException
+     * @throws IOException if password generation fails
      */
     //@FXML private javafx.scene.control.Button generatePasswordButton;
     public void generatePassword() throws IOException{
@@ -85,10 +86,9 @@ public class addNewItemController implements IController {
 
     /**
      * methode to populate the field of for add new Item
-     * @param dbentry
-     * @throws Exception
+     * @param dbentry if encryption goes wrong or db querie is invalid
      */
-    public void fillIn(DatabaseEntry dbentry) throws Exception {
+    public void fillIn(DatabaseEntry dbentry) {
         usernameFieldLabelError.setVisible(false);
         passwordFieldLabelError.setVisible(false);
         typeFieldLabelError.setVisible(false);
@@ -165,19 +165,17 @@ public class addNewItemController implements IController {
 
     /**
      * discard action
-     * @param actionEvent mouse click
      */
-    public void onDiscardButton(ActionEvent actionEvent) {
+    public void onDiscardButton() {
         Stage stage = (Stage) discardButton.getScene().getWindow();
         stage.close();
     }
 
     /**
      * Save action
-     * @param actionEvent mouse click
-     * @throws Exception
+     * @throws Exception if password encryption is wrong or db querie is invalid
      */
-    public void onSaveButton(ActionEvent actionEvent) throws Exception {
+    public void onSaveButton() throws Exception {
         if(controlFieldInput()){
             String username = userNameField.getText();
             String password = passwordField.getText();
@@ -284,7 +282,7 @@ public class addNewItemController implements IController {
     /**
      * Get the view
      * @param stage
-     * @throws IOException
+     * @throws IOException if loader or stage is null
      */
     @Override
     public void getView(Stage stage) throws IOException {
@@ -298,7 +296,7 @@ public class addNewItemController implements IController {
     /**
      * get controller
      * @return loader.getController()
-     * @throws IOException
+     * @throws IOException if controller is not available
      */
     @Override
     public Object getController() throws IOException {
@@ -307,7 +305,7 @@ public class addNewItemController implements IController {
 
     /**
      * Update the passwordfield (show vs hide password)
-     * @param inputMethodEvent
+     * @param inputMethodEvent From which element the event comes
      */
     public void update(InputMethodEvent inputMethodEvent) {
         Node n = (Node)inputMethodEvent.getSource();

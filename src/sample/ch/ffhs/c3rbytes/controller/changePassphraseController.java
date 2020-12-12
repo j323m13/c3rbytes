@@ -8,18 +8,19 @@ import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.FileEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.utils.PasswordRevealer;
 import sample.ch.ffhs.c3rbytes.utils.PasswordValidator;
-
 import javax.crypto.AEADBadTagException;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * This class controls change pass phrase view
+ */
 public class changePassphraseController implements IController{
 
     @FXML javafx.scene.control.TextField oldMasterPassphraseText;
@@ -30,7 +31,7 @@ public class changePassphraseController implements IController{
     @FXML javafx.scene.control.PasswordField newPassphraseConfirmField;
     @FXML javafx.scene.control.Label oldPassphraseErrorLabel;
     @FXML javafx.scene.control.Label passphraseMatchErrorLabel;
-    @FXML javafx.scene.control.Button savePassPhraseButton;
+    @FXML javafx.scene.control.Button discardPassphraseButton;
     public static final String FILENAME = "c3r.c3r";
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
     private boolean isHidingOld = true;
@@ -38,9 +39,11 @@ public class changePassphraseController implements IController{
     private boolean isHidingConfirm = true;
     FXMLLoader loader = null;
 
-
-    public void changePassphraseAction(ActionEvent actionEvent) {
-        //String oldPassPhrase = "password123";
+    /**
+     * This method compares the old with the new masterpassphrase. If correct it triggers the change
+     * otherwise the aciton will be cancelled
+     */
+    public void changePassphraseAction() {
         String oldMasterpassphrase = oldMasterPassphraseField.getText();
         String newMasterpassphrase = newPassphraseField.getText();
         String newMasterpassphraseConfirmed = newPassphraseConfirmField.getText();
@@ -93,26 +96,39 @@ public class changePassphraseController implements IController{
         }
     }
 
+    /**
+     * This method sets the style of the passwordfild if input is invalid
+     * @param passwordField The passwordfield
+     * @param textField The textfield
+     */
+
     private void setStyle(PasswordField passwordField, TextField textField){
         passwordField.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
         textField.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
     }
 
+    /**
+     * This method resets the Fields
+     * @param passwordField PasswordField
+     * @param textField TextField
+     */
     private void resetStyle(PasswordField passwordField, TextField textField){
         passwordField.setStyle(null);
         textField.setStyle(null);
     }
 
+    /**
+     * This method encrypts the file with the new masterpassphrase
+     * @param oldMasterpassphrase String. The old masterpassphrase
+     * @param newMasterpassphraseConfirmed String. The new masterpassphrase
+     */
     private void changePassPhrase(String oldMasterpassphrase, String newMasterpassphraseConfirmed){
             try {
                 FileEncrypterDecrypter fileEncrypterDecrypter = new FileEncrypterDecrypter();
                 byte[] decryptedText = fileEncrypterDecrypter.decryptFile(FILENAME, oldMasterpassphrase);
                 String originalContent = new String(decryptedText, UTF_8);
 
-                //String newPassPhrase = "password123";
-                //String newPassPhrase = newPassphraseConfirmField.getText();
                 fileEncrypterDecrypter.encryptFile(originalContent, FILENAME, newMasterpassphraseConfirmed);
-
 
                 passphraseMatchErrorLabel.setText("Master pass phrase successful. Please discard the window");
 
@@ -127,8 +143,8 @@ public class changePassphraseController implements IController{
 
     }
 
-    @FXML javafx.scene.control.Button discardPassphraseButton;
-    public void discardPassphraseAction(ActionEvent actionEvent) {
+
+    public void discardPassphraseAction() {
         Stage stage = (Stage) discardPassphraseButton.getScene().getWindow();
         stage.close();
     }
@@ -148,42 +164,42 @@ public class changePassphraseController implements IController{
         return loader.getController();
     }
 
-    public void showPasswordOld(ActionEvent actionEvent) {
+    public void showPasswordOld() {
         new PasswordRevealer().passwordReveal(oldMasterPassphraseField, oldMasterPassphraseText, isHidingOld);
         isHidingOld =! isHidingOld;
     }
 
-    public void showPasswordNew(ActionEvent actionEvent) {
+    public void showPasswordNew() {
         new PasswordRevealer().passwordReveal(newPassphraseField, newPassphraseText, isHidingNew);
         isHidingNew =! isHidingNew;
     }
 
-    public void showPasswordConfirm(ActionEvent actionEvent) {
+    public void showPasswordConfirm() {
         new PasswordRevealer().passwordReveal(newPassphraseConfirmField, newPassphraseConfirmText, isHidingConfirm);
         isHidingConfirm =! isHidingConfirm;
     }
 
-    public void updateOldPPPasswordText(KeyEvent keyEvent) {
+    public void updateOldPPPasswordText() {
         oldMasterPassphraseText.setText(oldMasterPassphraseField.getText());
     }
 
-    public void updateOldPPPasswordField(KeyEvent keyEvent) {
+    public void updateOldPPPasswordField() {
         oldMasterPassphraseField.setText(oldMasterPassphraseText.getText());
     }
 
-    public void updateNewPPPasswordField(KeyEvent keyEvent) {
+    public void updateNewPPPasswordField() {
         newPassphraseField.setText(newPassphraseText.getText());
     }
 
-    public void updateNewPPTextField(KeyEvent keyEvent) {
+    public void updateNewPPTextField() {
         newPassphraseText.setText(newPassphraseField.getText());
     }
 
-    public void updatePPConfPasswordField(KeyEvent keyEvent) {
+    public void updatePPConfPasswordField() {
         newPassphraseConfirmField.setText(newPassphraseConfirmText.getText());
     }
 
-    public void updatePPConfTextField(KeyEvent keyEvent) {
+    public void updatePPConfTextField() {
         newPassphraseConfirmText.setText(newPassphraseConfirmField.getText());
     }
 
