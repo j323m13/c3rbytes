@@ -2,7 +2,7 @@ package sample.ch.ffhs.c3rbytes.dao;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import sample.ch.ffhs.c3rbytes.DatabaseEntry.DatabaseEntry;
+import sample.ch.ffhs.c3rbytes.databaseEntry.DatabaseEntry;
 import sample.ch.ffhs.c3rbytes.utils.OSBasedAction;
 
 import java.sql.*;
@@ -225,8 +225,7 @@ public class DatabaseEntryDao implements Dao{
                 //we set a new password for the db user.
                 resetUserDBWithPassword(newPasswordDB);
                 System.out.println("success.");
-                //we try to shutdown the db and start it with the new bootpassword.
-                shutdown();
+                //we try to start it with the new bootpassword.
                 connect();
             } catch (SQLException error) {
                 System.out.println("failed. -> "+error);
@@ -276,7 +275,7 @@ public class DatabaseEntryDao implements Dao{
      */
     public void setupEncryption(String encryptionKey) throws SQLException {
         setBootPasswordDAO(encryptionKey);
-        connect();
+        dbConnect(createURL());
     }
 
 
@@ -329,7 +328,7 @@ public class DatabaseEntryDao implements Dao{
 
     /**
      * set the password of the db
-     * @param passwordDBString
+     * @param passwordDBString the password string to be set as the password for the DB
      */
     public void setPasswordDBDAO (String passwordDBString){
         setPasswordDB(passwordDBString);
@@ -337,7 +336,7 @@ public class DatabaseEntryDao implements Dao{
 
     /**
      * set the bootPassword of the db
-     * @param bootPasswordString
+     * @param bootPasswordString the bootpassword string to set as the bootpassword.
      */
     public void setBootPasswordDAO (String bootPasswordString){
         setBootPassword(bootPasswordString);
@@ -345,7 +344,7 @@ public class DatabaseEntryDao implements Dao{
 
     /**
      * set the local values of the user of the software.
-     * @param localValuesString
+     * @param localValuesString the string containing the local values of the user (of the software)
      */
     public void setLocalValuesDAO (String localValuesString){
         setLocalValues(localValuesString);
