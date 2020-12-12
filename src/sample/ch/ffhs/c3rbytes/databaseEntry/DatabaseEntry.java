@@ -1,4 +1,4 @@
-package sample.ch.ffhs.c3rbytes.DatabaseEntry;
+package sample.ch.ffhs.c3rbytes.databaseEntry;
 
 
 import javafx.beans.property.SimpleStringProperty;
