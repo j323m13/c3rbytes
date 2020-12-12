@@ -2,19 +2,27 @@ package sample.ch.ffhs.c3rbytes.utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Locale;
 
+/**
+ * This class deals with files
+ *  @author Olaf Schmidt
+ */
 
 public class FileHandler {
 
-    private final static Charset UTF_8 = StandardCharsets.UTF_8;
+
     OSBasedAction helper = new OSBasedAction();
 
+    /**
+     * This method writes to a file and hides it. If the file does not exist. It will be created
+     * @param file String. The filename
+     * @param content byte[]. The content in bytes to write to the file
+     * @throws IOException in case it is not possible to write to file
+     */
     // if file exists, it overwrites it's content. if not, it creates a new file and write the content into
     public void writeToFile(String file, byte[] content) throws IOException {
         //check if the user os is Windows or something better.
@@ -24,10 +32,8 @@ public class FileHandler {
 
             // write to file
             Files.write(path, content);
-            //Files.setAttribute(path, "dos:hidden", Boolean.TRUE);
+            Files.setAttribute(path, "dos:hidden", Boolean.TRUE);
 
-            //setReadWriteAttributes(file, false);
-            //setReadWriteAttributes(file, "deny");
         }else{
             System.out.println("Unix system");
             Path path = Paths.get(file);
@@ -38,6 +44,12 @@ public class FileHandler {
 
     }
 
+    /**
+     * This method reads from a file or throws an exception if it does not exist
+     * @param filenameFinal String. The filename
+     * @return returns the content of the file (String)
+     * @throws IOException if the file is missing
+     */
     public String readFromFile(String filenameFinal) throws IOException {
         String filename = filenameFinal;
         // create new file instance
@@ -61,45 +73,26 @@ public class FileHandler {
         }
     }
 
-
-    public void setReadWriteAttributes(String file, boolean lock) throws IOException {
+    /**
+     * This method sets read or write attributes of a file
+     * @param file String. The filename
+     * @param lock boolean. true if the file should be locked (write). false if the file is not write-locked
+     */
+    public void setReadWriteAttributes(String file, boolean lock) {
         File file1 = new File(file);
 
-        //Path path = Paths.get(file);
-        //System.out.println("path: " + path);
         System.out.println("fileabspath: " + file1.getAbsolutePath());
 
-
         if (lock){
+            // Another approach
             //Runtime.getRuntime().exec(new String[]{"attrib", "+H", file});
             //Runtime.getRuntime().exec("attrib +H +W +R" + file1);
-            file1.setReadable(false);
             file1.setWritable(false);
-
         } else{
             //Runtime.getRuntime().exec("attrib +H -W -R" + file1);
             file1.setWritable(true);
-            file1.setReadable(true);
         }
 
-        /*
-        switch (isHidden){
-            case "allow":
-                // allow all permissions
-                Runtime.getRuntime().exec(new String[]{"attrib", "+H", file});
-                //Runtime.getRuntime().exec(new String[]{"cacls", file1.getAbsolutePath(), "/E", "/P", "Benutzer:f"} );
-                return;
-
-            case "deny":
-                // deny all permissions
-                //Runtime.getRuntime().exec(new String[]{"cacls", file1.getAbsolutePath(), "/E", "/P", "Benutzer:n"});
-                return;
-        }
-
-        //file1.setWritable(permissionToAccess);
-        //file1.setReadable(bool);
-
-         */
     }
     //Todo: use delte methode in OSBasedAction.java
     public void deleteFile(String filename){
@@ -111,26 +104,5 @@ public class FileHandler {
             System.out.println("File does not exist");
         }
     }
-
-    public boolean fileExists(File filename){
-        if (filename.exists()){
-            return true;
-        }
-        return false;
-    }
-
-    //TODO to delete
-    public static void main(String[] args) throws IOException {
-        FileHandler fileHandler = new FileHandler();
-
-        byte[] content = "Test".getBytes(UTF_8);
-        //fileHandler.writeToFile("testfile.txt",content);
-        fileHandler.readFromFile("testfile.txt");
-        //fileHandler.setReadWriteAttributes("testfile.txt", true);
-        //fileHandler.deleteFile("testfile.txt");
-
-    }
-
-
 
 }

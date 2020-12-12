@@ -1,9 +1,18 @@
 package sample.ch.ffhs.c3rbytes.utils;
 
-import javafx.scene.control.Label;
+/**
+ * This class validates if a string is not empty or two Strings are equal
+ * @author Olaf Schmidt
+ */
+
 
 public class PasswordValidator {
 
+    /**
+     * This method checks whether a String is empty nor it's length is 0
+     * @param string String. The string to check
+     * @return returns true if is not empty or it' length is 0, false instead.
+     */
     public boolean checkFillOut(String string) {
         boolean isFilledOut = false;
 
@@ -16,6 +25,12 @@ public class PasswordValidator {
 
     }
 
+    /**
+     * This method checks whether two strings are equal
+     * @param oldString String. The first string
+     * @param newString String. The other string
+     * @return true if equal, false instead
+     */
     public boolean isEqual(String oldString, String newString) {
         boolean isEqual = false;
 

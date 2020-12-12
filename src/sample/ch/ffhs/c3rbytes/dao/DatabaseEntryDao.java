@@ -118,6 +118,7 @@ public class DatabaseEntryDao implements Dao{
             //delete db file
             dbExecuteUpdate(deleteAccountStmt,createURLSimple());
             handler.deleteDatabaseFolder(handler.getPath("db"));
+            System.out.println("db path:" +handler.getPath("db"));
             //delete db log file (derby.log)
             handler.deleteDatabaseFolder(handler.getPath("derby.log"));
             dbExecuteUpdate(deleteAccountStmt,createURLSimple());

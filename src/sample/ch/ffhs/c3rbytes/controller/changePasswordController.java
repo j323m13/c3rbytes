@@ -43,7 +43,7 @@ public class changePasswordController implements IController {
         String oldMasterpassword = oldMasterPasswordField.getText();
         String newMasterpassword = newPasswordField.getText();
         String newMasterpasswordConfirmed = newPasswordConfirmField.getText();
-        boolean isFilledOut = true;
+        //boolean isFilledOut = true;
         StringHasher stringHasher = new StringHasher();
         String oldMasterpasswordHashed = stringHasher.encryptSHA3(HASHALGORITHM, oldMasterpassword);
 
@@ -109,54 +109,6 @@ public class changePasswordController implements IController {
             passwordMatchErrorLabel.setText("Password change not possible");
             System.out.println("New password does not match");
         }
-
-
-
-
-        /*
-        if (oldMasterpassphrase.equals("") || oldMasterpassphrase.length() == 0){
-            oldPassphraseErrorLabel.setText("Please fill out old master pass phrase");
-            isFilledOut = false;
-            System.out.println("fill out masterpassphrase");
-        }
-
-        if (newMasterpassphrase.equals("") || newMasterpassphrase.length() == 0){
-            passphraseMatchErrorLabel.setText("Please fill out new master pass phrase");
-            isFilledOut = false;
-            System.out.println("fill out masterpassphrase");
-        }
-
-        if (newMasterpassphraseConfirmed.equals("") || newMasterpassphraseConfirmed.length() == 0){
-            passphraseMatchErrorLabel.setText("Please fill out confirmation for the new master pass phrase");
-            isFilledOut = false;
-            System.out.println("fill out masterpassphrase");
-        }
-
-        if (isFilledOut && newMasterpassphrase.equals(newMasterpassphraseConfirmed)) {
-            try {
-                FileEncrypterDecrypter fileEncrypterDecrypter = new FileEncrypterDecrypter();
-                byte[] decryptedText = fileEncrypterDecrypter.decryptFile(FILENAME, oldMasterpassphrase);
-                String originalContent = new String(decryptedText, UTF_8);
-
-
-                //String newPassPhrase = "password123";
-                //String newPassPhrase = newPassphraseConfirmField.getText();
-                fileEncrypterDecrypter.encryptFile(originalContent, FILENAME, newMasterpassphraseConfirmed);
-
-
-                passphraseMatchErrorLabel.setText("Master pass phrase successful. Please discard the window");
-
-            } catch(
-                AEADBadTagException e){
-                    System.out.println("Pass phrase change denied");
-                    oldPassphraseErrorLabel.setText("Old pass phrase not correct");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }else{
-            passphraseMatchErrorLabel.setText("New pass phrase does not match");
-            System.out.println("New password does not match");
-        }*/
     }
 
     private void setStyle(PasswordField passwordField, TextField textField){
@@ -167,55 +119,7 @@ public class changePasswordController implements IController {
     private void resetStyle(PasswordField passwordField, TextField textField){
         passwordField.setStyle(null);
         textField.setStyle(null);
-        /*
-        passwordField.getStyleClass().removeIf(style -> style.equals("passwordfieldstyle"));
-        textField.getStyleClass().removeIf(style -> style.equals("textfieldstyle"));
-
-         */
     }
-        /*
-        if (oldMasterpassword.equals("") || oldMasterpassword.length() == 0){
-            oldPasswordErrorLabel.setText("Please fill out old masterpassword");
-            isFilledOut = false;
-            System.out.println("fill out masterpassword");
-        }
-
-        if (newMasterpassword.equals("") || newMasterpassword.length() == 0){
-            oldPasswordErrorLabel.setText("Please fill out new masterpassword");
-            isFilledOut = false;
-            System.out.println("fill out masterpassword");
-        }
-
-        if (newMasterpasswordConfirmed.equals("") || newMasterpasswordConfirmed.length() == 0){
-            oldPasswordErrorLabel.setText("Please fill out confirmation for the new masterpassword");
-            isFilledOut = false;
-            System.out.println("fill out masterpassword");
-        }
-
-        if (isFilledOut && newMasterpassword.equals(newMasterpasswordConfirmed)) {
-            try {
-                StringHasher stringHasher = new StringHasher();
-                String hashedOldMasterpassword = stringHasher.encryptSHA3(HASHALGORITHM, oldMasterpassword);
-                String hashedNewMasterpassword = stringHasher.encryptSHA3(HASHALGORITHM, newMasterpassword);
-                String hashedNewPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM, hashedNewMasterpassword).substring(32,64);
-                DatabaseEntryDao setup = new DatabaseEntryDao();
-                setup.changeBootPassword(hashedNewMasterpassword,hashedNewPasswordDB);
-
-                //DBConnection.changebootPasswordAndEncryptDBWithNewBootPassword(hashedOldMasterpassword, hashedNewMasterpassword);
-                //DBConnection.changeBootPassword(oldMasterpassword, newMasterpassword);
-                System.out.println(newMasterpassword);
-                discardPasswordAction(null);
-            }catch (Exception e){
-                System.out.println("Password incorrect");
-                oldPasswordErrorLabel.setText("Password incorrect");
-                e.printStackTrace();
-            }
-        } else{
-            passwordMatchErrorLabel.setText("New password does not match");
-            System.out.println("New password does not match");
-        }
-
-         */
 
 
     private void changePassword(String oldMasterpassword, String newMasterpassword) {
@@ -231,8 +135,6 @@ public class changePasswordController implements IController {
                 setup.changeBootPassword(hashedNewMasterpassword, hashedNewPasswordDB);
             }
 
-            //DBConnection.changebootPasswordAndEncryptDBWithNewBootPassword(hashedOldMasterpassword, hashedNewMasterpassword);
-            //DBConnection.changeBootPassword(oldMasterpassword, newMasterpassword);
             System.out.println(newMasterpassword);
             discardPasswordAction(null);
         } catch (Exception e) {

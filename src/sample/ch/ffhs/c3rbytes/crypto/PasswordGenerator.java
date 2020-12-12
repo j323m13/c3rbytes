@@ -4,6 +4,10 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class generates a password of a choosen length and a choosen charset
+ */
+
 public class PasswordGenerator {
     private String str;
     private int randInt;
@@ -11,12 +15,23 @@ public class PasswordGenerator {
     private List<Integer> l;
     private int passwordLength;
 
+    /**
+     * Constructor takes arraylist and stringbuilder
+     */
     // Constructor
     public PasswordGenerator() {
         this.l = new ArrayList<>();
         this.sb = new StringBuilder();
     }
 
+    /**
+     * This method prepares the desired charset
+     *
+     * gets an arrayList (see description from method buildPassword(ArrayList<Integer> charSet, int passwordLength))
+     * and prepares ASCII Letters the final List consisting of the desired ASCII-Letters of the charset.
+     *
+     * @param charSet charset from function buildPassowrd
+     */
     // prepare desired ASCII CharSet
     private void prepareCharSets(ArrayList<Integer> charSet) {
         ArrayList<Integer> lowerCaseLetters = new ArrayList<>();
@@ -65,12 +80,20 @@ public class PasswordGenerator {
             l.addAll(charSetContainer.get(charSet.get(i)));
             System.out.println(charSet.get(i));
         }
-
-        //System.out.println(l.toString());
-
     }
 
 
+    /**
+     * This method builds the desired password
+     *
+     * @param charSet contains an arraylist with the charsetcodes -->
+     *          * 0 = lower case letters
+     *          * 1 = upper case letters
+     *          * 2 = digits
+     *          * 3 = special characters
+     *          * or combinations of them
+     * @param passwordLength The length of the passwort (Integer)
+     */
     public void buildPassword(ArrayList<Integer> charSet, int passwordLength) {
 
         prepareCharSets(charSet);
@@ -85,39 +108,13 @@ public class PasswordGenerator {
         str = sb.toString();
     }
 
+    /**
+     * This method only returns the generated password
+     *
+     * @return the generated password
+     */
     public String generatePassword() {
         return str;
     }
 
-    public List<Integer> get_charset(){
-        return l;
-    }
-
-    /*
-    public static void main(String[] args) {
-        PasswordGenerator pwgen = new PasswordGenerator();
-
-        /* input for int[] charSet must come from option buttons with options
-         * 0 = lower case letters
-         * 1 = upper case letters
-         * 2 = digits
-         * 3 = special characters
-         * or combinations of them
-         *
-        ArrayList<Integer> charSet = new ArrayList<>();
-
-        charSet.add(0);
-        charSet.add(1);
-        charSet.add(2);
-        charSet.add(3);
-
-
-        // Password length must also come from textfield in gui
-        int passwordLength = 25;
-
-        pwgen.buildPassword(charSet, passwordLength);
-        String pw = pwgen.generatePassword();
-        System.out.println(pw);
-    }
-    */
 }

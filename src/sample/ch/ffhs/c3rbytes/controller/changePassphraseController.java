@@ -22,9 +22,6 @@ import java.nio.charset.StandardCharsets;
 
 public class changePassphraseController implements IController{
 
-    public static final String FILENAME = "c3r.c3r";
-    private final static Charset UTF_8 = StandardCharsets.UTF_8;
-
     @FXML javafx.scene.control.TextField oldMasterPassphraseText;
     @FXML javafx.scene.control.TextField newPassphraseText;
     @FXML javafx.scene.control.TextField newPassphraseConfirmText;
@@ -34,6 +31,8 @@ public class changePassphraseController implements IController{
     @FXML javafx.scene.control.Label oldPassphraseErrorLabel;
     @FXML javafx.scene.control.Label passphraseMatchErrorLabel;
     @FXML javafx.scene.control.Button savePassPhraseButton;
+    public static final String FILENAME = "c3r.c3r";
+    private final static Charset UTF_8 = StandardCharsets.UTF_8;
     private boolean isHidingOld = true;
     private boolean isHidingNew = true;
     private boolean isHidingConfirm = true;
@@ -92,53 +91,6 @@ public class changePassphraseController implements IController{
             passphraseMatchErrorLabel.setText("New pass phrase not correctly confirmed");
             System.out.println("fill out masterpassphrase");
         }
-
-
-
-        /*
-        if (oldMasterpassphrase.equals("") || oldMasterpassphrase.length() == 0){
-            oldPassphraseErrorLabel.setText("Please fill out old master pass phrase");
-            isFilledOut = false;
-            System.out.println("fill out masterpassphrase");
-        }
-
-        if (newMasterpassphrase.equals("") || newMasterpassphrase.length() == 0){
-            passphraseMatchErrorLabel.setText("Please fill out new master pass phrase");
-            isFilledOut = false;
-            System.out.println("fill out masterpassphrase");
-        }
-
-        if (newMasterpassphraseConfirmed.equals("") || newMasterpassphraseConfirmed.length() == 0){
-            passphraseMatchErrorLabel.setText("Please fill out confirmation for the new master pass phrase");
-            isFilledOut = false;
-            System.out.println("fill out masterpassphrase");
-        }
-
-        if (isFilledOut && newMasterpassphrase.equals(newMasterpassphraseConfirmed)) {
-            try {
-                FileEncrypterDecrypter fileEncrypterDecrypter = new FileEncrypterDecrypter();
-                byte[] decryptedText = fileEncrypterDecrypter.decryptFile(FILENAME, oldMasterpassphrase);
-                String originalContent = new String(decryptedText, UTF_8);
-
-
-                //String newPassPhrase = "password123";
-                //String newPassPhrase = newPassphraseConfirmField.getText();
-                fileEncrypterDecrypter.encryptFile(originalContent, FILENAME, newMasterpassphraseConfirmed);
-
-
-                passphraseMatchErrorLabel.setText("Master pass phrase successful. Please discard the window");
-
-            } catch(
-                AEADBadTagException e){
-                    System.out.println("Pass phrase change denied");
-                    oldPassphraseErrorLabel.setText("Old pass phrase not correct");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }else{
-            passphraseMatchErrorLabel.setText("New pass phrase does not match");
-            System.out.println("New password does not match");
-        }*/
     }
 
     private void setStyle(PasswordField passwordField, TextField textField){

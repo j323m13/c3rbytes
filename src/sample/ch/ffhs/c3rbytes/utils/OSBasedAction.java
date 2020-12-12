@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Locale;
 
+
 public class OSBasedAction {
     private String osName = null;
 
@@ -44,19 +45,43 @@ public class OSBasedAction {
      */
     public void deleteDatabaseFolder(File file){
         try{
-            for (File subFile : file.listFiles()) {
-                if(subFile.isDirectory()) {
-                    deleteDatabaseFolder(subFile);
-                } else {
-                    subFile.delete();
+            //File[] allContents = file.listFiles();
+
+                for (File files : file.listFiles()) {
+                    System.out.println(files);
+                    Runtime.getRuntime().exec("attrib +W" + files);
+                    //files.setWritable(true);
+                    files.delete();
+                    if (files.isDirectory()) {
+                        deleteDatabaseFolder(files);
+                        //files.delete();
+                    }
+
+                    System.out.println("Files should be deleted");
+                    files.delete();
                 }
+            file.delete();
+    /*      file.delete();
+            try{
+                for (File subFile : file.listFiles()) {
+                    while (subFile.isDirectory()){
+                        deleteDatabaseFolder(subFile.);
+                    }
+                    System.out.println("subFile" + subFile);
+                    if(subFile.isDirectory()) {
+                        deleteDatabaseFolder(subFile);
+                    } else {
+                        subFile.delete();
+                    }
+                }
+
+     */
+            } catch (Exception e) {
+                file.delete();
             }
-        }catch (Exception e){
             file.delete();
         }
-        file.delete();
 
-    }
 
 
 

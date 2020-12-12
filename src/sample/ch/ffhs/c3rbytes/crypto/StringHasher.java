@@ -4,8 +4,20 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * This class hashes a String in the desired hash-algorithm ex. SHA3-512
+ *  @author Olaf Schmidt
+ */
+
     public class StringHasher {
 
+    /**
+     * This method prepares a digest for
+     *
+     * @param input input in bytes
+     * @param algorithm String. It is the desired hash algorithm. ex. SHA3-512
+     * @return returns the messagedigest in bytes
+     */
         private byte[] digest(byte[] input, String algorithm) {
             MessageDigest md;
             try {
@@ -17,7 +29,13 @@ import java.nio.charset.StandardCharsets;
             return result;
         }
 
-        private String bytesToHex(byte[] bytes) {
+    /**
+     * This method converts bytes to hex values
+     *
+     * @param bytes the bytes to convert into hex
+     * @return String in hexadecimal format
+     */
+    private String bytesToHex(byte[] bytes) {
             StringBuilder sb = new StringBuilder();
             for (byte b : bytes) {
                 sb.append(String.format("%02x", b));
@@ -36,19 +54,32 @@ import java.nio.charset.StandardCharsets;
             return data;
         }
 
+    /**
+     * This method hashes a String in the desired hash algorithm
+     *
+     * @param algorithm String. The desired hash algorithm
+     * @param password String. The string to hash
+     * @return returns a String in hexadecimal format
+     */
         public String encryptSHA3(String algorithm, String password){
 
-            byte[] textInBytes = password.getBytes(StandardCharsets.UTF_8);
+            byte[] shaInBytes = new byte[0];
+            try {
+                byte[] textInBytes = password.getBytes(StandardCharsets.UTF_8);
 
-            byte[] shaInBytes = this.digest(textInBytes, algorithm);
+                shaInBytes = this.digest(textInBytes, algorithm);
 
-            // debugging
-            System.out.println("Input (string): \t" + password);
-            System.out.println("Input (length): \t" + password.length());
-            System.out.println(algorithm + " (hex): \t" + bytesToHex(shaInBytes));
-            System.out.println(algorithm + " (length): \t" + shaInBytes.length);
-            //
+                // debugging
+                System.out.println("Input (string): \t" + password);
+                System.out.println("Input (length): \t" + password.length());
+                System.out.println(algorithm + " (hex): \t" + bytesToHex(shaInBytes));
+                System.out.println(algorithm + " (length): \t" + shaInBytes.length);
+                //
 
+                
+            } catch (Exception e){
+                e.printStackTrace();
+            }
             return bytesToHex(shaInBytes);
         }
     }

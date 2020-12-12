@@ -19,6 +19,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 
+/**
+ * This class handles
+ */
+
 public class setMasterPWViewController implements IController {
 
     @FXML javafx.scene.control.PasswordField setMPViewPasswordField;

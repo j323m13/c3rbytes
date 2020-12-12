@@ -10,6 +10,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 /**
+ * This class encrypts or decrypts content with AES-CBC.
+ * @author Olaf Schmidt
+ *
  * AES-CBC inputs - 16 bytes IV, need the same IV and secret keys for encryption and decryption.
  * <p>
  * The output consist of iv, password's salt, encrypted content and auth tag in the following format:
@@ -28,6 +31,15 @@ public class PasswordEncrypterDecrypter {
     private static final int SALT_LENGTH_BYTE = 16;
     private static final Charset UTF_8 = StandardCharsets.UTF_8;
 
+    /**
+     *This method encrypts the plain text in bytes with the choosen password and adds a random salt (16 bytes) and an
+     * intialisation vector (12 bytes)
+     *
+     * @param plainText The plaintext to encrypt
+     * @param password The password to encrypt the plaintext
+     * @return encrypted String of the plaintext (Base64)
+     * @throws Exception if something went wrong
+     */
     // return a base64 encoded AES encrypted text
     public String encrypt(byte[] plainText, String password) throws Exception {
 
@@ -59,6 +71,14 @@ public class PasswordEncrypterDecrypter {
         return Base64.getEncoder().encodeToString(cipherTextWithIvSalt);
     }
 
+    /**
+     *This method decrypts a String (ciphertext in BASE64) with a password
+     *
+     * @param cipherText The encrypted String (Base64)
+     * @param password The password to decrypt the String
+     * @return decrypted plaintext
+     * @throws Exception if something went wrong -->ex. wrong password
+     */
     // we need the same password, salt and iv to decrypt it (reverse order)
     public String decrypt(String cipherText, String password) throws Exception {
 

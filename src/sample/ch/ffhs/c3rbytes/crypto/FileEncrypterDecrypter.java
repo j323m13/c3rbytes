@@ -2,21 +2,36 @@ package sample.ch.ffhs.c3rbytes.crypto;
 
 import sample.ch.ffhs.c3rbytes.utils.FileHandler;
 import sample.ch.ffhs.c3rbytes.utils.OSBasedAction;
-
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Base64;
-import java.util.Locale;
+
+/**
+ * This class uses the PasswordEncrypterDecrypter to en- or decrypt the content of a given file and a chosen password.
+ * @author Olaf Schmidt
+ *
+ */
+
 
 public class FileEncrypterDecrypter {
 
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
     OSBasedAction handler = new OSBasedAction();
 
+    /**
+     *
+     * This method encrypts a content in a file with a choosen password
+     *
+     * @param content The content to encrypt
+     * @param toFile The filename to save the encrypted content
+     * @param password The password to encrypt the content
+     * @throws Exception in case of wrong encryption --> wrong
+     */
     public void encryptFile(String content, String toFile, String password) throws Exception {
 
+        // create new PasswordEncrypterDecryptr Object
         PasswordEncrypterDecrypter passwordEncrypterDecrypter = new PasswordEncrypterDecrypter();
 
         // read a normal txt
@@ -33,37 +48,34 @@ public class FileEncrypterDecrypter {
         // Base64 Encoding the standard way
         byte[] encryptedByteText = Base64.getEncoder().encode(encryptedText.getBytes(UTF_8));
 
+        // Make file hidden and apply write protection
         FileHandler fileHandler = new FileHandler();
 
         if(handler.getOSName().contains("win")){
-            // save to file and disable write permissions
-            //fileHandler.setReadWriteAttributes(toFile,false);
-            //fileHandler.setReadWriteAttributes(toFile,"allow");
-            //Thread.sleep(1000);
+            fileHandler.setReadWriteAttributes(toFile,false);
             fileHandler.writeToFile(toFile, encryptedByteText);
-            //fileHandler.setReadWriteAttributes(toFile, true);
-            //fileHandler.setReadWriteAttributes(toFile,false);
-            //fileHandler.setReadWriteAttributes(toFile,"deny");
+            fileHandler.setReadWriteAttributes(toFile,true);
         }else{
             System.out.println(encryptedText);
             System.out.println(toFile);
             fileHandler.writeToFile("."+toFile, encryptedByteText);
         }
-        fileHandler = null;
-        passwordEncrypterDecrypter = null;
     }
 
+    /**
+     * This method decrypts a file with the password
+     *
+     * @param fromEncryptedFile The String of the encrypted File
+     * @param password The password to decrypt the filecontent
+     * @return decrypted text in bytes
+     * @throws Exception in case of wrong decryption --> ex. wrong password
+     */
     public byte[] decryptFile(String fromEncryptedFile, String password) throws Exception {
-        String fromEncryptedFilePath = null;
+        String fromEncryptedFilePath;
+
         // create new passwordEncrypterDecrypter
         PasswordEncrypterDecrypter passwordEncrypterDecrypter = new PasswordEncrypterDecrypter();
 
-        // Enable write Persmissions of the file
-        FileHandler fileHandler = new FileHandler();
-        //fileHandler.setReadWriteAttributes(fromEncryptedFile, true);
-        //fileHandler.setReadWriteAttributes(fromEncryptedFile, true);
-
-        //fileHandler.setReadWriteAttributes(fromEncryptedFile, "allow");
         if(handler.getOSName().contains("win")){
             fromEncryptedFilePath = fromEncryptedFile;
         }else {
@@ -86,15 +98,6 @@ public class FileEncrypterDecrypter {
 
         // Cast to Bytes
         byte[] decryptedByteText = decryptedText.getBytes(UTF_8);
-
-        /* in case to decrypt passphrasefiel c3r.c3r
-        FileHandler fileHandler = new FileHandler();
-        fileHandler.writeToFile(fromEncryptedFile, decryptedByteText);
-        */
-
-        //fileHandler.setReadWriteAttributes(fromEncryptedFile, false);
-        //fileHandler.setReadWriteAttributes(fromEncryptedFile, "deny");
-        //fileHandler.setReadWriteAttributes(fromEncryptedFile, false);
 
         return decryptedByteText;
 

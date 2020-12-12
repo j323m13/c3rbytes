@@ -11,46 +11,38 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.InputMethodEvent;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
 import java.io.IOException;
-
-import org.junit.platform.engine.support.descriptor.FileSystemSource;
 import sample.ch.ffhs.c3rbytes.crypto.PasswordEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.DatabaseEntry.DatabaseEntry;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.utils.ClipboardHandler;
 import sample.ch.ffhs.c3rbytes.utils.PasswordRevealer;
-
-
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
-import java.util.Base64;
+
 
 
 public class addNewItemController implements IController {
-    private final static Charset UTF_8 = StandardCharsets.UTF_8;
+
     @FXML public PasswordField passwordField;
     @FXML private Label viewCreationDateLabel;
-    private boolean isHidingPassword = true;
     @FXML public TextField userNameField;
     @FXML private TextField notesField;
     @FXML private javafx.scene.control.Label viewLastUpdateLabel;
     @FXML private javafx.scene.control.Button saveButton;
-    @FXML private javafx.scene.control.Button showPasswordButton;
     @FXML private Label passwordFieldLabelError;
     @FXML private Label usernameFieldLabelError;
     @FXML private Label typeFieldLabelError;
     @FXML ChoiceBox<String> typeField;
     @FXML TextField urlField;
     @FXML private TextField showPasswordTextField;
+    @FXML javafx.scene.control.Button discardButton;
     private String id;
     private String creation;
-    private boolean emptyField;
-    @FXML javafx.scene.control.Button discardButton;
+    private final static Charset UTF_8 = StandardCharsets.UTF_8;
+    private boolean isHidingPassword = true;
     FXMLLoader loader = null;
 
 
@@ -63,16 +55,15 @@ public class addNewItemController implements IController {
      */
     public void createCombox(){
         typeField.setItems(options);
-        typeField.setValue(options.get(1).toString());
+        typeField.setValue(options.get(1));
     }
 
     /**
      * Open a new view with a password generator
-     * @param event bouton click
      * @throws IOException
      */
     //@FXML private javafx.scene.control.Button generatePasswordButton;
-    public void generatePassword(ActionEvent event) throws IOException{
+    public void generatePassword() throws IOException{
         Stage stage = new Stage();
 
         passwordGeneratorController passwordGenerator = new passwordGeneratorController();
@@ -81,32 +72,12 @@ public class addNewItemController implements IController {
         pwGenController.getpwdOutputTextField(passwordField, showPasswordTextField);
 
         stage.show();
-
-        /*//TODO: for all views: find a better approach to handle stage changes
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/password_generator_view.fxml"));
-            Parent root = loader.load();
-
-            passwordGeneratorController pwGenCon = loader.getController();
-            pwGenCon.getpwdOutputTextField(passwordField);
-
-            Stage stage = new Stage();
-            stage.setTitle("Password-Generator");
-            stage.setScene(new Scene(root, 545, 420));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        createCombox();*/
     }
-
-    //show or hide passwordField
 
     /**
      * Show the password in field password (view protected)
-     * @param event mouse click
      */
-    public void showPassword(ActionEvent event){
+    public void showPassword(){
         new PasswordRevealer().passwordReveal(passwordField, showPasswordTextField, isHidingPassword);
         isHidingPassword =! isHidingPassword;
     }
@@ -138,11 +109,8 @@ public class addNewItemController implements IController {
             PasswordEncrypterDecrypter passwordEncrypterDecrypter = new PasswordEncrypterDecrypter();
             String decryptedAccountPassword = passwordEncrypterDecrypter.decrypt(encryptedAccountPassword,
                     passwordDecrypterPassword);
-            /*
-            String decryptedAccountPassword = passwordEncrypterDecrypter.decrypt(dbentry.getPassword(),
-                    passwordDecrypterPassword);*/
-            passwordField.setText(decryptedAccountPassword);
 
+            passwordField.setText(decryptedAccountPassword);
 
             urlField.setText(dbentry.getUrl());
             //set Combox options
@@ -300,9 +268,8 @@ public class addNewItemController implements IController {
 
     /**
      * Copy password in memory
-     * @param actionEvent mouse click
      */
-    public void copyPassword(ActionEvent actionEvent) {
+    public void copyPassword() {
         // get password from passwordField
         String accountPassword = passwordField.getText();
 
@@ -341,7 +308,6 @@ public class addNewItemController implements IController {
     /**
      * Update the passwordfield (show vs hide password)
      * @param inputMethodEvent
-     *
      */
     public void update(InputMethodEvent inputMethodEvent) {
         Node n = (Node)inputMethodEvent.getSource();
@@ -349,14 +315,13 @@ public class addNewItemController implements IController {
 
         switch (id) {
             case "passwordField":
-                updateTextField();//showPasswordTextField.setText(passwordField.getText());
+                updateTextField();
                 break;
 
             case "showPasswordTextField":
-                updatePasswordField();//passwordField.setText(showPasswordTextField.getText());
+                updatePasswordField();
                 break;
         }
-
     }
 
     /**

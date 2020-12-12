@@ -1,16 +1,29 @@
 package sample.ch.ffhs.c3rbytes.utils;
 
+/**
+ * This class opens a url in the default browser
+ * @author Olaf Schmidt
+ */
+
 public class UrlOpener {
 
     String url = null;
-    Runtime runtime = null;
-    String getSystem = null;
+    Runtime runtime;
+    String getSystem;
 
+    /**
+     * Constructor
+     * Gets the runtime and systemproberty
+     */
     public UrlOpener(){
         runtime = Runtime.getRuntime();
         getSystem = System.getProperty("os.name");
     }
 
+    /**
+     * This method opens a well formed url in the default browser
+     * @param domain String. The url to open in the browser
+     */
     public void openURL(String domain){
 
         url = domain;
@@ -30,10 +43,20 @@ public class UrlOpener {
         }
     }
 
+    /**
+     * This method checks whether the os is windows or not
+     * @param os String. The operation system
+     * @return returns true if it is windows, false instead
+     */
     public boolean isWindows(String os){
         return os.contains("Win") || os.contains("win");
     }
 
+    /**
+     * This method checks whether the os is mac_os or not
+     * @param os String. The operation system
+     * @return returns true if it is mac_os, false instead
+     */
     public boolean isMac(String os){
         return os.contains("mac") || os.contains("Mac");
     }
