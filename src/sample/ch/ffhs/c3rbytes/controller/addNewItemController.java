@@ -39,6 +39,8 @@ public class addNewItemController implements IController {
     @FXML private Label passwordFieldLabelError;
     @FXML private Label usernameFieldLabelError;
     @FXML private Label typeFieldLabelError;
+    @FXML private Label urlFieldLabelError;
+    @FXML private Label notesFieldLabelError;
     @FXML ChoiceBox<String> typeField;
     @FXML TextField urlField;
     @FXML private TextField showPasswordTextField;
@@ -134,6 +136,8 @@ public class addNewItemController implements IController {
         usernameFieldLabelError.setText("");
         passwordFieldLabelError.setText("");
         typeFieldLabelError.setText("");
+        urlFieldLabelError.setText("");
+        notesFieldLabelError.setText("");
         boolean isFilledOut = true;
         String type;
         try{
@@ -160,6 +164,36 @@ public class addNewItemController implements IController {
             typeField.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
             isFilledOut = false;
         }
+        if(userNameField.getText().length() > 250 ){
+            usernameFieldLabelError.setVisible(true);
+            usernameFieldLabelError.setText("the value is too big. try smaller.");
+            userNameField.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
+            isFilledOut = false;
+
+        }
+        if(passwordField.getText().length() > 250 ){
+            passwordFieldLabelError.setVisible(true);
+            passwordFieldLabelError.setText("the value is too big. try smaller.");
+            passwordField.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
+            isFilledOut = false;
+
+        }
+        if(urlField.getText().length() > 250 ){
+            urlFieldLabelError.setVisible(true);
+            urlFieldLabelError.setText("the value is too big. try smaller.");
+            urlField.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
+            isFilledOut = false;
+
+        }
+        if(notesField.getText().length() > 250 ){
+            notesFieldLabelError.setVisible(true);
+            notesFieldLabelError.setText("the value is too big. try smaller.");
+            notesField.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
+            isFilledOut = false;
+
+        }
+
+
         return isFilledOut;
     }
 

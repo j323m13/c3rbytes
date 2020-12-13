@@ -22,7 +22,9 @@
                 <ChoiceBox fx:id="typeField" layoutX="160.0" layoutY="140.0" prefHeight="25.0" prefWidth="333.0" />
                 <Label fx:id="typeFieldLabelError" layoutX="160.0" layoutY="175.0" prefHeight="17.0" prefWidth="333.0" textAlignment="CENTER" />
                 <TextField fx:id="urlField" layoutX="160.0" layoutY="189.0" prefHeight="25.0" prefWidth="333.0" />
+                <Label fx:id="urlFieldLabelError" layoutX="160.0" layoutY="195.0" prefHeight="25.0" prefWidth="333.0" />
                 <TextField fx:id="notesField" layoutX="160.0" layoutY="238.0" prefHeight="25.0" prefWidth="333.0" />
+                <Label fx:id="notesFieldLabelError" layoutX="160.0" layoutY="245.0" prefHeight="25.0" prefWidth="333.0" />
                 <Label layoutX="57.0" layoutY="46.0" prefHeight="17.0" prefWidth="91.0" text="User name:" />
                 <Label layoutX="57.0" layoutY="94.0" prefHeight="17.0" prefWidth="91.0" text="Password:" />
                 <Label layoutX="57.0" layoutY="144.0" prefHeight="17.0" prefWidth="91.0" text="Type:" />
