@@ -70,21 +70,26 @@ public class loginViewController implements IController{
             stage.close();
 
         }catch (SQLException e){
-            loginCounter++;
-            int leftLogins = 3 - loginCounter;
-            System.out.println(leftLogins);
-            loginViewPasswordField.setText("");
-            loginViewPasswordField.requestFocus();
-            wrongLoginLabel.setText("Login failed. " + leftLogins + " attempts left");
-            if (loginCounter == 3){
-                logoutAction();
-            }
+            setLoginCounter();
 
             System.out.println("Access to DB denied");
         }catch (IOException e) {
             e.printStackTrace();
+            setLoginCounter();
         }
 
+    }
+
+    private void setLoginCounter() {
+        loginCounter++;
+        int leftLogins = 3 - loginCounter;
+        System.out.println(leftLogins);
+        loginViewPasswordField.setText("");
+        loginViewPasswordField.requestFocus();
+        wrongLoginLabel.setText("Login failed. " + leftLogins + " attempts left");
+        if (loginCounter == 3){
+            logoutAction();
+        }
     }
 
     public void logoutAction(){

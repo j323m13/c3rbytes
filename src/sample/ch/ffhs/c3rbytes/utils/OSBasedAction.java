@@ -44,9 +44,17 @@ public class OSBasedAction {
      * @param file
      */
     public void deleteDatabaseFolder(File file){
-        try{
+        //try{
             //File[] allContents = file.listFiles();
+            if (file.isDirectory()){
+                for (File files : file.listFiles()) {
+                    deleteDatabaseFolder(files);
+                }
+            }
 
+            System.out.println(file.delete());
+
+          /*
                 for (File files : file.listFiles()) {
                     System.out.println(files);
                     files.delete();
@@ -60,8 +68,11 @@ public class OSBasedAction {
             } catch (Exception e) {
             System.out.println(e.getMessage());
                 file.delete();
-            }
+            } finally {
             file.delete();
+            }
+
+           */
         }
 
 
