@@ -41,38 +41,17 @@ public class OSBasedAction {
 
     /**
      * Delete a folder on user computer.
-     * @param file
+     * it iterates through a folder and delete the files.
+     * @param file the file we want to delete.
      */
     public void deleteDatabaseFolder(File file){
-        //try{
-            //File[] allContents = file.listFiles();
             if (file.isDirectory()){
                 for (File files : file.listFiles()) {
                     deleteDatabaseFolder(files);
                 }
             }
-
-            System.out.println(file.delete());
-
-          /*
-                for (File files : file.listFiles()) {
-                    System.out.println(files);
-                    files.delete();
-                    if (files.isDirectory()) {
-                        deleteDatabaseFolder(files);
-                        //files.delete();
-                    }else{
-                        System.out.println("Files should be deleted");
-                        files.delete();   }
-                }
-            } catch (Exception e) {
-            System.out.println(e.getMessage());
-                file.delete();
-            } finally {
             file.delete();
-            }
-
-           */
+            //System.out.println(file.delete());
         }
 
 

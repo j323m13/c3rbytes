@@ -38,29 +38,22 @@ public class loginViewController implements IController{
         //TODO: Correct login authentication with dB
         System.out.println("LoginAction");
 
-
         // password to forward to the db
         String mpTextField = loginViewPasswordField.getText();
         System.out.println("masterpassword: " + mpTextField);
 
         try {
             //TODO change this line for an tmp line. if not security risk (password in clear text)
-            //BootPassword should not be transmitted in clear like this. unecessary.
+            //BootPassword should not be transmitted in clear like this. unnecessary.
             //String tmpBootPassword= mpTextField;
             StringHasher stringHasher = new StringHasher();
             String hashedBootPassword = stringHasher.encryptSHA3(HASHALGORITHM,mpTextField);
             String hashedPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM,hashedBootPassword).substring(32,64);
 
             DatabaseEntryDao login = new DatabaseEntryDao();
-            login.setBootPasswordDAO(hashedBootPassword);
-            login.setPasswordDBDAO(hashedPasswordDB);
-
-            //decryptDB or createdB on first boot
             //if master password is not correct, then an exception is raised. DB will not boot with the wrong password.
             //if there is no DB, then a DB will be created with the master password.
-            login.setupEncryption(hashedBootPassword);
-
-
+            startDatabaseWithEncryptionBootPassword(login, hashedBootPassword, hashedPasswordDB);
             Stage stage = new Stage();
             loginViewMasterpassphraseController loginPassphrase = new loginViewMasterpassphraseController();
             loginPassphrase.getView(stage);
@@ -69,16 +62,13 @@ public class loginViewController implements IController{
             stage =  (Stage) loginButton.getScene().getWindow();
             stage.close();
 
-        }catch (SQLException e){
+        } catch (SQLException | IOException e) {
             setLoginCounter();
-
-            System.out.println("Access to DB denied");
-        }catch (IOException e) {
-            e.printStackTrace();
-            setLoginCounter();
+            System.out.println("Access to DB denied: "+e);
         }
-
     }
+
+
 
     private void setLoginCounter() {
         loginCounter++;
@@ -117,7 +107,7 @@ public class loginViewController implements IController{
      * This method manges the key inputs of the fields
      * @param keyEvent The key event
      */
-    public void manageKeyInput(KeyEvent keyEvent) {
+    public void manageKeyInput(KeyEvent keyEvent) throws SQLException {
 
         System.out.println(keyEvent.getSource());
         Node n = (Node)keyEvent.getSource();
@@ -144,5 +134,21 @@ public class loginViewController implements IController{
     public void showPassword() {
         new PasswordRevealer().passwordReveal(loginViewPasswordField, loginViewPasswordTextField, isHidingPassword);
         isHidingPassword =! isHidingPassword;
+    }
+
+    /**
+     * Start the encrypted database with the hashed bootPassword
+     * save the hashedBootPassword as the bootPassword variable (DBConnection.java)
+     * save the hashedPasswordDB as the passwordDB variable (DBConnection.java)
+     * @param dao a DatabaseEntryDAO object to initiate the login procedure
+     * @param hashedBootPassword the bootPassword value (hash), which the encryption key of the DB.
+     * @param hashedPasswordDB the passwordDB value (hash), which is the password of the DB user
+     * @throws SQLException if a wrong bootPassword is given, a sql exception is thrown and catch here. the DB cannot
+     * start with a wrong password. the setLoginCounter() +1
+     */
+    private void startDatabaseWithEncryptionBootPassword(DatabaseEntryDao dao, String hashedBootPassword, String hashedPasswordDB) throws SQLException {
+        dao.setBootPasswordDAO(hashedBootPassword);
+        dao.setPasswordDBDAO(hashedPasswordDB);
+        dao.connect();
     }
 }
