@@ -18,7 +18,6 @@ import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.utils.ClipboardHandler;
 import sample.ch.ffhs.c3rbytes.utils.PasswordRevealer;
 
-import javax.xml.crypto.Data;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -30,9 +29,9 @@ import java.sql.SQLException;
 
 public class addNewItemController implements IController {
 
-    @FXML public PasswordField passwordField;
+    @FXML private PasswordField passwordField;
     @FXML private Label viewCreationDateLabel;
-    @FXML public TextField userNameField;
+    @FXML private TextField userNameField;
     @FXML private TextField notesField;
     @FXML private javafx.scene.control.Label viewLastUpdateLabel;
     @FXML private javafx.scene.control.Button saveButton;
@@ -41,10 +40,10 @@ public class addNewItemController implements IController {
     @FXML private Label typeFieldLabelError;
     @FXML private Label urlFieldLabelError;
     @FXML private Label notesFieldLabelError;
-    @FXML ChoiceBox<String> typeField;
-    @FXML TextField urlField;
+    @FXML private ChoiceBox<String> typeField;
+    @FXML private TextField urlField;
     @FXML private TextField showPasswordTextField;
-    @FXML javafx.scene.control.Button discardButton;
+    @FXML private javafx.scene.control.Button discardButton;
     private String id;
     private String creation;
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
@@ -130,7 +129,7 @@ public class addNewItemController implements IController {
 
     /**
      * control if the mandatory fields are note empty.
-     * @return isFilledOut
+     * @return isFilledOut true or false
      */
     public boolean controlFieldInput(){
         usernameFieldLabelError.setText("");
@@ -166,21 +165,21 @@ public class addNewItemController implements IController {
         }
         if(userNameField.getText().length() > 250 ){
             usernameFieldLabelError.setVisible(true);
-            usernameFieldLabelError.setText("the value is too big. try smaller.");
+            usernameFieldLabelError.setText("the username is too big. try smaller.");
             userNameField.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
             isFilledOut = false;
 
         }
         if(passwordField.getText().length() > 250 ){
             passwordFieldLabelError.setVisible(true);
-            passwordFieldLabelError.setText("the value is too big. try smaller.");
+            passwordFieldLabelError.setText("the password is too big. try smaller.");
             passwordField.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
             isFilledOut = false;
 
         }
         if(urlField.getText().length() > 250 ){
             urlFieldLabelError.setVisible(true);
-            urlFieldLabelError.setText("the value is too big. try smaller.");
+            urlFieldLabelError.setText("the url is too big. try smaller.");
             urlField.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
             isFilledOut = false;
 
@@ -211,12 +210,6 @@ public class addNewItemController implements IController {
      */
     public void onSaveButton() throws Exception {
         if(controlFieldInput()){
-            String username = userNameField.getText();
-            String password = passwordField.getText();
-            String description = typeField.getValue();
-            String url = urlField.getText();
-            String notes = notesField.getText();
-
             // get secretKey of the file c3r.c3r
             String passwordDecrypterPassword = loginViewMasterpassphraseController.passwordDecrypterPassword;
 
@@ -224,6 +217,7 @@ public class addNewItemController implements IController {
             System.out.println("passphrase: "+ passwordDecrypterPassword);
 
             // for passwordEncrypterDecrypter the password of the account is the plainText
+            String password = passwordField.getText();
             byte[] bytePassword = password.getBytes(UTF_8);
 
             // Encrypt Account-passwort with secretKey from File
@@ -234,11 +228,11 @@ public class addNewItemController implements IController {
             DatabaseEntry tmp = new DatabaseEntry();
 
             //we set all the fields as instance variable of the databaseEntry object.
-            tmp.setUsername(username);
+            tmp.setUsername(userNameField.getText());
             tmp.setPassword(encryptedAccountPassword);
             tmp.setDescription(typeField.getValue());
-            tmp.setUrl(url);
-            tmp.setNote(notes);
+            tmp.setUrl(urlField.getText());
+            tmp.setNote(notesField.getText());
             tmp.setLastUpdate(DatabaseEntry.getDateTime());
             //if creation date is already set
             tmp.setCreationDate(creation);
