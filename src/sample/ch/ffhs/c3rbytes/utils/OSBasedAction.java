@@ -49,34 +49,16 @@ public class OSBasedAction {
 
                 for (File files : file.listFiles()) {
                     System.out.println(files);
-                    Runtime.getRuntime().exec("attrib +W" + files);
-                    //files.setWritable(true);
                     files.delete();
                     if (files.isDirectory()) {
                         deleteDatabaseFolder(files);
                         //files.delete();
-                    }
-
-                    System.out.println("Files should be deleted");
-                    files.delete();
+                    }else{
+                        System.out.println("Files should be deleted");
+                        files.delete();   }
                 }
-            file.delete();
-    /*      file.delete();
-            try{
-                for (File subFile : file.listFiles()) {
-                    while (subFile.isDirectory()){
-                        deleteDatabaseFolder(subFile.);
-                    }
-                    System.out.println("subFile" + subFile);
-                    if(subFile.isDirectory()) {
-                        deleteDatabaseFolder(subFile);
-                    } else {
-                        subFile.delete();
-                    }
-                }
-
-     */
             } catch (Exception e) {
+            System.out.println(e.getMessage());
                 file.delete();
             }
             file.delete();

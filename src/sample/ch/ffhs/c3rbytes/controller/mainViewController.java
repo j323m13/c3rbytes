@@ -19,6 +19,7 @@ import sample.ch.ffhs.c3rbytes.databaseEntry.DatabaseEntry;
 import sample.ch.ffhs.c3rbytes.crypto.PasswordEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.utils.ClipboardHandler;
+import sample.ch.ffhs.c3rbytes.utils.OSBasedAction;
 import sample.ch.ffhs.c3rbytes.utils.UrlOpener;
 
 import java.io.IOException;
@@ -374,16 +375,19 @@ public class mainViewController implements Initializable, IController {
      * this action is final. no coming back from it. only tears.
      * @throws IOException Signals that an I/O exception of some sort has occurred.
      */
-    public void deleteAccountAction() throws IOException {
+    public void deleteAccountAction() throws IOException, SQLException, InterruptedException {
         //TODO: Define deleting account
         System.out.println("Delete Account Action");
         String alertText = "Are you sure you want to delete your account? \n" +
                 "There is no way back to that.";
         Optional<ButtonType> confirm = startAlert(alertText, Alert.AlertType.CONFIRMATION, "Confirmation");
         if(confirm.get() == ButtonType.OK){
+            OSBasedAction helper = new OSBasedAction();
             DatabaseEntryDao deleteDao = new DatabaseEntryDao();
             deleteDao.deleteAccount();
-            logoutButton.fire();
+            helper.deleteDatabaseFolder(helper.getPath("derby.log"));
+            System.exit(0);
+
         }else {
             System.out.println("discard.");
         }

@@ -16,6 +16,7 @@ import sample.ch.ffhs.c3rbytes.utils.FileHandler;
 import sample.ch.ffhs.c3rbytes.utils.PasswordRevealer;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 //import static sample.ch.ffhs.c3rbytes.controller.loginViewMasterpassphraseController.startMainView;
@@ -84,7 +85,7 @@ public class setMasterPPViewController implements IController {
 
     }
 
-    public void abordMPPAction() {
+    public void abordMPPAction() throws SQLException, InterruptedException {
         System.out.println("System exit");
         //delete db if the user abort during passphrase setup
         newStartUp.deleteAccount();

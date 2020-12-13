@@ -110,17 +110,12 @@ public class DatabaseEntryDao implements Dao{
      * Methode to delete the account. it deletes all the entries from the database.
      * Delete also the database folders
      */
-    public void deleteAccount() {
+    public void deleteAccount() throws SQLException, InterruptedException {
         System.out.print("account will be deleted");
         String deleteAccountStmt = "DELETE FROM \"CERBYTES\".\"database_entries\"";
+        OSBasedAction handler = new OSBasedAction();
         try {
-            OSBasedAction handler = new OSBasedAction();
-            //delete db file
-            dbExecuteUpdate(deleteAccountStmt,createURLSimple());
-            handler.deleteDatabaseFolder(handler.getPath("db"));
-            System.out.println("db path:" +handler.getPath("db"));
-            //delete db log file (derby.log)
-            handler.deleteDatabaseFolder(handler.getPath("derby.log"));
+            //delete db table
             dbExecuteUpdate(deleteAccountStmt,createURLSimple());
             String fileName;
             if(handler.getOSName().contains("win")){
@@ -134,12 +129,34 @@ public class DatabaseEntryDao implements Dao{
             System.out.print("Error occurred while DELETE Operation: " + e);
 
         }
+        try{
+            //delete db log file (derby.log)
+            handler.deleteDatabaseFolder(handler.getPath("derby.log"));
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            System.out.println("delete log file failed");
+
+        }
+        shutdown();
+        System.out.println("sleeping 1");
+        TimeUnit.SECONDS.sleep(1);
+        try {
+            //delete db folder
+            handler.deleteDatabaseFolder(handler.getPath("db"));
+            System.out.println("db path:" +handler.getPath(getDatabaseName()));
+
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            System.out.println("delete Action failed");
+        }
+        System.out.println("sleeping 1");
+        TimeUnit.SECONDS.sleep(1);
 
     }
 
 
     /**
-     * call the dbConnect methode from DBConnenction.java
+     * call the dbConnect methode from DBConnection.java
      * @throws SQLException if the transaction failed, an error is raised.
      */
     @Override

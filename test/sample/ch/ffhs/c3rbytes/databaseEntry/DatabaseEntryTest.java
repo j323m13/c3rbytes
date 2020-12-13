@@ -3,7 +3,7 @@ package sample.ch.ffhs.c3rbytes.databaseEntry;
 import javafx.beans.property.SimpleStringProperty;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import sample.ch.ffhs.c3rbytes.DatabaseEntry.DatabaseEntry;
+import sample.ch.ffhs.c3rbytes.databaseEntry.DatabaseEntry;
 
 import java.lang.reflect.Field;
 
