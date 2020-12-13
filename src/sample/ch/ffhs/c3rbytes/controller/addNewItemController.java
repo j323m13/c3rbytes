@@ -17,6 +17,9 @@ import sample.ch.ffhs.c3rbytes.databaseEntry.DatabaseEntry;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.utils.ClipboardHandler;
 import sample.ch.ffhs.c3rbytes.utils.PasswordRevealer;
+
+import javax.xml.crypto.Data;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
@@ -92,11 +95,8 @@ public class addNewItemController implements IController {
         usernameFieldLabelError.setVisible(false);
         passwordFieldLabelError.setVisible(false);
         typeFieldLabelError.setVisible(false);
-
-
         try{
             id = dbentry.getId();
-            System.out.println("id form fillIn() :"+id);
             creation = dbentry.getCreationDate();
             userNameField.setText(dbentry.getUsername());
 
@@ -110,8 +110,8 @@ public class addNewItemController implements IController {
             String decryptedAccountPassword = passwordEncrypterDecrypter.decrypt(encryptedAccountPassword,
                     passwordDecrypterPassword);
 
+            //we set the fields
             passwordField.setText(decryptedAccountPassword);
-
             urlField.setText(dbentry.getUrl());
             //set Combox options
             typeField.setItems(options);
@@ -119,7 +119,7 @@ public class addNewItemController implements IController {
             typeField.setValue(options.get(options.indexOf(dbentry.getDescription())));
             notesField.setText(dbentry.getNote());
             viewCreationDateLabel.setText("created on: "+dbentry.getCreationDate());
-            viewLastUpdateLabel.setText("Last update: "+dbentry.getLastUpdate().toString());
+            viewLastUpdateLabel.setText("Last update: "+dbentry.getLastUpdate());
         }catch (Exception e){
             System.out.println("a field is null.");
         }
@@ -179,26 +179,9 @@ public class addNewItemController implements IController {
         if(controlFieldInput()){
             String username = userNameField.getText();
             String password = passwordField.getText();
-            try{
-                String description = typeField.getValue();
-            }catch (Exception e){
-                System.out.print("typefield is empty");
-            }
+            String description = typeField.getValue();
             String url = urlField.getText();
             String notes = notesField.getText();
-
-
-            //debugging
-            System.out.println("id :"+id);
-            System.out.println(username);
-            System.out.println(password);
-            //System.out.println(description);
-            System.out.println(url);
-            System.out.println("creation date "+creation);
-            System.out.println(notes);
-            System.out.print(typeField.getSelectionModel().getSelectedItem());
-
-            DatabaseEntryDao newDao = new DatabaseEntryDao();
 
             // get secretKey of the file c3r.c3r
             String passwordDecrypterPassword = loginViewMasterpassphraseController.passwordDecrypterPassword;
@@ -213,48 +196,28 @@ public class addNewItemController implements IController {
             PasswordEncrypterDecrypter passwordEncrypterDecrypter = new PasswordEncrypterDecrypter();
             String encryptedAccountPassword = passwordEncrypterDecrypter.encrypt(bytePassword, passwordDecrypterPassword);
 
-            // debugging decryption test
-            System.out.println("encryptedAccountPassword: " + encryptedAccountPassword);
-            String decryptedAccountPassword = passwordEncrypterDecrypter.decrypt(encryptedAccountPassword, passwordDecrypterPassword);
-            System.out.println("decryptedAccountPassword: " + decryptedAccountPassword);
+            //we create a databaseEntry object to store the values and pass it to the db.
             DatabaseEntry tmp = new DatabaseEntry();
+
+            //we set all the fields as instance variable of the databaseEntry object.
             tmp.setUsername(username);
             tmp.setPassword(encryptedAccountPassword);
-            try {
-                tmp.setDescription(typeField.getValue());
-            }catch (Exception e){
-                System.out.print(e);
-            }
+            tmp.setDescription(typeField.getValue());
             tmp.setUrl(url);
-            //debuging
             tmp.setNote(notes);
-            //tmp.setNote(noteField.getText());
+            tmp.setLastUpdate(DatabaseEntry.getDateTime());
+            //if creation date is already set
+            tmp.setCreationDate(creation);
+            //if the object has already an id
             if(tmp.getCreationDate()==null){
                 tmp.setCreationDate(DatabaseEntry.getDateTime());
             }
-            tmp.setLastUpdate(DatabaseEntry.getDateTime());
-            tmp.setCreationDate(creation);
             if(id != null){
                 tmp.setId(id);
             }
 
             // save to DB
-            if(id!=null){
-                try {
-                    System.out.println("update() -->");
-                    newDao.update(tmp);
-                }catch (SQLException | ClassNotFoundException e){
-                    System.out.println(e);
-                }
-
-            }else{
-                try {
-                    System.out.println("save() -->");
-                    newDao.save(tmp);
-                }catch (SQLException | ClassNotFoundException e){
-                    System.out.print(e);
-                }
-            }
+            saveToDB(tmp);
 
             // close the window
             Stage stage = (Stage) saveButton.getScene().getWindow();
@@ -262,6 +225,25 @@ public class addNewItemController implements IController {
 
         }
 
+    }
+    private void saveToDB(DatabaseEntry entry) {
+        DatabaseEntryDao dao = new DatabaseEntryDao();
+        if(id!=null){
+            try {
+                System.out.println("update() -->");
+                dao.update(entry);
+            }catch (SQLException | ClassNotFoundException e){
+                System.out.println(e);
+            }
+
+        }else{
+            try {
+                System.out.println("save() -->");
+                dao.save(entry);
+            }catch (SQLException | ClassNotFoundException | InterruptedException e){
+                System.out.print(e);
+            }
+        }
     }
 
     /**
@@ -281,12 +263,13 @@ public class addNewItemController implements IController {
 
     /**
      * Get the view
-     * @param stage
+     * @param stage the stage.
      * @throws IOException if loader or stage is null
      */
     @Override
     public void getView(Stage stage) throws IOException {
-        loader = new FXMLLoader(getClass().getResource("../gui/add_new_item_view.fxml"));
+        URL url = getClass().getClassLoader().getResource("add_new_item_view.fxml");
+        loader = new FXMLLoader(url);
         Parent addNewItemView = loader.load();
         stage.setTitle("Add new item");
         stage.getIcons().add(new Image("logo3.png"));
