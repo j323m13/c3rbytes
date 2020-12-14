@@ -163,28 +163,28 @@ public class addNewItemController implements IController {
             typeField.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
             isFilledOut = false;
         }
-        if(userNameField.getText().length() > 250 ){
+        if(userNameField.getText().length() > 80 ){
             usernameFieldLabelError.setVisible(true);
             usernameFieldLabelError.setText("the username is too big. try smaller.");
             userNameField.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
             isFilledOut = false;
 
         }
-        if(passwordField.getText().length() > 250 ){
+        if(passwordField.getText().length() > 100 ){
             passwordFieldLabelError.setVisible(true);
             passwordFieldLabelError.setText("the password is too big. try smaller.");
             passwordField.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
             isFilledOut = false;
 
         }
-        if(urlField.getText().length() > 250 ){
+        if(urlField.getText().length() > 255 ){
             urlFieldLabelError.setVisible(true);
             urlFieldLabelError.setText("the url is too big. try smaller.");
             urlField.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");
             isFilledOut = false;
 
         }
-        if(notesField.getText().length() > 250 ){
+        if(notesField.getText().length() > 2048 ){
             notesFieldLabelError.setVisible(true);
             notesFieldLabelError.setText("the value is too big. try smaller.");
             notesField.setStyle("-fx-text-box-border: #B22222; -fx-focus-color: #B22222;");

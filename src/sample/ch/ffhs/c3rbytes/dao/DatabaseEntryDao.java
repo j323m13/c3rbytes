@@ -260,10 +260,10 @@ public class DatabaseEntryDao implements Dao{
         String slqCreateSchema = "CREATE SCHEMA \"CERBYTES\"";
         String sqlCreateTable = "CREATE TABLE \"CERBYTES\".\"database_entries\" (\n" +
                 "                        \"user_id\" INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY(Start with 1, Increment by 1),\n" +
-                "                        \"username\" VARCHAR(255) DEFAULT NULL,\n" +
-                "                        \"description\" VARCHAR(255) DEFAULT NULL,\n" +
-                "                        \"url_content\" VARCHAR(500) DEFAULT NULL,\n" +
-                "                        \"password_text\" VARCHAR(500) DEFAULT NULL,\n" +
+                "                        \"username\" VARCHAR(80) DEFAULT NULL,\n" +
+                "                        \"description\" VARCHAR(25) DEFAULT NULL,\n" +
+                "                        \"url_content\" VARCHAR(255) DEFAULT NULL,\n" +
+                "                        \"password_text\" VARCHAR(100) DEFAULT NULL,\n" +
                 "                        \"date_creation\" VARCHAR(50) DEFAULT NULL,\n" +
                 "                        \"date_update\" VARCHAR(50) DEFAULT NULL,\n" +
                 "                       \"note\" CLOB(2K) DEFAULT NULL)";
