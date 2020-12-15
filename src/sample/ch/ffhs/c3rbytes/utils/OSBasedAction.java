@@ -4,6 +4,7 @@ import sample.ch.ffhs.c3rbytes.connection.DBConnection;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Locale;
@@ -44,14 +45,25 @@ public class OSBasedAction {
      * it iterates through a folder and delete the files.
      * @param file the file we want to delete.
      */
-    public void deleteDatabaseFolder(File file){
+    public void deleteDatabaseFolder(File file) throws IOException {
             if (file.isDirectory()){
                 for (File files : file.listFiles()) {
                     deleteDatabaseFolder(files);
                 }
             }
             file.delete();
-            //System.out.println(file.delete());
+
+            try {
+                if (file.toString().contains("derby.log")) {
+                    System.out.println("derby.log path: " + file);
+                    Runtime.getRuntime().exec("del " + file);
+
+                }
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+
+                        //System.out.println(file.delete());
         }
 
 

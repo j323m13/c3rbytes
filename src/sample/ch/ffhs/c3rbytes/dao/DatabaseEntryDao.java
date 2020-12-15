@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import sample.ch.ffhs.c3rbytes.databaseEntry.DatabaseEntry;
 import sample.ch.ffhs.c3rbytes.utils.OSBasedAction;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.concurrent.TimeUnit;
 
@@ -128,7 +129,7 @@ public class DatabaseEntryDao implements Dao{
             }
             //delete c3r.c3r file
             handler.deleteDatabaseFolder(handler.getPath(fileName));
-        }catch (SQLException e) {
+        }catch (SQLException | IOException e) {
             System.out.print("Error occurred while DELETE Operation: " + e);
 
         }

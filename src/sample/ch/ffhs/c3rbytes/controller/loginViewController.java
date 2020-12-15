@@ -51,6 +51,10 @@ public class loginViewController implements IController{
             String hashedPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM,hashedBootPassword).substring(32,64);
 
             DatabaseEntryDao login = new DatabaseEntryDao();
+            login.setBootPasswordDAO(hashedBootPassword);
+            login.setPasswordDBDAO(hashedPasswordDB);
+
+            //decryptDB or createdB on first boot
             //if master password is not correct, then an exception is raised. DB will not boot with the wrong password.
             //if there is no DB, then a DB will be created with the master password.
             startDatabaseWithEncryptionBootPassword(login, hashedBootPassword, hashedPasswordDB);

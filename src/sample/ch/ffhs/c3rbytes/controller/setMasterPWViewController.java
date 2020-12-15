@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.StringHasher;
 import sample.ch.ffhs.c3rbytes.connection.DBConnection;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
+import sample.ch.ffhs.c3rbytes.utils.FileHandler;
 import sample.ch.ffhs.c3rbytes.utils.PasswordRevealer;
 
 import java.io.IOException;
@@ -28,6 +29,7 @@ public class setMasterPWViewController implements IController {
     @FXML javafx.scene.control.TextField setMPViewPasswordText;
     @FXML javafx.scene.control.Button setMPViewloginButton;
     @FXML javafx.scene.control.Label errorLabel;
+    public final String filename = "c3r.c3r";
     private boolean isHidingPassword = true;
     FXMLLoader loader = null;
 
@@ -67,7 +69,8 @@ public class setMasterPWViewController implements IController {
             login.setupEncryption(hashedBootPassword);
 
         } catch (IOException | SQLException e) {
-            e.printStackTrace();
+            FileHandler fileHandler = new FileHandler();
+            fileHandler.deleteFile(filename);
         }
 
         Stage stage = (Stage) setMPViewloginButton.getScene().getWindow();
