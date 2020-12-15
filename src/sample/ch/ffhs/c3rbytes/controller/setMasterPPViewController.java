@@ -31,7 +31,7 @@ public class setMasterPPViewController implements IController {
     @FXML javafx.scene.control.TextField setMPPViewTextField;
     @FXML javafx.scene.control.Button setMPPViewloginButton;
     private boolean isHidingPassword = true;
-    public final String filename = "c3r.c3r";
+    private final String filename = "c3r.c3r";
     FXMLLoader loader = null;
     DatabaseEntryDao newStartUp = new DatabaseEntryDao();
 

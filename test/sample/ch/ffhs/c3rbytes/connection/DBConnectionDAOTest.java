@@ -10,6 +10,7 @@ import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.utils.OSBasedAction;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
@@ -223,7 +224,7 @@ class DBConnectionDAOTest {
 
 
     @AfterAll
-    static void clean(){
+    static void clean() throws IOException {
         OSBasedAction deleter = new OSBasedAction();
         Path dbFile = Paths.get("testDB/");
         File db = new File(dbFile.toAbsolutePath().toString());

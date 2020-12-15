@@ -53,17 +53,17 @@ public class OSBasedAction {
             }
             file.delete();
 
-            try {
-                if (file.toString().contains("derby.log")) {
-                    System.out.println("derby.log path: " + file);
-                    Runtime.getRuntime().exec("del " + file);
+           if(getOSName().equals("win")){
+               try {
+                   if (file.toString().contains("derby.log")) {
+                       System.out.println("derby.log path: " + file);
+                       Runtime.getRuntime().exec("del " + file);
 
-                }
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-
-                        //System.out.println(file.delete());
+                   }
+               } catch (IOException e){
+                   e.printStackTrace();
+               }
+           }
         }
 
 
