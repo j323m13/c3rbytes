@@ -2,6 +2,7 @@ package sample.ch.ffhs.c3rbytes.utils;
 
 import sample.ch.ffhs.c3rbytes.connection.DBConnection;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
+import sample.ch.ffhs.c3rbytes.databaseEntry.DatabaseEntry;
 
 import java.io.File;
 import java.io.IOException;
@@ -81,5 +82,25 @@ public class OSBasedAction {
         String country = locale.getCountry();
         System.out.println(lang+"_"+country);
         helper.setLocalValuesDAO(lang+"_"+country);
+    }
+
+    public void printDatabaseEntryObject(DatabaseEntry object){
+        System.out.print(object.getId());
+        System.out.print(", ");
+        System.out.print(object.getDummyId());
+        System.out.print(", ");
+        System.out.print(object.getUsername());
+        System.out.print(", ");
+        System.out.print(object.getDescription());
+        System.out.print(", ");
+        System.out.print(object.getPassword());
+        System.out.print(", ");
+        System.out.print(object.getUrl());
+        System.out.print(", ");
+        System.out.print(object.getCreationDate());
+        System.out.print(", ");
+        System.out.print(object.getLastUpdate());
+        System.out.print(", ");
+        System.out.print(object.getNote()+"\n");
     }
 }

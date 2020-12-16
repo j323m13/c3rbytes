@@ -192,7 +192,7 @@ public class mainViewController implements Initializable, IController {
             databaseEntries.addAll(entries);
             populateTableView(databaseEntries);
             foundLabel.setText(valueOf(databaseEntries.size()));
-        } catch (SQLException | ClassNotFoundException | InterruptedException throwables) {
+        } catch (SQLException | ClassNotFoundException | InterruptedException | IOException throwables) {
             System.out.println(throwables);
         }
     }

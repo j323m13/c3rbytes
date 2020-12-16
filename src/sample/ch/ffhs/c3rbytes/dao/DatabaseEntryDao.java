@@ -1,15 +1,19 @@
 package sample.ch.ffhs.c3rbytes.dao;
 
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import sample.ch.ffhs.c3rbytes.databaseEntry.DatabaseEntry;
 import sample.ch.ffhs.c3rbytes.utils.OSBasedAction;
 
+import javax.sql.rowset.CachedRowSet;
 import java.io.IOException;
+import java.io.Reader;
 import java.sql.*;
 import java.util.concurrent.TimeUnit;
 
 import static sample.ch.ffhs.c3rbytes.connection.DBConnection.*;
+import static sample.ch.ffhs.c3rbytes.connection.DBConnection.dbExecuteQuery;
 
 public class DatabaseEntryDao implements Dao{
 
@@ -21,16 +25,53 @@ public class DatabaseEntryDao implements Dao{
      * @throws InterruptedException if the task is interrupted, an error is raised.
      */
     @Override
-    public ObservableList<DatabaseEntry> getAll() throws SQLException, ClassNotFoundException, InterruptedException {
+    public ObservableList<DatabaseEntry> getAll() throws SQLException, ClassNotFoundException, InterruptedException, IOException {
         String getAll = "SELECT * FROM \"CERBYTES\".\"database_entries\"";
         ObservableList<DatabaseEntry> databaseEntries = FXCollections.observableArrayList();
-        try{
-            dbExecuteQuery(getAll,databaseEntries,createURLSimple());
-        }catch (SQLException ex){
-            if(ex.getSQLState().equals("X0Y32")){
-                System.out.println("Table is empty");
+        dbExecuteQueryDAO(getAll, databaseEntries, createURLSimple());
+        return databaseEntries;
+    }
+
+    /**
+     * Execute a query to the database. call the dbExecuteQuery methode from the DBConnection Class
+     * @param query the query as a string
+     * @param databaseEntries an Obaservable to hold the result. the results will be passed to the tableview in mainview.
+     * @param urlSimple a simple url as JDBC_URL
+     * @return the results (ObservableList)
+     * @throws SQLException if the transaction encounters a problem, a exception is raised.
+     * @throws IOException if result is empty, an exception is raised.
+     */
+    private ObservableList<DatabaseEntry> dbExecuteQueryDAO(String query, ObservableList<DatabaseEntry> databaseEntries, String urlSimple) throws SQLException, IOException {
+        CachedRowSet result = dbExecuteQuery(query, urlSimple);
+        OSBasedAction helper = new OSBasedAction();
+        int i = 1;
+        //we iterate through the results and save them into databaseEntry objects. then all of them are saved into the ObservableList.
+        while (result.next()) {
+            DatabaseEntry entry = new DatabaseEntry();
+            entry.setDummytId(String.valueOf(i));
+            entry.setId(result.getString("user_id"));
+            entry.setUsername(result.getString("username"));
+            entry.setDescription(result.getString("description"));
+            entry.setPassword(result.getString("password_text"));
+            entry.setUrl(result.getString("url_content"));
+            entry.setCreationDate(result.getString("date_creation"));
+            entry.setLastUpdate(result.getString("date_update"));
+            Clob note = result.getClob("note");
+            //we transform the Clob data into a string.
+            Reader r = note.getCharacterStream();
+            StringBuffer buffer = new StringBuffer();
+            int ch;
+            while ((ch = r.read())!=-1) {
+                buffer.append(""+(char)ch);
             }
+            //save the string as the instance variable (note)
+            entry.setNote(buffer.toString());
+            databaseEntries.addAll(entry);
+            i++;
+            helper.printDatabaseEntryObject(entry);
+
         }
+        System.out.println("size :" +databaseEntries.size());
         return databaseEntries;
     }
 
@@ -295,6 +336,7 @@ public class DatabaseEntryDao implements Dao{
      * @return the results (databaseEntries)
      */
     public ObservableList<DatabaseEntry> searchElement(String searched, ObservableList<DatabaseEntry> databaseEntries){
+        //ObservableList<DatabaseEntry> searchResults = FXCollections.observableArrayList();
         String element = "SELECT \"user_id\",\"username\",\"description\",\"url_content\",\"password_text\",\"date_creation\",\"date_update\",\"note\"\n" +
                 "FROM \"CERBYTES\".\"database_entries\"\n" +
                 "WHERE \"username\" LIKE '%"+searched+"%'\n" +
@@ -303,9 +345,9 @@ public class DatabaseEntryDao implements Dao{
                 "OR \"note\" LIKE '%"+searched+"%'";
         System.out.println(element);
         try {
-            dbExecuteQuery(element,databaseEntries,createURLSimple());
-        }catch (SQLException | InterruptedException e) {
-            System.out.print("Error occurred while search Operation: " + e);
+            dbExecuteQueryDAO(element,databaseEntries,createURLSimple());
+        }catch (Exception e){
+            System.out.println(e.getMessage());
         }
         return databaseEntries;
     }

@@ -10,12 +10,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.InputMethodEvent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import java.io.IOException;
 import sample.ch.ffhs.c3rbytes.crypto.PasswordEncrypterDecrypter;
 import sample.ch.ffhs.c3rbytes.databaseEntry.DatabaseEntry;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.utils.ClipboardHandler;
+import sample.ch.ffhs.c3rbytes.utils.OSBasedAction;
 import sample.ch.ffhs.c3rbytes.utils.PasswordRevealer;
 
 import java.net.URL;
@@ -49,6 +52,7 @@ public class addNewItemController implements IController {
     private final static Charset UTF_8 = StandardCharsets.UTF_8;
     private boolean isHidingPassword = true;
     FXMLLoader loader = null;
+    OSBasedAction helper = new OSBasedAction();
 
 
     public ObservableList<String> options = FXCollections.observableArrayList(
@@ -121,6 +125,9 @@ public class addNewItemController implements IController {
             notesField.setText(dbentry.getNote());
             viewCreationDateLabel.setText("created on: "+dbentry.getCreationDate());
             viewLastUpdateLabel.setText("Last update: "+dbentry.getLastUpdate());
+
+            //debugging: should match the view
+            helper.printDatabaseEntryObject(dbentry);
         }catch (Exception e){
             System.out.println("a field is null.");
         }
@@ -346,5 +353,7 @@ public class addNewItemController implements IController {
     public void updateTextField() {
         showPasswordTextField.setText(passwordField.getText());
     }
+
+
 }
 

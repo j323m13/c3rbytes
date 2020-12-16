@@ -203,7 +203,7 @@ class DBConnectionTest {
         ObservableList<DatabaseEntry> databaseEntriesTest = FXCollections.observableArrayList();
         ObservableList<DatabaseEntry> databaseEntriesTestResults = FXCollections.observableArrayList();
         databaseEntriesTest.add(entry);
-        databaseEntriesTestResults = dbExecuteQuery(queryTest,databaseEntriesTest,createURL());
+        //databaseEntriesTestResults = dbExecuteQuery(queryTest,databaseEntriesTest,createURL());
         System.out.println(databaseEntriesTest.get(0));
         assertNotNull(databaseEntriesTestResults);
         //assertEquals();

@@ -37,6 +37,19 @@ class DBConnectionDAOTest {
         setLocalValues("fr_CH");
     }
 
+    public DatabaseEntry createAnEntry(){
+        DatabaseEntry entry = new DatabaseEntry();
+        entry.setId("1");
+        entry.setUsername("Jérome");
+        entry.setDescription("Social");
+        entry.setUrl("https://facebook.com");
+        entry.setPassword("123456789");
+        entry.setCreationDate("2020-01-12");
+        entry.setLastUpdate("2020-05-18");
+        entry.setNote("this a test note");
+        return entry;
+    }
+
     @Test
     void setEncryptionTest() throws SQLException {
         helperTest.setDatabaseNameDAO(dbName+"01");
@@ -110,7 +123,8 @@ class DBConnectionDAOTest {
 
     @Test
     void setupUserDBWithPasswordTest () throws SQLException {
-        helperTest.setDatabaseNameDAO(dbName+"07");
+        helperTest.setDatabaseNameDAO(dbName+"100");
+        helperTest.setPasswordDBDAO("");
         helperTest.connect();
         helperTest.setupUserDBWithPassword("123456789");
         assertEquals("123456789",helperTest.getPasswordDBDAO());
@@ -121,9 +135,9 @@ class DBConnectionDAOTest {
         helperTest.setDatabaseNameDAO(dbName+"02");
         helperTest.setPasswordDBDAO("123456789");
         helperTest.connect();
-        setupUserDBWithPasswordTest();
+        helperTest.setupUserDBWithPassword("123456789");
         helperTest.resetUserDBWithPassword("3874436sjsjsjzszhshs");
-        helperTest.setPasswordDBDAO("3874436sjsjsjzszhshs");
+        //helperTest.setPasswordDBDAO("3874436sjsjsjzszhshs");
         assertEquals("3874436sjsjsjzszhshs", helperTest.getPasswordDBDAO());
     }
 
@@ -148,38 +162,23 @@ class DBConnectionDAOTest {
         helperTest.setDatabaseNameDAO(dbName+"04");
         helperTest.setPasswordDBDAO(passworDB);
         helperTest.connect();
-        DatabaseEntry entry = new DatabaseEntry();
-        entry.setId("1");
-        entry.setUsername("Jérome");
-        entry.setDescription("Social");
-        entry.setUrl("https://facebook.com");
-        entry.setPassword("123456789");
-        entry.setCreationDate("2020-01-12");
-        entry.setLastUpdate("2020-05-12");
-        entry.setNote("this a test note");
-        assertTrue(helperTest.save(entry));
+        assertTrue(helperTest.save(createAnEntry()));
     }
 
     @Test
-    void updateTest() throws InterruptedException, SQLException, ClassNotFoundException {
-        saveTest();
-
-        DatabaseEntry entry = new DatabaseEntry();
-                entry.setId("1");
-                entry.setUsername("Jérome");
-                entry.setDescription("Social");
-                entry.setUrl("https://facebook.com");
-                entry.setPassword("123456789");
-                entry.setCreationDate("2020-01-12");
-                entry.setLastUpdate("2020-05-12");
-                entry.setNote("this a test note");
-
-
+    void updateTest() throws InterruptedException, SQLException, ClassNotFoundException, IOException {
+        DatabaseEntry entry = createAnEntry();
         ObservableList<DatabaseEntry> databaseEntriesTest = FXCollections.observableArrayList();
-        ObservableList<DatabaseEntry> databaseEntriesTestResults;
+        ObservableList<DatabaseEntry> databaseEntriesTestResults = null;
         databaseEntriesTest.add(entry);
+        helperTest.setup();
+        helperTest.save(entry);
         helperTest.update(entry);
-        databaseEntriesTestResults = helperTest.getAll();
+        try {
+            databaseEntriesTestResults = helperTest.getAll();
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
         System.out.println(databaseEntriesTest.get(0));
         assertNotNull(databaseEntriesTestResults);
         //assertEquals();
@@ -192,6 +191,7 @@ class DBConnectionDAOTest {
     void shutdownDBTest() throws SQLException {
         helperTest.setDatabaseNameDAO(dbName+"05");
         helperTest.setPasswordDBDAO(passworDB);
+
         //start db
         helperTest.connect();
         try{
@@ -213,8 +213,10 @@ class DBConnectionDAOTest {
         helperTest.setPasswordDBDAO(passworDB);
         helperTest.connect();
         String deleteStmtTest = "DELETE FROM \"CERBYTES\".\"database_entries\"";
+        helperTest.setup();
+        helperTest.save(createAnEntry());
         try{
-            assertFalse(dbExecuteUpdate(deleteStmtTest,createURLSimple()));
+            assertTrue(dbExecuteUpdate(deleteStmtTest,createURLSimple()));
         }catch (SQLException exception){
             assertNotEquals(exception.getSQLState(),"Username not found in SYS.SYSUSERS");
         }
