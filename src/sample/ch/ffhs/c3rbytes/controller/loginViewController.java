@@ -35,7 +35,6 @@ public class loginViewController implements IController{
      * This method logs in if password is correct
      */
     public void loginAction(){
-        //TODO: Correct login authentication with dB
         System.out.println("LoginAction");
 
         // password to forward to the db
@@ -111,7 +110,7 @@ public class loginViewController implements IController{
      * This method manges the key inputs of the fields
      * @param keyEvent The key event
      */
-    public void manageKeyInput(KeyEvent keyEvent) throws SQLException {
+    public void manageKeyInput(KeyEvent keyEvent) {
 
         System.out.println(keyEvent.getSource());
         Node n = (Node)keyEvent.getSource();

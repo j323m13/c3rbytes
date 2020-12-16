@@ -6,6 +6,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.robot.Robot;
 import javafx.stage.Stage;
 import sample.ch.ffhs.c3rbytes.crypto.PasswordGenerator;
 import sample.ch.ffhs.c3rbytes.utils.ClipboardHandler;
@@ -153,6 +156,44 @@ public class passwordGeneratorController implements IController {
 
     public void closeStage(Stage stage){
         stage.close();
+    }
+
+    /**
+     * This method manages key inputs
+     * @param keyEvent The key that was used
+     */
+    public void manageKeyInput(KeyEvent keyEvent) {
+        System.out.println("Key released");
+        if (keyEvent.getCode().equals(KeyCode.TAB)){
+            return;
+        }
+
+        if (isEnterKey(keyEvent)) {
+            focusNext();
+        }
+
+    }
+
+    /**
+     * This method checks if key input is Enter
+     * @param keyEvent The key that was used
+     * @return true if Enter, false instead
+     */
+    private boolean isEnterKey(KeyEvent keyEvent){
+        if (keyEvent.getCode().equals(KeyCode.ENTER)){
+            System.out.println("Enter");
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * This method focuses the next element
+     */
+    private void focusNext(){
+        Robot robot = new Robot();
+        robot.keyPress(KeyCode.TAB);
+        robot.keyRelease(KeyCode.TAB);
     }
 
     @Override

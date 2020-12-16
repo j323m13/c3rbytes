@@ -15,29 +15,29 @@
     <children>
         <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="371.0" prefWidth="640.0" VBox.vgrow="ALWAYS">
             <children>
-                <TextField fx:id="userNameField" layoutX="160.0" layoutY="42.0" onKeyReleased="#updatePasswordField" prefHeight="25.0" prefWidth="333.0" />
-                <Label fx:id="usernameFieldLabelError" layoutX="160.0" layoutY="65.0" prefHeight="25.0" prefWidth="333.0" />
-                <PasswordField fx:id="passwordField" layoutX="160.0" layoutY="90.0" onInputMethodTextChanged="#update" onKeyReleased="#updateTextField" prefHeight="25.0" prefWidth="220.0" />
-                <Label fx:id="passwordFieldLabelError" layoutX="160.0" layoutY="115.0" prefHeight="25.0" prefWidth="333.0" />
-                <ChoiceBox fx:id="typeField" layoutX="160.0" layoutY="140.0" prefHeight="25.0" prefWidth="333.0" />
-                <Label fx:id="typeFieldLabelError" layoutX="160.0" layoutY="175.0" prefHeight="17.0" prefWidth="333.0" textAlignment="CENTER" />
-                <TextField fx:id="urlField" layoutX="160.0" layoutY="189.0" prefHeight="25.0" prefWidth="333.0" />
-                <Label fx:id="urlFieldLabelError" layoutX="160.0" layoutY="195.0" prefHeight="25.0" prefWidth="333.0" />
-                <TextField fx:id="notesField" layoutX="160.0" layoutY="238.0" prefHeight="25.0" prefWidth="333.0" />
-                <Label fx:id="notesFieldLabelError" layoutX="160.0" layoutY="245.0" prefHeight="25.0" prefWidth="333.0" />
+                <TextField fx:id="userNameField" layoutX="160.0" layoutY="42.0" onKeyReleased="#manageKeyInput" prefHeight="25.0" prefWidth="333.0" />
+                <Label fx:id="usernameFieldLabelError" layoutX="160.0" layoutY="65.0" prefHeight="25.0" prefWidth="333.0" visible="false" />
+                <PasswordField fx:id="passwordField" layoutX="160.0" layoutY="90.0" onInputMethodTextChanged="#update" onKeyReleased="#manageKeyInput" prefHeight="25.0" prefWidth="220.0" />
+                <Label fx:id="passwordFieldLabelError" layoutX="160.0" layoutY="115.0" prefHeight="25.0" prefWidth="333.0" visible="false" />
+                <ChoiceBox fx:id="typeField" layoutX="160.0" layoutY="140.0" onKeyReleased="#manageKeyInput" prefHeight="25.0" prefWidth="333.0" />
+                <Label fx:id="typeFieldLabelError" layoutX="160.0" layoutY="175.0" prefHeight="17.0" prefWidth="333.0" textAlignment="CENTER" visible="false" />
+                <TextField fx:id="urlField" layoutX="160.0" layoutY="189.0" onKeyReleased="#manageKeyInput" prefHeight="25.0" prefWidth="333.0" />
+                <Label fx:id="urlFieldLabelError" layoutX="160.0" layoutY="195.0" prefHeight="25.0" prefWidth="333.0" visible="false" />
+                <TextField fx:id="notesField" layoutX="160.0" layoutY="238.0" onKeyReleased="#manageKeyInput" prefHeight="25.0" prefWidth="333.0" />
+                <Button fx:id="saveButton" layoutX="351.0" layoutY="286.0" mnemonicParsing="false" onAction="#onSaveButton" prefHeight="25.0" prefWidth="56.0" text="Save" />
+                <Button fx:id="discardButton" layoutX="437.0" layoutY="286.0" mnemonicParsing="false" onAction="#onDiscardButton" text="Discard" />
+                <Label fx:id="notesFieldLabelError" layoutX="160.0" layoutY="245.0" prefHeight="25.0" prefWidth="333.0" visible="false" />
                 <Label layoutX="57.0" layoutY="46.0" prefHeight="17.0" prefWidth="91.0" text="User name:" />
                 <Label layoutX="57.0" layoutY="94.0" prefHeight="17.0" prefWidth="91.0" text="Password:" />
                 <Label layoutX="57.0" layoutY="144.0" prefHeight="17.0" prefWidth="91.0" text="Type:" />
                 <Label layoutX="57.0" layoutY="193.0" prefHeight="17.0" prefWidth="91.0" text="URL:" />
                 <Label layoutX="57.0" layoutY="242.0" prefHeight="17.0" prefWidth="91.0" text="Notes:" />
-                <Button fx:id="showPasswordButton" layoutX="428.0" layoutY="90.0" mnemonicParsing="false" onAction="#showPassword" prefHeight="25.0" prefWidth="32.0" text="👁" />
-                <Button fx:id="generatePasswordButton" layoutX="390.0" layoutY="90.0" mnemonicParsing="false" onAction="#generatePassword" prefHeight="25.0" prefWidth="32.0" text="🔄" />
-                <Button fx:id="passwordCopyButton" layoutX="466.0" layoutY="90.0" mnemonicParsing="false" onAction="#copyPassword" prefHeight="25.0" prefWidth="32.0" text="📋" />
-                <Button fx:id="saveButton" layoutX="351.0" layoutY="286.0" mnemonicParsing="false" onAction="#onSaveButton" prefHeight="25.0" prefWidth="56.0" text="Save" />
-                <Button fx:id="discardButton" layoutX="437.0" layoutY="286.0" mnemonicParsing="false" onAction="#onDiscardButton" text="Discard" />
+                <Button fx:id="generatePasswordButton" layoutX="390.0" layoutY="90.0" mnemonicParsing="false" onAction="#generatePassword" prefHeight="25.0" prefWidth="32.0" text="👁👁🔄" />
+                <Button fx:id="showPasswordButton" layoutX="428.0" layoutY="90.0" mnemonicParsing="false" onAction="#showPassword" prefHeight="25.0" prefWidth="32.0" text="👁🔄👁" />
+                <Button fx:id="passwordCopyButton" layoutX="466.0" layoutY="90.0" mnemonicParsing="false" onAction="#copyPassword" prefHeight="25.0" prefWidth="32.0" text="👁🔄👁👁👁🔄👁👁🔄👁🔄👁👁🔄📋" />
                 <Label fx:id="viewCreationDateLabel" layoutX="57.0" layoutY="313.0" prefHeight="17.0" prefWidth="250.0" />
                 <Label fx:id="viewLastUpdateLabel" layoutX="57.0" layoutY="340.0" prefHeight="17.0" prefWidth="250.0" />
-                <TextField fx:id="showPasswordTextField" layoutX="160.0" layoutY="90.0" onInputMethodTextChanged="#update" onKeyReleased="#updatePasswordField" prefHeight="25.0" prefWidth="220.0" visible="false" />
+                <TextField fx:id="showPasswordTextField" layoutX="160.0" layoutY="90.0" onInputMethodTextChanged="#update" onKeyReleased="#manageKeyInput" prefHeight="25.0" prefWidth="220.0" visible="false" />
             </children>
         </AnchorPane>
     </children>

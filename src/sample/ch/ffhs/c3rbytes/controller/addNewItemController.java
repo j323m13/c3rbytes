@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.robot.Robot;
 import javafx.stage.Stage;
 import java.io.IOException;
 import sample.ch.ffhs.c3rbytes.crypto.PasswordEncrypterDecrypter;
@@ -354,6 +355,52 @@ public class addNewItemController implements IController {
         showPasswordTextField.setText(passwordField.getText());
     }
 
+    public void manageKeyInput(KeyEvent keyEvent) {
+        System.out.println("Key released");
 
+        if (keyEvent.getCode().equals(KeyCode.TAB)){
+            return;
+        }
+
+        Node n = (Node)keyEvent.getSource();
+        String id = n.getId();
+
+        System.out.println(id);
+        switch (id) {
+            case "passwordField":
+                updateTextField();
+                break;
+
+            case "showPasswordTextField":
+                updatePasswordField();
+                break;
+        }
+
+        if (isEnterKey(keyEvent)) {
+            focusNext();
+        }
+    }
+
+    /**
+     * This method checks if key input is Enter
+     * @param keyEvent The key that was used
+     * @return true if Enter, false instead
+     */
+    private boolean isEnterKey(KeyEvent keyEvent){
+        if (keyEvent.getCode().equals(KeyCode.ENTER)){
+            System.out.println("Enter");
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * This method focuses the next element
+     */
+    private void focusNext(){
+    Robot robot = new Robot();
+    robot.keyPress(KeyCode.TAB);
+    robot.keyRelease(KeyCode.TAB);
+    }
 }
 
