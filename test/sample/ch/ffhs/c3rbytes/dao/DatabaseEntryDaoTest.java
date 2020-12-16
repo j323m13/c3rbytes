@@ -1,27 +1,29 @@
-package sample.ch.ffhs.c3rbytes.connection;
+package sample.ch.ffhs.c3rbytes.dao;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import sample.ch.ffhs.c3rbytes.databaseEntry.DatabaseEntry;
-import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.utils.OSBasedAction;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static sample.ch.ffhs.c3rbytes.connection.DBConnection.*;
 
-class DBConnectionDAOTest {
+
+/**
+ * Test de methodes of the DatabaseEntryDao Class.
+ * for each test a new db is created and the task performed.
+ * the last methode, clean the db (delete them).
+ */
+class DatabaseEntryDaoTest {
     DatabaseEntryDao helperTest = new DatabaseEntryDao();
     String passworDB = "123456789";
     String dbName = "testDB/testDB";
@@ -158,29 +160,27 @@ class DBConnectionDAOTest {
         }
 
     @Test
-    void saveTest() throws InterruptedException, SQLException, ClassNotFoundException {
+    void saveTest() throws InterruptedException, SQLException, ClassNotFoundException, IOException {
         helperTest.setDatabaseNameDAO(dbName+"04");
         helperTest.setPasswordDBDAO(passworDB);
         helperTest.connect();
-        assertTrue(helperTest.save(createAnEntry()));
+        helperTest.setup();
+        helperTest.save(createAnEntry());
+        ObservableList<DatabaseEntry> databaseEntriesTestResults = null;
+        assertNotNull(databaseEntriesTestResults=helperTest.getAll());
     }
 
     @Test
     void updateTest() throws InterruptedException, SQLException, ClassNotFoundException, IOException {
         DatabaseEntry entry = createAnEntry();
-        ObservableList<DatabaseEntry> databaseEntriesTest = FXCollections.observableArrayList();
-        ObservableList<DatabaseEntry> databaseEntriesTestResults = null;
-        databaseEntriesTest.add(entry);
+        ObservableList<DatabaseEntry> databaseEntriesTest = null;
         helperTest.setup();
         helperTest.save(entry);
+        entry.setUrl("www.instagramm");
         helperTest.update(entry);
-        try {
-            databaseEntriesTestResults = helperTest.getAll();
-        }catch (SQLException e){
-            System.out.println(e.getMessage());
-        }
-        System.out.println(databaseEntriesTest.get(0));
-        assertNotNull(databaseEntriesTestResults);
+        ObservableList<DatabaseEntry> databaseEntriesTestResults = null;
+        databaseEntriesTestResults = helperTest.getAll();
+        assertEquals(entry.getUrl(),databaseEntriesTestResults.get(0).getUrl());
         //assertEquals();
 
 
@@ -207,7 +207,7 @@ class DBConnectionDAOTest {
 
 
     @Test
-    void removeTestsEffects() throws SQLException, InterruptedException, ClassNotFoundException {
+    void removeTestsEffects() throws SQLException, InterruptedException, ClassNotFoundException, IOException {
         OSBasedAction deleter = new OSBasedAction();
         helperTest.setDatabaseNameDAO(dbName+"04");
         helperTest.setPasswordDBDAO(passworDB);
@@ -215,11 +215,10 @@ class DBConnectionDAOTest {
         String deleteStmtTest = "DELETE FROM \"CERBYTES\".\"database_entries\"";
         helperTest.setup();
         helperTest.save(createAnEntry());
-        try{
-            assertTrue(dbExecuteUpdate(deleteStmtTest,createURLSimple()));
-        }catch (SQLException exception){
-            assertNotEquals(exception.getSQLState(),"Username not found in SYS.SYSUSERS");
-        }
+        dbExecuteUpdate(deleteStmtTest,createURLSimple());
+        ObservableList<DatabaseEntry> resultDelete = null;
+        resultDelete = helperTest.getAll();
+        assertTrue(resultDelete.size()==0);
 
 
     }

@@ -11,7 +11,7 @@ public interface Dao {
         return null;
     }
 
-    boolean save(DatabaseEntry databaseEntry) throws SQLException, ClassNotFoundException, InterruptedException;
+    void save(DatabaseEntry databaseEntry) throws SQLException, ClassNotFoundException, InterruptedException;
     void update(DatabaseEntry databaseEntry) throws SQLException, ClassNotFoundException;
     void delete(DatabaseEntry databaseEntry) throws SQLException, ClassNotFoundException;
     void deleteAccount() throws SQLException, InterruptedException;

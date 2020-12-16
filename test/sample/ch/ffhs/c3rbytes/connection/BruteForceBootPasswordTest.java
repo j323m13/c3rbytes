@@ -1,9 +1,7 @@
 package sample.ch.ffhs.c3rbytes.connection;
 
-import javafx.beans.value.ObservableSetValue;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.OS;
 import sample.ch.ffhs.c3rbytes.crypto.StringHasher;
 import sample.ch.ffhs.c3rbytes.utils.OSBasedAction;
 
@@ -17,13 +15,23 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static sample.ch.ffhs.c3rbytes.connection.DBConnection.*;
+
+/**
+ * Bruteforce the bootpassword
+ *
+ */
 
 class BruteForceBootPasswordTest {
 
 
     @Test
+    /**
+     * take a password from the list, hash it and compare it to the bootPassword.
+     * if they match, the test is successful.
+     */
     public void bruteForceBootPasswordTest() throws SQLException {
         String passwordDB = "123456789";
         String bootPassword = "password";
@@ -56,7 +64,6 @@ class BruteForceBootPasswordTest {
             //we load a password text files with passwords.
             Path passwordsFilePath = Paths.get("test/sample/ch/ffhs/c3rbytes/connection/10-million-password-list-top-1000000.txt");
             hacker = new File(passwordsFilePath.toAbsolutePath().toString());
-            //hacker = new File("10-million-password-list-top-1000000.txt");
             myReader = new Scanner(hacker);
         } catch (FileNotFoundException e) {
             e.printStackTrace();

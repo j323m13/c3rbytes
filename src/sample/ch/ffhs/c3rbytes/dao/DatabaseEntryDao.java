@@ -86,7 +86,7 @@ public class DatabaseEntryDao implements Dao{
      * @throws InterruptedException if the task is interrupted, an error is raised.
      */
     @Override
-    public boolean save(DatabaseEntry entry) throws SQLException, ClassNotFoundException, InterruptedException {
+    public void save(DatabaseEntry entry) throws SQLException, ClassNotFoundException, InterruptedException {
         System.out.println(entry.getUsername()+", "+entry.getDescription()+", "+
         entry.getPassword()+", "+ entry.getCreationDate()+", "+entry.getLastUpdate()+", "+entry.getUrl());
 
@@ -99,10 +99,10 @@ public class DatabaseEntryDao implements Dao{
             dbExecuteUpdate(saveStmt,createURLSimple());
         } catch (SQLException e) {
             System.out.print("Error occurred while insert Operation: " + e);
-            return false;
+
 
         }
-        return true;
+
     }
 
 
@@ -310,8 +310,9 @@ public class DatabaseEntryDao implements Dao{
                 "                        \"date_update\" VARCHAR(50) DEFAULT NULL,\n" +
                 "                       \"note\" CLOB(2K) DEFAULT NULL)";
 
-
+        //create the database schema
         dbExecuteUpdate(slqCreateSchema,urlForSetupSchemaAndTable);
+        //create the table
         dbExecuteUpdate(sqlCreateTable,urlForSetupSchemaAndTable);
 
     }

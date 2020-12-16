@@ -9,6 +9,9 @@ import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Test the DatabaseEntry Class.
+ */
 class DatabaseEntryTest {
 
 

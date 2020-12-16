@@ -63,7 +63,6 @@ public class DBConnection {
      * @param JDBC_URL an url (see createURL() and createURLSimple())
      * @return databaseEntries
      * @throws SQLException if a sql error happens, it is raised.
-     * @throws InterruptedException require for the sleeper in this methods.
      */
     public static CachedRowSet dbExecuteQuery(String getAll, String JDBC_URL) throws SQLException  {
         //Declare resultSet and CachedResultSet as null
@@ -74,7 +73,7 @@ public class DBConnection {
         try {
             PreparedStatement ps = connection.prepareStatement(getAll);
             result = ps.executeQuery();
-            cacheResult = RowSetProvider.newFactory().createCachedRowSet();;
+            cacheResult = RowSetProvider.newFactory().createCachedRowSet();
             cacheResult.populate(result);
 
         } catch (SQLException e) {
@@ -87,7 +86,7 @@ public class DBConnection {
         }
         dbDisconnect();
 
-
+        //we return the result from the database as a CachedRowSet
         return cacheResult;
     }
 
@@ -95,27 +94,24 @@ public class DBConnection {
      * DB Execute Update (For Update/Insert/Delete) Operation
      * @param sqlStmt the query to be executed
      * @param JDBC_URL the url
-     * @return true if successful.
      * @throws SQLException if the sql transaction failed, an error is raised.
      */
-    public static boolean dbExecuteUpdate(String sqlStmt, String JDBC_URL) throws SQLException {
+    public static void dbExecuteUpdate(String sqlStmt, String JDBC_URL) throws SQLException {
         //print the query for debugging.
         //System.out.println("query " + sqlStmt);
         dbConnect(JDBC_URL);
         try (Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(sqlStmt);
         } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
             if (ex.getSQLState().equals("X0Y32")) {
                 System.out.println("Table is empty");
             }
-            return false;
 
         }
-        //Close statement
 
         //Close connection
         dbDisconnect();
-        return true;
     }
 
 
@@ -200,7 +196,8 @@ public class DBConnection {
                 ";encryptionKeyLength=" + encryptionKeyLength +
                 ";encryptionAlgorithm=" + encryptionAlgorithm +
                 ";bootPassword=" + getBootPassword() + "";
-        System.out.println("createURL() -> " + JDBC_URL);
+        //print url for debugging
+        //System.out.println("createURL() -> " + JDBC_URL);
         return JDBC_URL;
     }
 
@@ -216,7 +213,8 @@ public class DBConnection {
                 ";create=true;"+
                 "user=" + userDB +
                 ";password=" + getPasswordDB() + "";
-        System.out.println("createURLSimple() -> " + JDBC_URL);
+        //print url for debugging
+        //System.out.println("createURLSimple() -> " + JDBC_URL);
         return JDBC_URL;
     }
 
@@ -239,7 +237,6 @@ public class DBConnection {
     public static void shutdownDB() throws SQLException {
         try {
             dbConnect(createURLSimple()+";shutdown=true");
-            //connection = DriverManager.getConnection(createURLSimple() + ";shutdown=true");
             getConnectionInstance();
         } catch (SQLException e) {
             if (e.getSQLState().equals("08006")) {
