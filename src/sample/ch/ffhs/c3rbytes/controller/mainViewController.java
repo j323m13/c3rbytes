@@ -236,7 +236,6 @@ public class mainViewController implements Initializable, IController {
      */
     public void logoutAction() throws SQLException {
         System.out.println("Logout Action");
-        //TODO: Add necessary methods to clear/reencrypt/delete before closing the app.
         Stage stage = (Stage) logoutButton.getScene().getWindow();
         //shutdown the db before closing. db will be encrypted again.
         mainViewDao.shutdown();

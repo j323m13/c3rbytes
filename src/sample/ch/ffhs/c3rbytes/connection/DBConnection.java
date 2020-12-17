@@ -107,6 +107,7 @@ public class DBConnection {
             if (ex.getSQLState().equals("X0Y32")) {
                 System.out.println("Table is empty");
             }
+            throw ex;
 
         }
 

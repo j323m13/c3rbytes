@@ -207,19 +207,17 @@ class DatabaseEntryDaoTest {
 
 
     @Test
-    void removeTestsEffects() throws SQLException, InterruptedException, ClassNotFoundException, IOException {
-        OSBasedAction deleter = new OSBasedAction();
-        helperTest.setDatabaseNameDAO(dbName+"04");
+    void deleteTest() throws SQLException, InterruptedException, ClassNotFoundException, IOException {
+        helperTest.setDatabaseNameDAO(dbName+"24");
         helperTest.setPasswordDBDAO(passworDB);
         helperTest.connect();
-        String deleteStmtTest = "DELETE FROM \"CERBYTES\".\"database_entries\"";
         helperTest.setup();
         helperTest.save(createAnEntry());
-        dbExecuteUpdate(deleteStmtTest,createURLSimple());
+        //we test if the delete function works as it shoud. if we query a something from the DB, it should return an empty ObservableList.
+        helperTest.delete(createAnEntry());
         ObservableList<DatabaseEntry> resultDelete = null;
         resultDelete = helperTest.getAll();
         assertTrue(resultDelete.size()==0);
-
 
     }
 
