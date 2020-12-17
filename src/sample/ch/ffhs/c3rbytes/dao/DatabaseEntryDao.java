@@ -183,7 +183,7 @@ public class DatabaseEntryDao implements Dao{
             System.out.println(e.getMessage());
             System.out.println("delete Action failed");
         }
-        TimeUnit.SECONDS.sleep(1);
+
         try{
             //delete db log file (derby.log)
             handler.deleteDatabaseFolder(handler.getPath("derby.log"));
