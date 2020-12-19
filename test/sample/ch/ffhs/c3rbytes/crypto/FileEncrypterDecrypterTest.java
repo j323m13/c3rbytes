@@ -64,26 +64,4 @@ public class FileEncrypterDecrypterTest {
         assertFalse(pText.equals(originalContent));
     }
 
-    @Test
-    public void decryptFile() throws Exception {
-
-        FileEncrypterDecrypter fileEncrypterDecrypter = new FileEncrypterDecrypter();
-
-        String originalContent = "\\Kj9a4\\YLVkvnm D8C#TK; W<t|v. /r";
-        String file = "c3r.c3r";
-        String password = "123";
-
-        // decrypt file
-        String pText = "Access denied";
-        try {
-            byte[] decryptedText = fileEncrypterDecrypter.decryptFile(file, password);
-            pText = new String(decryptedText, UTF_8);
-            System.out.println(pText);
-            System.out.println("Access granted");
-        }catch(javax.crypto.AEADBadTagException e){
-            System.out.println("Access denied");
-        }
-        assertTrue(pText.equals(originalContent));
-    }
-
 }
