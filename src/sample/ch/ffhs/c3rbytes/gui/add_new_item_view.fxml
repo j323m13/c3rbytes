@@ -32,9 +32,9 @@
                 <Label layoutX="57.0" layoutY="144.0" prefHeight="17.0" prefWidth="91.0" text="Type:" />
                 <Label layoutX="57.0" layoutY="193.0" prefHeight="17.0" prefWidth="91.0" text="URL:" />
                 <Label layoutX="57.0" layoutY="242.0" prefHeight="17.0" prefWidth="91.0" text="Notes:" />
-                <Button fx:id="generatePasswordButton" layoutX="390.0" layoutY="90.0" mnemonicParsing="false" onAction="#generatePassword" prefHeight="25.0" prefWidth="32.0" text="👁👁🔄" />
-                <Button fx:id="showPasswordButton" layoutX="428.0" layoutY="90.0" mnemonicParsing="false" onAction="#showPassword" prefHeight="25.0" prefWidth="32.0" text="👁🔄👁" />
-                <Button fx:id="passwordCopyButton" layoutX="466.0" layoutY="90.0" mnemonicParsing="false" onAction="#copyPassword" prefHeight="25.0" prefWidth="32.0" text="👁🔄👁👁👁🔄👁👁🔄👁🔄👁👁🔄📋" />
+                <Button fx:id="generatePasswordButton" layoutX="390.0" layoutY="90.0" mnemonicParsing="false" onAction="#generatePassword" prefHeight="25.0" prefWidth="32.0" text="🔄" />
+                <Button fx:id="showPasswordButton" layoutX="428.0" layoutY="90.0" mnemonicParsing="false" onAction="#showPassword" prefHeight="25.0" prefWidth="32.0" text="👁" />
+                <Button fx:id="passwordCopyButton" layoutX="466.0" layoutY="90.0" mnemonicParsing="false" onAction="#copyPassword" prefHeight="25.0" prefWidth="32.0" text="📋" />
                 <Label fx:id="viewCreationDateLabel" layoutX="57.0" layoutY="313.0" prefHeight="17.0" prefWidth="250.0" />
                 <Label fx:id="viewLastUpdateLabel" layoutX="57.0" layoutY="340.0" prefHeight="17.0" prefWidth="250.0" />
                 <TextField fx:id="showPasswordTextField" layoutX="160.0" layoutY="90.0" onInputMethodTextChanged="#update" onKeyReleased="#manageKeyInput" prefHeight="25.0" prefWidth="220.0" visible="false" />
