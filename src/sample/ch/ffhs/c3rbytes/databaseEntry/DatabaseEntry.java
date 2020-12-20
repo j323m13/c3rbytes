@@ -5,7 +5,10 @@ import javafx.beans.property.SimpleStringProperty;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-
+/**
+ * Data model.
+ * @author Jérémie Equey
+ */
 public class DatabaseEntry {
 
     private SimpleStringProperty id;
@@ -76,7 +79,7 @@ public class DatabaseEntry {
 
     /**
      * set the type of account (description)
-     * @param description
+     * @param description a type of account
      */
     public void setDescription(String description) {
         this.description.set(description);

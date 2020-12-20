@@ -27,7 +27,7 @@ public class FileEncrypterDecrypter {
      * @param content The content to encrypt
      * @param toFile The filename to save the encrypted content
      * @param password The password to encrypt the content
-     * @throws Exception in case of wrong encryption --> wrong
+     * @throws Exception in case of wrong encryption {@code -->}  wrong
      */
     public void encryptFile(String content, String toFile, String password) throws Exception {
 
@@ -68,7 +68,7 @@ public class FileEncrypterDecrypter {
      * @param fromEncryptedFile The String of the encrypted File
      * @param password The password to decrypt the filecontent
      * @return decrypted text in bytes
-     * @throws Exception in case of wrong decryption --> ex. wrong password
+     * @throws Exception in case of wrong decryption {@code -->} ex. wrong password
      */
     public byte[] decryptFile(String fromEncryptedFile, String password) throws Exception {
         String fromEncryptedFilePath;

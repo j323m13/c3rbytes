@@ -276,7 +276,7 @@ public class mainViewController implements Initializable, IController {
 
     /**
      * copy password in computer memory.
-     * @param dbEntry
+     * @param dbEntry a databaseEntry object.
      */
     private void copyPassword(DatabaseEntry dbEntry) {
         try{
@@ -321,7 +321,6 @@ public class mainViewController implements Initializable, IController {
      *Button to copy the password in memory
      */
     public void copyPasswordAction() {
-        //TODO: Copy password -> get password text field content
         System.out.println("Copy Password Action");
         try{
             DatabaseEntry dbEntry = profileTable.getSelectionModel().getSelectedItem();
@@ -373,9 +372,10 @@ public class mainViewController implements Initializable, IController {
      *
      * this action is final. no coming back from it. only tears.
      * @throws IOException Signals that an I/O exception of some sort has occurred.
+     * @throws SQLException if a problem occurs with the DB, a exception is raised.
+     * @throws InterruptedException if a problem occurs during the process, an exception is thrown.
      */
     public void deleteAccountAction() throws IOException, SQLException, InterruptedException {
-        //TODO: Define deleting account
         System.out.println("Delete Account Action");
         String alertText = "Are you sure you want to delete your account? \n" +
                 "There is no way back to that.";
@@ -434,15 +434,9 @@ public class mainViewController implements Initializable, IController {
      * Methode to call the change master Passphrase action
      */
     public void changeMasterPPAction(){
-        //TODO: here we have to open login_view_masterpassphrase.fxml and aks for the passphrase or something similar
-
-        //TODO delete ?
         Parent changePassphrase;
 
         try {
-
-            //TODO: then here we have to call the set_master_mpp_view.fxml and ask for the new passphrase
-
             Stage stage = new Stage();
             changePassphraseController changePP = new changePassphraseController();
             changePP.getView(stage);

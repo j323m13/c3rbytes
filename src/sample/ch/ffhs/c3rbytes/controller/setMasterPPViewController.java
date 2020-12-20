@@ -72,8 +72,7 @@ public class setMasterPPViewController implements IController {
         } catch(Exception e){
             // Reset Settings by deleting c3r.c3r
             FileHandler fileHandler = new FileHandler();
-            //TODO remplace with variable filename
-            fileHandler.deleteFile("c3r.c3r");
+            fileHandler.deleteFile(filename);
         }
 
         Stage stage = new Stage();

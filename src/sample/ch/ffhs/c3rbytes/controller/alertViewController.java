@@ -10,6 +10,10 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Optional;
 
+/**
+ * This class produces alerts to be displayed to the user.
+ * @author Jérémie Equey
+ */
 public class alertViewController implements IController {
     @FXML
     private TilePane tilePaneAlert;

@@ -86,7 +86,7 @@ public class PasswordGenerator {
     /**
      * This method builds the desired password
      *
-     * @param charSet contains an arraylist with the charsetcodes -->
+     * @param charSet contains an arraylist with the charsetcodes {@code -->}
      *          * 0 = lower case letters
      *          * 1 = upper case letters
      *          * 2 = digits

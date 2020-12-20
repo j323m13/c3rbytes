@@ -276,6 +276,7 @@ public class addNewItemController implements IController {
             try {
                 System.out.println("save() -->");
                 dao.save(entry);
+
             }catch (SQLException | ClassNotFoundException | InterruptedException e){
                 System.out.print(e);
             }

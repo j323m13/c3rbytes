@@ -15,11 +15,15 @@ import java.util.concurrent.TimeUnit;
 import static sample.ch.ffhs.c3rbytes.connection.DBConnection.*;
 import static sample.ch.ffhs.c3rbytes.connection.DBConnection.dbExecuteQuery;
 
+/**
+ * This class is the pivot between the classes DBConnection and the controllers.
+ * @author Jérémie Equey
+ */
 public class DatabaseEntryDao implements Dao{
 
     /**
      * Methode to retrieve all the entries from the Database.
-     * @return an observableList ObservableList<DatabaseEntry> which contains the results of the query.
+     * save the result inside an an observableList ObservableList {@code <DatabaseEntry>} which contains the results of the query.
      * @throws SQLException if the transaction failed, an error is raised.
      * @throws ClassNotFoundException if the table or the schema are not set, an error is raised.
      * @throws InterruptedException if the task is interrupted, an error is raised.
@@ -59,10 +63,10 @@ public class DatabaseEntryDao implements Dao{
             Clob note = result.getClob("note");
             //we transform the Clob data into a string.
             Reader r = note.getCharacterStream();
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
             int ch;
             while ((ch = r.read())!=-1) {
-                buffer.append(""+(char)ch);
+                buffer.append((char) ch);
             }
             //save the string as the instance variable (note)
             entry.setNote(buffer.toString());
@@ -71,7 +75,7 @@ public class DatabaseEntryDao implements Dao{
             helper.printDatabaseEntryObject(entry);
 
         }
-        System.out.println("size :" +databaseEntries.size());
+        //System.out.println("size :" +databaseEntries.size());
         return databaseEntries;
     }
 
@@ -80,7 +84,6 @@ public class DatabaseEntryDao implements Dao{
     /**
      * Save a databaseEntry object to the database
      * @param entry a databaseEntry object
-     * @return true if the transaction is successful.
      * @throws SQLException if the transaction failed, an error is raised.
      * @throws ClassNotFoundException if the table or the schema are not set, an error is raised.
      * @throws InterruptedException if the task is interrupted, an error is raised.

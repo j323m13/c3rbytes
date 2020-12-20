@@ -77,7 +77,7 @@ public class PasswordEncrypterDecrypter {
      * @param cipherText The encrypted String (Base64)
      * @param password The password to decrypt the String
      * @return decrypted plaintext
-     * @throws Exception if something went wrong -->ex. wrong password
+     * @throws Exception if something went wrong {@code -->} ex. wrong password
      */
     // we need the same password, salt and iv to decrypt it (reverse order)
     public String decrypt(String cipherText, String password) throws Exception {

@@ -69,7 +69,7 @@ public class passwordGeneratorController implements IController {
 
     /**
      * This method generates a new password with the desired length and the desired charset
-     *         /* input for ArrayList<Integer> charSet must come from option buttons with options
+     *         /* input for ArrayList{@code <Integer>}  charSet must come from option buttons with options
      *          * 0 = lower case letters
      *          * 1 = upper case letters
      *          * 2 = digits
@@ -132,7 +132,6 @@ public class passwordGeneratorController implements IController {
 
     public void discardPasswordAction() {
         System.out.println("Discarding Password");
-        //TODO: Discard information and close the window window.
         Stage stage = (Stage) discardPassword.getScene().getWindow();
         closeStage(stage);
     }
@@ -141,7 +140,6 @@ public class passwordGeneratorController implements IController {
      * This method the password to the addNewItemView
      */
     public void savePasswordAction() {
-        //TODO: Add necessary method and data transfer before closing the window.
         String pwdOutputFieldText = pwdOutputField.getText();
         passwordField.setText(pwdOutputFieldText);
         passwordTextField.setText(passwordField.getText());

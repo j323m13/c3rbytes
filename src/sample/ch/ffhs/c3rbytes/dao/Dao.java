@@ -6,6 +6,10 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * The interface for DAO pattern
+ * @author Jérémie Equey
+ */
 public interface Dao {
     default List<DatabaseEntry> getAll() throws SQLException, ClassNotFoundException, InterruptedException, IOException {
         return null;

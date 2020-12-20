@@ -1,6 +1,5 @@
 package sample.ch.ffhs.c3rbytes.utils;
 
-import sample.ch.ffhs.c3rbytes.connection.DBConnection;
 import sample.ch.ffhs.c3rbytes.dao.DatabaseEntryDao;
 import sample.ch.ffhs.c3rbytes.databaseEntry.DatabaseEntry;
 
@@ -10,6 +9,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Locale;
 
+/**
+ * some OS based actions
+ * @author Jérémie Equey
+ */
 
 public class OSBasedAction {
     private String osName = null;
@@ -20,7 +23,7 @@ public class OSBasedAction {
 
     /**
      * Methode to retur the absolute path of file / folder
-     * @param fileName
+     * @param fileName the name of the file from which we want to get the path.
      * @return file
      */
     public File getPath(String fileName){
@@ -44,7 +47,8 @@ public class OSBasedAction {
     /**
      * Delete a folder on user computer.
      * it iterates through a folder and delete the files.
-     * @param file the file we want to delete.
+     * @param file : the file we want to delete.
+     * @throws  IOException if a problem occurs, an exception is raised (cannot be deleted).
      */
     public void deleteDatabaseFolder(File file) throws IOException {
             if (file.isDirectory()){
@@ -84,6 +88,10 @@ public class OSBasedAction {
         helper.setLocalValuesDAO(lang+"_"+country);
     }
 
+    /**
+     * print all the instance variable in the console.
+     * @param object the object which will be printed.
+     */
     public void printDatabaseEntryObject(DatabaseEntry object){
         System.out.print(object.getId());
         System.out.print(", ");

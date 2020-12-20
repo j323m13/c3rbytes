@@ -4,7 +4,10 @@ import javax.sql.rowset.CachedRowSet;
 import javax.sql.rowset.RowSetProvider;
 import java.sql.*;
 import java.util.concurrent.TimeUnit;
-
+/**
+ * This class communicate with the DB
+ * @author Jérémie Equey
+ */
 public class DBConnection {
     private static final String userDB = "cerbytes";
     private static String passwordDB;

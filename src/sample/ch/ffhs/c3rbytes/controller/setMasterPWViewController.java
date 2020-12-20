@@ -55,13 +55,9 @@ public class setMasterPWViewController implements IController {
 
 
         try {
-            //TODO: Hier hakts irgendwo beim call von getView(Stage stage)
+
             setMasterPPViewController mppvc = new setMasterPPViewController();
             mppvc.getView();
-
-            //String hashedPasswordDB = stringHasher.encryptSHA3(HASHALGORITHM,DBConnection.bootPassword);
-            //DBConnection.bootPassword = hashedBootPassword;
-            //DBConnection.passwordDB = hashedPasswordDB;
             DatabaseEntryDao login = new DatabaseEntryDao();
             login.setBootPasswordDAO(hashedBootPassword);
             login.setPasswordDBDAO(hashedPasswordDB);
