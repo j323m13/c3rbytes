@@ -10,15 +10,7 @@ C3rBytes is protected thanks to cryptography. its database is encrypted to preve
 
 Some have even heard from Elon Musk, that C3rBytes was to the password managers, what the block chain is to finance. the future will tell us.
 
-![image.png](./image.png)
 
-![image-2.png](./image-2.png)
-
-![image-3.png](./image-3.png)
-
-![image-5.png](./image-5.png)
-
-![image-4.png](./image-4.png)
 
 ## Installation
 C3rBytes requires Java DK (minimum 11.0.1, maximum 15.0)
