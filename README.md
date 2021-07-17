@@ -22,7 +22,9 @@ download the version for your operating system: https://git.ffhs.ch/jeremie.eque
 
 
 ## configuration (after cloning the repo)
-- add extern libraries to java project 
+- add extern libraries to java project: 
+  - download JavaFX version for your system: https://gluonhq.com/products/javafx/ 
+  - libraries used for this project are to be find in /lib
 - add modules (refering to the externe libraries) to the java project.
 - build project
 - edit project configuration
